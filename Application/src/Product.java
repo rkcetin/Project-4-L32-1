@@ -1,15 +1,12 @@
 import java.io.Serializable;
 
-public class Product implements Serializable{
+public class Product implements Serializable {
     private static final long serialVersionUID = 106L;
     private Store store;
     private String productName;
     private String productDescription;
     private int quantity;
     private double price;
-
-
-
 
     public Product(String productName , String productDescription , int quantity, int price , Store store) {
         if( store == null || productName == null || productDescription == null ) {
@@ -24,6 +21,7 @@ public class Product implements Serializable{
         this.price = price;
         this.store = store;
     }
+
     public void setProductName(String productName) {
         if (productName == null) {
             throw new NullPointerException();
@@ -46,7 +44,7 @@ public class Product implements Serializable{
     }
 
     public void setPrice(double price) {
-        if (price < 0 ) {
+        if (price < 0) {
             throw new IllegalArgumentException();
         }
         this.price = price;
@@ -70,8 +68,8 @@ public class Product implements Serializable{
     public double getPrice() {
         return price;
     }
-    public String toString() {
 
+    public String toString() {
         return String.format("Product<Name: %s, Description: %s, Price: %.2f, Stock: %d, Store: %s>" , productName, productDescription, price, quantity, store.getName());
     }
 
