@@ -9,7 +9,7 @@ public class Product implements Serializable {
     private double price;
 
     public Product(String productName , String productDescription , int quantity, int price , Store store) {
-        if( store == null || productName == null || productDescription == null ) {
+        if (store == null || productName == null || productDescription == null ) {
             throw new NullPointerException();
         }
         if (quantity < 0 || price < 0) {
