@@ -32,7 +32,7 @@ public class Product {
     }
 
     public void setProductName(String productName) {
-        if (productName == null || name.isEmpty()) {
+        if (productName == null || productName.isEmpty()) {
             throw new NullPointerException();
         }
         this.productName = productName;
