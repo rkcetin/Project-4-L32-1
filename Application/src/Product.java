@@ -1,3 +1,15 @@
+ 
+/**
+ * Project 4 -- Product Class
+ *
+ * Class holds information about a specific product that is being sold within the store
+ * also checks for invalid input and has getter and setter methods
+ *
+ * @author Steven Chang Alexander Benson Stephanie Sun Chris Xu Ramazan Cetin , L32
+ *
+ * @version November 6, 2023
+ *
+ */
 public class Product {
     private Store store;
     private String productName;
@@ -20,7 +32,7 @@ public class Product {
     }
 
     public void setProductName(String productName) {
-        if (productName == null) {
+        if (productName == null || name.isEmpty()) {
             throw new NullPointerException();
         }
         this.productName = productName;
