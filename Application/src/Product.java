@@ -1,25 +1,22 @@
-import java.io.Serializable;
-
-public class Product implements Serializable {
-    private static final long serialVersionUID = 106L;
+public class Product {
     private Store store;
     private String productName;
     private String productDescription;
-    private int quantity;
+    private int stock;
     private double price;
 
-    public Product(String productName , String productDescription , int quantity, int price , Store store) {
-        if (store == null || productName == null || productDescription == null ) {
+    public Product(Store store, String productName, String productDescription, int stock, double price) {
+        if (store == null || productName == null || productDescription == null) {
             throw new NullPointerException();
         }
-        if (quantity < 0 || price < 0) {
+        if (stock < 0 || price < 0) {
             throw new IllegalArgumentException();
         }
+        this.store = store;
         this.productName = productName;
         this.productDescription = productDescription;
-        this.quantity = quantity;
+        this.stock = stock;
         this.price = price;
-        this.store = store;
     }
 
     public void setProductName(String productName) {
@@ -36,11 +33,11 @@ public class Product implements Serializable {
         this.productDescription = productDescription;
     }
 
-    public void setQuantity(int quantity) {
-        if (quantity < 0 ) {
+    public void setStock(int stock) {
+        if (stock < 0 ) {
             throw new IllegalArgumentException();
         }
-        this.quantity = quantity;
+        this.stock = stock;
     }
 
     public void setPrice(double price) {
@@ -49,6 +46,7 @@ public class Product implements Serializable {
         }
         this.price = price;
     }
+
     public Store getStore() {
         return store;
     }
@@ -61,8 +59,8 @@ public class Product implements Serializable {
         return productDescription;
     }
 
-    public int getQuantity() {
-        return quantity;
+    public int getStock() {
+        return stock;
     }
 
     public double getPrice() {
@@ -70,7 +68,9 @@ public class Product implements Serializable {
     }
 
     public String toString() {
-        return String.format("Product<Name: %s, Description: %s, Price: %.2f, Stock: %d, Store: %s>" , productName, productDescription, price, quantity, store.getName());
+        return String.format("Product<Name: %s, Description: %s, Price: %.2f, Stock: %d, Store: %s>",
+            this.getProductName(), this.getProductDescription(), this.getPrice(), this.getStock(),
+                this.getStore().getStoreName());
     }
 
 }
