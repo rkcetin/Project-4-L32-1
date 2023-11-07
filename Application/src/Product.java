@@ -5,7 +5,7 @@
  * Class holds information about a specific product that is being sold within the store
  * also checks for invalid input and has getter and setter methods
  *
- * @author Steven Chang Alexander Benson Stephanie Sun Chris Xu Ramazan Cetin , L32
+ * @author Steven Chang, Alexander Benson, Stephanie Sun, Chris Xu, Ramazan Cetin, L32
  *
  * @version November 6, 2023
  *

@@ -19,6 +19,6 @@ public class User implements Serializable {
     }
 
     public String toString() {
-        return String.format("%s, %s", name, password);
+        return String.format("%s,%s", name, password);
     }
 }

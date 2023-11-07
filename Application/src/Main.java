@@ -1,72 +1,78 @@
 import java.io.*;
-import java.util.Random;
-import java.util.Scanner;
+import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("1 - LogIn \n2 - SignUp");
-        int logorsign = scanner.nextInt();
+        System.out.println("1. Login \n2. Sign Up");
+        int logOrSign = scanner.nextInt();
         scanner.nextLine();
+
         // Prompt the user for email and password
         System.out.print("Enter your email: ");
         String email = scanner.nextLine().trim();
         System.out.print("Enter your password: ");
         String password = scanner.nextLine();
-        switch (logorsign) {
-            case 1:
-                if (isValidEmail(email)) {
-                    // Check if the email is registered
-                    if (isEmailRegistered(email)) {
-                        // Retrieve the stored hashed password and salt for the user
-                        String[] userData = getUserData(email);
-        
-                        if (userData != null) {
-                            String storedHashedPassword = userData[0];
-                            String salt = userData[1];
-        
-                            // Hash the provided password with the stored salt
-                            String hashedPassword = hashPassword(password, salt);
-        
-                            // Compare the computed hash with the stored hash
-                            if (storedHashedPassword.equals(hashedPassword)) {
-                                System.out.println("Login successful. Welcome, " + email + "!");
-                            } else {
-                                System.out.println("Login failed. Incorrect password.");
-                            }
-                        } else {
-                            System.out.println("User data is missing or corrupted.");
-                        }
+
+        switch (logOrSign) {
+            case 1 -> login(email, password);
+            case 2 -> signup(email, password);
+        }
+    }
+
+    public static void login(String email, String password) {
+        if (isValidEmail(email)) {
+            // Check if the email is registered
+            if (isEmailRegistered(email)) {
+                // Retrieve the stored hashed password and salt for the user
+                String[] userData = getUserData(email);
+
+                if (userData != null) {
+                    String storedHashedPassword = userData[0];
+                    String salt = userData[1];
+
+                    // Hash the provided password with the stored salt
+                    String hashedPassword = hashPassword(password, salt);
+
+                    // Compare the computed hash with the stored hash
+                    if (storedHashedPassword.equals(hashedPassword)) {
+                        System.out.println("Login successful. Welcome, " + email + "!");
                     } else {
-                        System.out.println("Email is not registered. Please sign up first.");
+                        System.out.println("Login failed. Incorrect password.");
                     }
                 } else {
-                    System.out.println("Invalid email format.");
+                    System.out.println("User data is missing or corrupted.");
                 }
-                break;
-            case 2:
-                // Check if the email is valid
-                if (isValidEmail(email)) {
-                    // Check if the email is not already registered
-                    if (!isEmailRegistered(email)) {
-                        // Generate a random salt
-                        String salt = generateSalt(16);
+            } else {
+                System.out.println("Email is not registered. Please sign up first.");
+            }
+        } else {
+            System.out.println("Invalid email format.");
+        }
+    }
 
-                        // Hash the password with the salt
-                        String hashedPassword = hashPassword(password, salt);
+    public static void signup(String email, String password) {
+        // Check if the email is valid
+        if (isValidEmail(email)) {
+            // Check if the email is not already registered
+            if (!isEmailRegistered(email)) {
+                // Generate a random salt
+                String salt = generateSalt(16);
 
-                        // Store the email, hashed password, and salt in a file
-                        if (saveUserToDatabase(email, hashedPassword, salt)) {
-                            System.out.println("Signup successful. User information has been saved.");
-                        } else {
-                            System.out.println("Signup failed. Please try again later.");
-                        }
-                    } else {
-                        System.out.println("Email is already registered.");
-                    }
+                // Hash the password with the salt
+                String hashedPassword = hashPassword(password, salt);
+
+                // Store the email, hashed password, and salt in a file
+                if (saveUserToDatabase(email, hashedPassword, salt)) {
+                    System.out.println("Signup successful. User information has been saved.");
                 } else {
-                    System.out.println("Invalid email format.");
+                    System.out.println("Signup failed. Please try again later.");
                 }
+            } else {
+                System.out.println("Email is already registered.");
+            }
+        } else {
+            System.out.println("Invalid email format.");
         }
     }
 
