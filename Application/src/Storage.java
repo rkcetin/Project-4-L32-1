@@ -1,6 +1,15 @@
 import java.io.*;
 import java.util.*;
-
+/**
+ * Project 4 -- Storage Class
+ *
+ * Class provides means to read and write array lists to file for  peristant storage
+ *
+ * @author Steven Chang Alexander Benson Stephanie Sun Chris Xu Ramazan Cetin, lab l32
+ *
+ * @version November 6, 2023
+ *
+ */
 public class Storage {
     public static void storeUsers(ArrayList<User> users) {
         if(users == null) {
