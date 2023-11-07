@@ -1,50 +1,76 @@
 public class Product {
-    private String name;
-    private String description;
+    private Store store;
+    private String productName;
+    private String productDescription;
     private int stock;
     private double price;
 
-    public Product(String name, String description, int stock, double price) {
-        this.name = name;
-        this.description = description;
+    public Product(Store store, String productName, String productDescription, int stock, double price) {
+        if (store == null || productName == null || productDescription == null) {
+            throw new NullPointerException();
+        }
+        if (stock < 0 || price < 0) {
+            throw new IllegalArgumentException();
+        }
+        this.store = store;
+        this.productName = productName;
+        this.productDescription = productDescription;
         this.stock = stock;
         this.price = price;
     }
 
-    public String getName() {
-        return name;
+    public void setProductName(String productName) {
+        if (productName == null) {
+            throw new NullPointerException();
+        }
+        this.productName = productName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setProductDescription(String productDescription) {
+        if (productDescription == null) {
+            throw new NullPointerException();
+        }
+        this.productDescription = productDescription;
     }
 
-    public String getDescription() {
-        return description;
+    public void setStock(int stock) {
+        if (stock < 0 ) {
+            throw new IllegalArgumentException();
+        }
+        this.stock = stock;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setPrice(double price) {
+        if (price < 0) {
+            throw new IllegalArgumentException();
+        }
+        this.price = price;
+    }
+
+    public Store getStore() {
+        return store;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public String getProductDescription() {
+        return productDescription;
     }
 
     public int getStock() {
         return stock;
     }
 
-    public void setStock(int stock) {
-        this.stock = stock;
-    }
-
     public double getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
-        this.price = price;
+    public String toString() {
+        return String.format("Product<Name: %s, Description: %s, Price: %.2f, Stock: %d, Store: %s>",
+            this.getProductName(), this.getProductDescription(), this.getPrice(), this.getStock(),
+                this.getStore().getStoreName());
     }
 
-    public String toString() {
-        return String.format("Name: %s\nDescription: %s\nStock: %d\nPrice: %.2f\n",
-                this.name, this.description, this.stock, this.price);
-    }
 }

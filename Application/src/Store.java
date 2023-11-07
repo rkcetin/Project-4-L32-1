@@ -17,13 +17,13 @@ public class Store {
         return storeName;
     }
 
-    public void addProduct(String name, String description, int stock, double price) {
-        products.add(new Product(name, description, stock, price));
+    public void addProduct(Store store, String name, String description, int stock, double price) {
+        products.add(new Product(store, name, description, stock, price));
     }
 
     public void removeProduct(String name) {
         for (int i = 0; i < products.size(); i++) {
-            if (name.equals(products.get(i).getName())) {
+            if (name.equals(products.get(i).getProductName())) {
                 products.remove(i);
                 return;
             }
@@ -32,7 +32,7 @@ public class Store {
 
     public void editProduct(String name, Scanner scan) {
         for (Product product : products) {
-            if (name.equals(product.getName())) {
+            if (name.equals(product.getProductName())) {
                 System.out.println(product + "\n1. Modify Name\n2. Modify Description\n" +
                         "3. Modify Stock\n4. Modify Price");
 
@@ -46,12 +46,12 @@ public class Store {
                             case 1 -> {
                                 System.out.println("Enter the new product name.");
                                 String newName = scan.nextLine();
-                                product.setName(newName);
+                                product.setProductName(newName);
                             }
                             case 2 -> {
                                 System.out.println("Enter the new product description.");
                                 String newDesc = scan.nextLine();
-                                product.setDescription(newDesc);
+                                product.setProductDescription(newDesc);
                             }
                             case 3 -> {
                                 System.out.println("Enter the new stock.");
