@@ -1,21 +1,25 @@
- 
+import java.io.Serializable;
+
 /**
  * Project 4 -- Product Class
  *
  * Class holds information about a specific product that is being sold within the store
  * also checks for invalid input and has getter and setter methods
  *
- * @author Steven Chang Alexander Benson Stephanie Sun Chris Xu Ramazan Cetin , L32
+ * @author Steven Chang, Alexander Benson, Stephanie Sun, Chris Xu, Ramazan Cetin, L32
  *
  * @version November 6, 2023
  *
  */
-public class Product {
+
+public class Product implements Serializable {
+    private static final long serialVersionUID = 1234L;
     private Store store; //the store a product is associated with
-    private String productName; //the name of the product
-    private String productDescription; //the description of the product
-    private int stock; //the number of items in stock
-    private double price; //the price of the item
+    private String productName; //the description of the product
+    private String productDescription;//the description of the product
+    private int stock;//the number of items in stock
+    private double price;//the price of the item
+
 
      //basic constructor for Product class
     public Product(Store store, String productName, String productDescription, int stock, double price) {
