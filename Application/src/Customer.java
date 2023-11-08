@@ -3,8 +3,8 @@ import java.util.ArrayList;
 public class Customer extends User {
     private ArrayList<Product> cart;
 
-    public Customer(String name, String password) {
-        super(name, password);
+    public Customer(String name, String password, String salt) {
+        super(name, password , salt);
     }
 
     public ArrayList<Product> getCart() {
