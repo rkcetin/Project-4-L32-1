@@ -8,12 +8,24 @@ public class Store {
 
 
     public Store(String storeName, ArrayList<Product> products , Seller seller ) {
+        if (storeName == null || products == null || seller == null) {
+            throw new NullPointerException();
+        }
+        if (storeName.isEmpty()) {
+            throw new IllegalArgumentException();
+        }
         this.storeName = storeName;
         this.products = products;
         this.seller = seller;
     }
 
     public Store(String storeName, Seller seller) {
+        if (storeName == null ||  seller == null) {
+            throw new NullPointerException();
+        }
+        if (storeName.isEmpty()) {
+            throw new IllegalArgumentException();
+        }
         this.storeName = storeName;
         products = new ArrayList<>();
         this.seller = seller;
