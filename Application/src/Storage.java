@@ -3,9 +3,9 @@ import java.util.*;
 /**
  * Project 4 -- Storage Class
  *
- * Class provides means to read and write array lists to file for  peristant storage
+ * Class provides means to read and write array lists to file for  persistent storage
  *
- * @author Steven Chang Alexander Benson Stephanie Sun Chris Xu Ramazan Cetin, lab l32
+ * @author Steven Chang, Alexander Benson, Stephanie Sun, Chris Xu, Ramazan Cetin, L32
  *
  * @version November 6, 2023
  *
@@ -57,6 +57,7 @@ public class Storage {
             e.printStackTrace();
         }
     }
+
     /**
      * Writes an Arraylist of products as an object to the Products.ser file
      *
@@ -80,6 +81,7 @@ public class Storage {
             e.printStackTrace();
         }
     }
+
     /**
      * Reads the ArrayList written to the Users.ser file
      *
@@ -104,6 +106,7 @@ public class Storage {
         }
         return users;
     }
+
     /**
      * Reads the ArrayList written to the Stores.ser file
      *
@@ -128,6 +131,7 @@ public class Storage {
         }
         return stores;
     }
+
     /**
      * Reads the ArrayList written to the Products.ser file
      *
@@ -154,7 +158,6 @@ public class Storage {
         }
         return products;
     }
-
 
 }
 

@@ -22,8 +22,7 @@ public class Product implements Serializable {
     private int stock;//the number of items in stock
     private double price;//the price of the item
 
-
-     //basic constructor for Product class
+    //basic constructor for Product class
     public Product(Store store, String productName, String productDescription, int stock, double price) {
         if (store == null || productName == null || productDescription == null) {
             throw new NullPointerException();
@@ -38,33 +37,33 @@ public class Product implements Serializable {
         this.price = price;
     }
 
-
     // SETTER METHODS
 
-
-  //sets Product name to given name, throws null pointer exception if null
-
+    //sets Product name to given name, throws null pointer exception if null
     public void setProductName(String productName) {
         if (productName == null || productName.isEmpty()) {
             throw new NullPointerException();
         }
         this.productName = productName;
     }
-//sets the Product description, throws null pointer exception if null
+
+    //sets the Product description, throws null pointer exception if null
     public void setProductDescription(String productDescription) {
         if (productDescription == null) {
             throw new NullPointerException();
         }
         this.productDescription = productDescription;
     }
-//set the stock to the given stock, throws Illegal argument exception if stock is less than zero
+
+    //set the stock to the given stock, throws Illegal argument exception if stock is less than zero
     public void setStock(int stock) {
         if (stock < 0 ) {
             throw new IllegalArgumentException();
         }
         this.stock = stock;
     }
-//sets the price to the given price, throws illegal argument exception if less than zero
+
+    //sets the price to the given price, throws illegal argument exception if less than zero
     public void setPrice(double price) {
         if (price < 0) {
             throw new IllegalArgumentException();
@@ -72,27 +71,30 @@ public class Product implements Serializable {
         this.price = price;
     }
 
-  //returns the name of the store
+    //returns the name of the store
     public Store getStore() {
         return store;
     }
-//returns the name of the product
+
+    //returns the name of the product
     public String getProductName() {
         return productName;
     }
-//returns the description of the product
+
+    //returns the description of the product
     public String getProductDescription() {
         return productDescription;
     }
-//returns the number of items in stock
+
+    //returns the number of items in stock
     public int getStock() {
         return stock;
     }
-//returns the price
+
+    //returns the price
     public double getPrice() {
         return price;
     }
-
 
     // Helper methods
     //check/get product method by string
@@ -109,6 +111,7 @@ public class Product implements Serializable {
         }
         return filteredProduct.get(0);
     }
+
     //search method
     public static ArrayList<Product> search(String search, ArrayList<Product> products) {
         if(search == null || products == null) {
@@ -124,6 +127,7 @@ public class Product implements Serializable {
         return output;
 
     }
+
     //generate listings from list
     public static ArrayList<String> generateListing(ArrayList<Product> products) {
         if (products == null) {
@@ -141,7 +145,8 @@ public class Product implements Serializable {
         return output;
 
     }
-    // helper functino that sorts the products list by stock high or low
+
+    // helper function that sorts the products list by stock high or low
     public static void sortStock(boolean startLow , ArrayList<Product> products) {
         if (products == null) {
             throw new NullPointerException();
@@ -153,6 +158,7 @@ public class Product implements Serializable {
         }
 
     }
+
     // helper function that sort the products list by price high or low
     public static void sortPrice(boolean startLow , ArrayList<Product>  products) {
         if (products == null) {
@@ -166,8 +172,7 @@ public class Product implements Serializable {
 
     }
 
-
-  //formats all of the information into a string and returns it
+   //formats all the information into a string and returns it
     public String toString() {
         return String.format("Product<Name: %s, Description: %s, Price: %.2f, Stock: %d, Store: %s>",
             this.getProductName(), this.getProductDescription(), this.getPrice(), this.getStock(),

@@ -36,7 +36,6 @@ public class Store implements Serializable {
     }
 
     //helper function for determining to determine if a store exists within a list of stores returns null if it doesn't
-
     public static Store checkStore(String storename, ArrayList<Store> stores) {
       if(stores == null || storename == null) {
           throw new NullPointerException();
@@ -50,6 +49,7 @@ public class Store implements Serializable {
       }
       return filteredStores.get(0);
     }
+
     //helper function to remove a store from a list based on its name
     public static void removeStore(String storename, ArrayList<Store> stores) {
         Store storeToRemove = checkStore(storename, stores);
@@ -59,6 +59,7 @@ public class Store implements Serializable {
         stores.remove(storeToRemove);
 
     }
+
     //helper function to get names of list of stores
     public static String[] listStoreNames(ArrayList<Store> stores) {
         if(stores == null) {
@@ -75,8 +76,6 @@ public class Store implements Serializable {
         output.toArray(storeList);
         return storeList;
     }
-
-
 
     public String getStoreName() {
         return storeName;
@@ -138,7 +137,6 @@ public class Store implements Serializable {
             }
         }
     }
-
 
     public String toString() {
         String itemList = "";

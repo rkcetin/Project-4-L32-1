@@ -1,6 +1,5 @@
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class User implements Serializable {
@@ -125,12 +124,8 @@ public class User implements Serializable {
 
                 User endUser = User.saveUserToDatabase(email, hashedPassword, salt, role, users);
 
-
                 return endUser;
                 // Store the email, hashed password, and salt in a file
-
-
-
             } else {
                 throw new Exception("Email Already Registerd");
             }
