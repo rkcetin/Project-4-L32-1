@@ -11,6 +11,11 @@ import java.util.*;
  *
  */
 public class Storage {
+    /**
+     * Writes an Arraylist of Users as an object to the Users.ser file
+     *
+     * @param uses ArrayList of Users to write to Users.ser file
+     */
     public static void storeUsers(ArrayList<User> users) {
         if(users == null) {
             throw new NullPointerException();
@@ -29,6 +34,11 @@ public class Storage {
             e.printStackTrace();
         }
     }
+    /**
+     * Writes an Arraylist of Stores as an object to the Stores.ser file
+     *
+     * @param uses ArrayList of Stores to write to Store.ser file
+     */
     public static void storeStores(ArrayList<Store> stores) {
         if(stores == null) {
             throw new NullPointerException();
@@ -47,6 +57,11 @@ public class Storage {
             e.printStackTrace();
         }
     }
+    /**
+     * Writes an Arraylist of products as an object to the Products.ser file
+     *
+     * @param uses ArrayList of Products to write to Products.ser file
+     */
     public static void storeProducts(ArrayList<Product> products) {
         if(products == null) {
             throw new NullPointerException();
@@ -65,6 +80,11 @@ public class Storage {
             e.printStackTrace();
         }
     }
+    /**
+     * Reads the ArrayList written to the Users.ser file
+     *
+     * @returns an ArrayList whihc is either a new Arraylist or the ArrayList<User> written to Users.ser
+     */
     public static ArrayList<User> getUsers() {
         ArrayList<User> users = new ArrayList<>();
         try {
@@ -84,6 +104,11 @@ public class Storage {
         }
         return users;
     }
+    /**
+     * Reads the ArrayList written to the Stores.ser file
+     *
+     * @returns an ArrayList whihc is either a new Arraylist or the ArrayList<Store> written to Stores.ser
+     */
     public static ArrayList<Store> getStores() {
         ArrayList<Store> stores = new ArrayList<>();
         try {
@@ -103,6 +128,11 @@ public class Storage {
         }
         return stores;
     }
+    /**
+     * Reads the ArrayList written to the Products.ser file
+     *
+     * @returns an ArrayList whihc is either a new Arraylist or the ArrayList<Product> written to Products.ser
+     */
     public static ArrayList<Product> getProducts() {
         ArrayList<Product> products = new ArrayList<>();
         try {
