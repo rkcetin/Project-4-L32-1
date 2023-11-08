@@ -3,9 +3,10 @@ import java.util.ArrayList;
 public class Seller extends User {
     private ArrayList<Store> stores;
 
-    public Seller(String name, String password) {
-        super(name, password);
+    public Seller(String name, String password , String salt) {
+        super(name, password , salt);
     }
+
 
     public void createStore(String storeName) {
         stores.add(new Store(storeName));
