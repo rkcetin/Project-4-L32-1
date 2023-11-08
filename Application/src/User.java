@@ -5,25 +5,27 @@ import java.util.stream.Collectors;
 
 public class User implements Serializable {
     private static final long serialVersionUID = 106L;
+
     private String name;
     private String password;
     private String salt;
 
-
+    //standard constructor for the User class
     public User(String name, String password, String salt) {
+
         this.name = name;
         this.password = password;
         this.salt = salt;
     }
-
+    //returns the name of the user
     public String getName() {
         return name;
     }
-
+    //returns the password of the user
     public String getPassword() {
         return password;
     }
-
+    //returns the information of the user in a formatted string
     public String toString() {
         return String.format("%s,%s,%s", name, password, salt);
     }
