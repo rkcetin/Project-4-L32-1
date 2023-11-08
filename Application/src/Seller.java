@@ -5,19 +5,29 @@ public class Seller extends User {
 
     public Seller(String name, String password) {
         super(name, password);
+        stores = new ArrayList<>();
     }
 
-    public void createStore(String storeName) {
-        stores.add(new Store(storeName));
+
+    public Store createStore(String storeName) {
+        Store createdStore = new Store(storeName , this);
+        stores.add(createdStore);
+        return createdStore;
+    }
+    public Store getStore(String storename) {
+        return Store.checkStore(storename, this.stores);
     }
 
     public void removeStore(String storeName) {
-        for (int i = 0; i < stores.size(); i++) {
-            if (stores.get(i).getStoreName().equals(storeName)) {
-                stores.remove(i);
-                return;
-            }
-        }
+        Store.removeStore(storeName, this.stores);
     }
+    public ArrayList<Store> getStores() {
+        return stores;
+    }
+    public String[] getSellerStoreNames() {
+        return Store.listStoreNames(this.getStores());
+    }
+
+
 
 }

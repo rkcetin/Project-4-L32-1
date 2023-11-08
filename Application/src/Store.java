@@ -1,17 +1,67 @@
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Store {
     private final String storeName;
     private ArrayList<Product> products;
+    private Seller seller;
 
-    public Store(String storeName, ArrayList<Product> products) {
+
+    public Store(String storeName, ArrayList<Product> products , Seller seller ) {
         this.storeName = storeName;
         this.products = products;
+        this.seller = seller;
     }
 
-    public Store(String storeName) {
+    public Store(String storeName, Seller seller) {
         this.storeName = storeName;
+        products = new ArrayList<>();
+        this.seller = seller;
+
     }
+
+    //helper function for determining to determine if a store exists within a list of stores returns null if it doesn't
+
+    public static Store checkStore(String storename, ArrayList<Store> stores) {
+      if(stores == null || storename == null) {
+          throw new NullPointerException();
+      }
+      ArrayList<Store> filteredStores = new ArrayList<Store>(stores
+              .stream()
+              .filter(store -> store.getStoreName().equalsIgnoreCase(storename) )
+              .collect(Collectors.toList()));
+      if(filteredStores.isEmpty()) {
+          return null;
+      }
+      return filteredStores.get(0);
+    }
+    //helper function to remove a store from a list based on its name
+    public static void removeStore(String storename, ArrayList<Store> stores) {
+        Store storeToRemove = checkStore(storename, stores);
+        if (storeToRemove == null) {
+            throw new IllegalArgumentException();
+        }
+        stores.remove(storeToRemove);
+
+    }
+    //helper function to get names of list of stores
+    public static String[] listStoreNames(ArrayList<Store> stores) {
+        if(stores == null) {
+            throw new NullPointerException();
+        }
+        if(stores.isEmpty()) {
+            return new String[0];
+        }
+        List<String> output = stores
+                .stream()
+                .map(Store::getStoreName)
+                .collect(Collectors.toList());
+        String[] storeList = new String[output.size()];
+        output.toArray(storeList);
+        return storeList;
+    }
+
+
 
     public String getStoreName() {
         return storeName;
