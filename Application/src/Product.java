@@ -112,7 +112,7 @@ public class Product implements Serializable {
         }
         ArrayList<Product> output = products
                 .stream()
-                .filter(product -> product.toStringCsvFormat().toLowerCase().contains(search.toLowerCase()))
+                .filter(product -> product.toStringCsvFormat(false).toLowerCase().contains(search.toLowerCase()))
                 .collect(Collectors.toCollection(ArrayList::new));
         return output;
 
@@ -164,12 +164,20 @@ public class Product implements Serializable {
             this.getProductName(), this.getProductDescription(), this.getPrice(), this.getStock(),
                 this.getStore().getStoreName());
     }
-    public String toStringCsvFormat() {
-        return String.format("%s,%s,$%.2f,%s",
-                this.getProductName(),
-                this.getProductDescription(),
-                this.getPrice(),
-                this.getStore().getStoreName());
+    public String toStringCsvFormat(boolean hasCommas) {
+        if (hasCommas) {
+            return String.format("%s,%s,$%.2f,%s",
+                    this.getProductName(),
+                    this.getProductDescription(),
+                    this.getPrice(),
+                    this.getStore().getStoreName());
+        } else {
+            return String.format("%s%s$%.2f%s",
+                    this.getProductName(),
+                    this.getProductDescription(),
+                    this.getPrice(),
+                    this.getStore().getStoreName());
+        }
     }
 
 }
