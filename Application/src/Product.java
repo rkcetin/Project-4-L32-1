@@ -1,4 +1,5 @@
- 
+import java.io.Serializable;
+
 /**
  * Project 4 -- Product Class
  *
@@ -10,7 +11,8 @@
  * @version November 6, 2023
  *
  */
-public class Product {
+public class Product implements Serializable {
+    private static final long serialVersionUID = 1234L;
     private Store store;
     private String productName;
     private String productDescription;

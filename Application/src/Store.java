@@ -1,7 +1,10 @@
+import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class Store {
+
+public class Store implements Serializable {
+    private static final long serialVersionUID = 118L;
     private final String storeName;
     private ArrayList<Product> products;
     private Seller seller;
