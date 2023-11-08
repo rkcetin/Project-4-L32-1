@@ -3,19 +3,22 @@ import java.util.ArrayList;
 public class Seller extends User {
     private ArrayList<Store> stores;
 
-    public Seller(String name, String password) {
-        super(name, password);
+
+    public Seller(String name, String password , String salt) {
+        super(name, password , salt);
         stores = new ArrayList<>();
     }
 
 
-    public Store createStore(String storeName) {
+    public Store createStore(String storeName, ArrayList<Store> bigStores) {
         Store createdStore = new Store(storeName , this);
         stores.add(createdStore);
+        bigStores.add(createdStore);
         return createdStore;
     }
     public Store getStore(String storename) {
         return Store.checkStore(storename, this.stores);
+
     }
 
     public void removeStore(String storeName) {
