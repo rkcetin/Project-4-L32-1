@@ -1,4 +1,6 @@
 import java.io.Serializable;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Project 4 -- Product Class
@@ -33,6 +35,8 @@ public class Product implements Serializable {
         this.price = price;
     }
 
+    // SETTER METHODS
+
     public void setProductName(String productName) {
         if (productName == null || productName.isEmpty()) {
             throw new NullPointerException();
@@ -61,6 +65,8 @@ public class Product implements Serializable {
         this.price = price;
     }
 
+    // Setter methods
+
     public Store getStore() {
         return store;
     }
@@ -81,9 +87,88 @@ public class Product implements Serializable {
         return price;
     }
 
+    // Helper methods
+    //check/get product method by string
+    public static Product checkProduct(String productName, ArrayList<Product> products) {
+        if(productName == null || products == null) {
+            throw new NullPointerException();
+        }
+        ArrayList<Product> filteredProduct = new ArrayList<Product>(products
+                .stream()
+                .filter(product -> product.getProductName().equalsIgnoreCase(productName))
+                .collect(Collectors.toCollection(ArrayList::new)));
+        if(filteredProduct.isEmpty()) {
+            return null;
+        }
+        return filteredProduct.get(0);
+    }
+    //search method
+    public static ArrayList<Product> search(String search, ArrayList<Product> products) {
+        if(search == null || products == null) {
+            throw new NullPointerException();
+        }
+        if (search.isEmpty()) {
+            return products;
+        }
+        ArrayList<Product> output = products
+                .stream()
+                .filter(product -> product.toStringCsvFormat().toLowerCase().contains(search.toLowerCase()))
+                .collect(Collectors.toCollection(ArrayList::new));
+        return output;
+
+    }
+    //generate listings from list
+    public static ArrayList<String> generateListing(ArrayList<Product> products) {
+        if (products == null) {
+            throw new NullPointerException();
+        }
+        ArrayList<String> output = new ArrayList<>();
+        for(Product product : products) {
+            String listing = String.format("Store: %s, Name: %s , Price: $%.2f" ,
+                    product.getStore().getStoreName() ,
+                    product.getProductName() ,
+                    product.getPrice());
+
+            output.add(listing);
+        }
+        return output;
+
+    }
+    // helper functino that sorts the products list by stock high or low
+    public static void sortStock(boolean startLow , ArrayList<Product> products) {
+        if (products == null) {
+            throw new NullPointerException();
+        }
+        if (startLow) {
+            products.sort(Comparator.comparing(Product::getStock));
+        } else {
+            products.sort(Comparator.comparing(Product::getStock).reversed());
+        }
+
+    }
+    // helper function that sort the products list by price high or low
+    public static void sortPrice(boolean startLow , ArrayList<Product>  products) {
+        if (products == null) {
+            throw new NullPointerException();
+        }
+        if (startLow) {
+            products.sort(Comparator.comparing(Product::getPrice));
+        } else {
+            products.sort(Comparator.comparing(Product::getPrice).reversed());
+        }
+
+    }
+
     public String toString() {
         return String.format("Product<Name: %s, Description: %s, Price: %.2f, Stock: %d, Store: %s>",
             this.getProductName(), this.getProductDescription(), this.getPrice(), this.getStock(),
+                this.getStore().getStoreName());
+    }
+    public String toStringCsvFormat() {
+        return String.format("%s,%s,$%.2f,%s",
+                this.getProductName(),
+                this.getProductDescription(),
+                this.getPrice(),
                 this.getStore().getStoreName());
     }
 
