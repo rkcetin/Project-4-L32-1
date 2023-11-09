@@ -114,7 +114,7 @@ public class Product implements Serializable {
 
     //search method
     public static ArrayList<Product> search(String search, ArrayList<Product> products) {
-        if(search == null || products == null) {
+        if (search == null || products == null) {
             throw new NullPointerException();
         }
         if (search.isEmpty()) {

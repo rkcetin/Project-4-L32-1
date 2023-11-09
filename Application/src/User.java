@@ -2,6 +2,18 @@ import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Project 4 -- User Class
+ *
+ * Parent class of Seller and Customer. Contains the basic information common to all users
+ * including their name and password. Contains methods pertaining to logging in and signing up
+ *
+ * @author Steven Chang, Alexander Benson, Stephanie Sun, Chris Xu, Ramazan Cetin, L32
+ *
+ * @version November 6, 2023
+ *
+ */
+
 public class User implements Serializable {
     private static final long serialVersionUID = 106L;
 

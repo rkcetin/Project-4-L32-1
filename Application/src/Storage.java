@@ -1,5 +1,6 @@
 import java.io.*;
 import java.util.*;
+
 /**
  * Project 4 -- Storage Class
  *
@@ -10,6 +11,7 @@ import java.util.*;
  * @version November 6, 2023
  *
  */
+
 public class Storage {
     /**
      * Writes an Arraylist of Users as an object to the Users.ser file
@@ -17,7 +19,7 @@ public class Storage {
      * @param uses ArrayList of Users to write to Users.ser file
      */
     public static void storeUsers(ArrayList<User> users) {
-        if(users == null) {
+        if (users == null) {
             throw new NullPointerException();
         }
         File userFile = new File("Users.ser");
@@ -34,6 +36,7 @@ public class Storage {
             e.printStackTrace();
         }
     }
+
     /**
      * Writes an Arraylist of Stores as an object to the Stores.ser file
      *
@@ -100,9 +103,7 @@ public class Storage {
             users = (ArrayList<User>) ois.readObject();
             fis.close();
             ois.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
         return users;
@@ -126,9 +127,7 @@ public class Storage {
             stores = (ArrayList<Store>) ois.readObject();
             fis.close();
             ois.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
         return stores;
@@ -137,7 +136,7 @@ public class Storage {
     /**
      * Reads the ArrayList written to the Products.ser file
      *
-     * @returns an ArrayList whihc is either a new Arraylist or the ArrayList<Product> written to Products.ser
+     * @returns an ArrayList which is either a new Arraylist or the ArrayList<Product> written to Products.ser
      */
     public static ArrayList<Product> getProducts() {
         ArrayList<Product> products = new ArrayList<>();
@@ -154,9 +153,7 @@ public class Storage {
             ois.close();
 
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
         return products;

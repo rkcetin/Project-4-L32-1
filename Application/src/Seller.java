@@ -1,7 +1,18 @@
 import java.util.ArrayList;
 
-public class Seller extends User {
+/**
+ * Project 4 -- Seller Class
+ *
+ * Class represents a Seller and extends User. Contains methods relating to Seller permissions
+ * such as editing their stores
+ *
+ * @author Steven Chang, Alexander Benson, Stephanie Sun, Chris Xu, Ramazan Cetin, L32
+ *
+ * @version November 6, 2023
+ *
+ */
 
+public class Seller extends User {
     private ArrayList<Store> stores;
 
     //standard constructor that extends from the user class
@@ -12,17 +23,15 @@ public class Seller extends User {
 
     //creates a new store with the given store name
     public Store createStore(String storeName, ArrayList<Store> bigStores) {
-
         Store createdStore = new Store(storeName , this);
         stores.add(createdStore);
         bigStores.add(createdStore);
         return createdStore;
     }
 
-    //returns a store with the given storename
-    public Store getStore(String storename) {
-        return Store.checkStore(storename, this.stores);
-
+    //returns a store with the given storeName
+    public Store getStore(String storeName) {
+        return Store.checkStore(storeName, this.stores);
     }
 
     //removes a store of the given name
@@ -40,4 +49,12 @@ public class Seller extends User {
         return Store.listStoreNames(this.getStores());
     }
 
+    public boolean equals(Object o) {
+        if (o instanceof Seller) {
+            Seller seller = (Seller) o;
+            return (seller.getName().equals(this.getName()));
+        } else {
+            return false;
+        }
+    }
 }

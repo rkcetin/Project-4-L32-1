@@ -2,6 +2,17 @@ import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Project 4 -- Store Class
+ *
+ * Class holds information about a store which contains a list of products associated with that store.
+ * Includes methods to edit the Store
+ *
+ * @author Steven Chang, Alexander Benson, Stephanie Sun, Chris Xu, Ramazan Cetin, L32
+ *
+ * @version November 6, 2023
+ *
+ */
 
 public class Store implements Serializable {
     private static final long serialVersionUID = 118L;
@@ -35,24 +46,24 @@ public class Store implements Serializable {
 
     }
 
-    //helper function for determining to determine if a store exists within a list of stores returns null if it doesn't
-    public static Store checkStore(String storename, ArrayList<Store> stores) {
-      if(stores == null || storename == null) {
+    //helper function for determining to determine if a store exists within a list of stores; returns null if it doesn't
+    public static Store checkStore(String storeName, ArrayList<Store> stores) {
+      if (stores == null || storeName == null) {
           throw new NullPointerException();
       }
       ArrayList<Store> filteredStores = new ArrayList<Store>(stores
               .stream()
-              .filter(store -> store.getStoreName().equalsIgnoreCase(storename) )
+              .filter(store -> store.getStoreName().equalsIgnoreCase(storeName) )
               .collect(Collectors.toList()));
-      if(filteredStores.isEmpty()) {
+      if (filteredStores.isEmpty()) {
           return null;
       }
       return filteredStores.get(0);
     }
 
     //helper function to remove a store from a list based on its name
-    public static void removeStore(String storename, ArrayList<Store> stores) {
-        Store storeToRemove = checkStore(storename, stores);
+    public static void removeStore(String storeName, ArrayList<Store> stores) {
+        Store storeToRemove = checkStore(storeName, stores);
         if (storeToRemove == null) {
             throw new IllegalArgumentException();
         }
@@ -62,10 +73,10 @@ public class Store implements Serializable {
 
     //helper function to get names of list of stores
     public static String[] listStoreNames(ArrayList<Store> stores) {
-        if(stores == null) {
+        if (stores == null) {
             throw new NullPointerException();
         }
-        if(stores.isEmpty()) {
+        if (stores.isEmpty()) {
             return new String[0];
         }
         List<String> output = stores
@@ -135,6 +146,15 @@ public class Store implements Serializable {
                     }
                 }
             }
+        }
+    }
+
+    public boolean equals(Object o) {
+        if (o instanceof Store) {
+            Store store = (Store) o;
+            return (store.getStoreName().equals(this.getStoreName()) && store.seller.equals(this.seller));
+        } else {
+            return false;
         }
     }
 
