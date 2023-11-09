@@ -92,6 +92,7 @@ public class Storage {
         try {
             File userFile = new File("Users.ser");
             if (userFile.createNewFile()) {
+                storeUsers(users);
                 throw new FileNotFoundException("User.ser no values");
             }
             FileInputStream fis = new FileInputStream(userFile);
@@ -117,6 +118,7 @@ public class Storage {
         try {
             File storeFile = new File("Stores.ser");
             if (storeFile.createNewFile()) {
+                storeStores(stores);
                 throw new FileNotFoundException("Stores.ser no values");
             }
             FileInputStream fis = new FileInputStream(storeFile);
@@ -142,6 +144,7 @@ public class Storage {
         try {
             File productFile = new File("Products.ser");
             if (productFile.createNewFile()) {
+                storeProducts(products);
                 throw new FileNotFoundException("Products.ser no values");
             }
             FileInputStream fis = new FileInputStream(productFile);
