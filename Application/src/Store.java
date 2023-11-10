@@ -21,7 +21,7 @@ public class Store implements Serializable {
     private ArrayList<Product> products;
     private Seller seller;
     private double sales;
-
+    private int soldProduct;
 
     public Store(String storeName, ArrayList<Product> products , Seller seller ) {
         if (storeName == null || products == null || seller == null) {
@@ -95,7 +95,7 @@ public class Store implements Serializable {
     }
 
     public void addProduct( String name, String description, int stock, double price , ArrayList<Product> product) {
-        Product addedProduct = new Product(this , name , description, stock , price);
+        Product addedProduct = new Product(this , name , description, stock , price, 0);
         this.products.add(addedProduct);
         product.add(addedProduct);
     }
@@ -156,12 +156,24 @@ public class Store implements Serializable {
         }
     }
 
+    public int getSoldProduct() {
+        return soldProduct;
+    }
+
+    public void incrementSoldProduct() {
+        soldProduct++;
+    }
+
     public double getSales() {
         return sales;
     }
 
     public void incrementSales(double sales) {
         this.sales += sales;
+    }
+
+    public ArrayList<Product> getProducts() {
+        return products;
     }
 
     public boolean equals(Object o) {
