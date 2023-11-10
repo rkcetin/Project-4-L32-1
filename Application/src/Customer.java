@@ -60,7 +60,7 @@ public class Customer extends User {
 
     public void purchase(Scanner scan) {
         String transactionHistory = "";
-        System.out.printf("Purchase cart items for $%d?\n1. Confirm purchase\n2. Exit\n", this.calculatePrice());
+        System.out.printf("Purchase cart items for $%.2f?\n1. Confirm purchase\n2. Exit\n", this.calculatePrice());
         try {
             int choice = scan.nextInt();
             scan.nextLine();
