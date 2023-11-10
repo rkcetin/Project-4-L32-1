@@ -4,6 +4,7 @@ public class Main {
 
     public static void main(String[] args) {
         ArrayList<User> users = Storage.getUsers();
+        System.out.println(Arrays.deepToString(users.toArray()));
         ArrayList<Product> products = Storage.getProducts();
         ArrayList<Store> stores = Storage.getStores();
 
@@ -38,6 +39,8 @@ public class Main {
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
+        System.out.println(workingUser.getName());
+        Storage.storeUsers(users);
     }
 
 }
