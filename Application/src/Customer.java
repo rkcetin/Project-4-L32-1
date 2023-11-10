@@ -14,7 +14,7 @@ import java.util.*;
 
 public class Customer extends User {
     private ArrayList<Product> cart;
-
+    private ArrayList<String> transactionHistory;
     public Customer(String name, String password, String salt) {
         super(name, password , salt);
     }
@@ -23,11 +23,26 @@ public class Customer extends User {
         return cart;
     }
 
+    //might not be necessary without "int quantity"
     public void addToCart(Store store, String name) {
         ArrayList<Product> products = Storage.getProducts();
-        for (int i = 0; i < products.size(); i++) {
-            if (store.equals(products.get(i).getStore()) && name.equals(products.get(i).getProductName())) {
-                cart.add(products.get(i));
+        for (Product product : products) {
+            if (store.equals(product.getStore()) && name.equals(product.getProductName())) {
+                cart.add(product);
+                return;
+            }
+        }
+    }
+
+    //overloaded
+    public void addToCart(Store store, String name, int quantity) {
+        ArrayList<Product> products = Storage.getProducts();
+        for (Product product : products) {
+            if (store.equals(product.getStore()) && name.equals(product.getProductName())) {
+                for (int j = 0; j < quantity; j++) {
+                    cart.add(product);
+
+                }
                 return;
             }
         }
@@ -42,20 +57,30 @@ public class Customer extends User {
         }
     }
 
-    public void purchase(Scanner scan) {
-        System.out.printf("Purchase cart items for $%d?\n1. Confirm purchase\n2. Exit\n", this.calculatePrice());
+    public void purchaseCart(Scanner scan) {
+        System.out.printf("Purchase all cart items for $%.2f?\n1. Confirm purchase\n2. Exit\n", this.calculatePrice());
         try {
             int choice = scan.nextInt();
             scan.nextLine();
             if (choice == 1) {
-                //TODO
+                for (Product product : cart) {
+                    this.transactionHistory.add(product.toString2());
+                    product.decrementStock();
+                }
+                for (int j = cart.size() - 1; j >= 0; j--) {
+                    cart.get(j).getStore().incrementSales(cart.get(j).getPrice());
+                    cart.remove(j);
+                }
+                this.setTransactionHistory(transactionHistory);
             } else if (choice == 2) {
-                //TODO
+                System.out.println("You have exited the purchase screen.");
             } else {
                 System.out.println("Invalid input, try again.");
             }
         } catch (InputMismatchException ime) {
             System.out.println("Invalid input, try again.");
+        } catch (IllegalArgumentException iae) {
+            System.out.println("Cannot purchase all items, stock exceeded.");
         }
     }
 
@@ -63,10 +88,22 @@ public class Customer extends User {
         this.cart = cart;
     }
 
-    public int calculatePrice() {
-        int price = 0;
-        for (int i = 0; i < cart.size(); i++) {
-            price += cart.get(i).getPrice();
+    public String getTransactionHistory() {
+        String history = "";
+        for (int i  = 0; i < transactionHistory.size(); i++) {
+            history += transactionHistory.get(i) + "\n";
+        }
+        return history;
+    }
+
+    public void setTransactionHistory(ArrayList<String> transactionHistory) {
+        this.transactionHistory = transactionHistory;
+    }
+
+    public double calculatePrice() {
+        double price = 0;
+        for (Product product : cart) {
+            price += product.getPrice();
         }
         return price;
     }
