@@ -1,6 +1,7 @@
 import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.io.*;
 
 /**
  * Project 4 -- Store Class
@@ -94,6 +95,9 @@ public class Store implements Serializable {
 
     public void addProduct(Store store, String name, String description, int stock, double price) {
         products.add(new Product(store, name, description, stock, price));
+    }
+    public void addProduct(Product product) {
+        products.add(product);
     }
 
     public void removeProduct(String name) {

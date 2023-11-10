@@ -180,13 +180,13 @@ public class Product implements Serializable {
     }
     public String toStringCsvFormat(boolean hasCommas) {
         if (hasCommas) {
-            return String.format("%s,%s,$%.2f,%s",
+            return String.format("%s,%s,%.2f,%s",
                     this.getProductName(),
                     this.getProductDescription(),
                     this.getPrice(),
                     this.getStore().getStoreName());
         } else {
-            return String.format("%s%s$%.2f%s",
+            return String.format("%s%s%.2f%s",
                     this.getProductName(),
                     this.getProductDescription(),
                     this.getPrice(),
