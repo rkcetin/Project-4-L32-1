@@ -96,6 +96,14 @@ public class Product implements Serializable {
         return price;
     }
 
+    public void decrementStock() {
+        this.stock --;
+    }
+
+    public void incrementSales() {
+
+    }
+
     // Helper methods
     //check/get product method by string
     public static Product checkProduct(String productName, ArrayList<Product> products) {
@@ -178,6 +186,12 @@ public class Product implements Serializable {
             this.getProductName(), this.getProductDescription(), this.getPrice(), this.getStock(),
                 this.getStore().getStoreName());
     }
+
+    public String toString2() {
+        return String.format("Product<Name: %s, Description: %s, Price: %.2f, Store: %s>",
+                this.getProductName(), this.getProductDescription(), this.getPrice(), this.getStore().getStoreName());
+    }
+
     public String toStringCsvFormat(boolean hasCommas) {
         if (hasCommas) {
             return String.format("%s,%s,%.2f,%s",
