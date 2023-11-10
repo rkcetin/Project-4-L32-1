@@ -1,12 +1,17 @@
 import java.util.*;
 
 public class Main {
+    private static final int USER_INDEX = 0;
+    private static final int STORE_INDEX = 1;
+    private static final int PRODUCT_INDEX = 2;
 
     public static void main(String[] args) {
-        ArrayList<User> users = Storage.getUsers();
-        System.out.println(Arrays.deepToString(users.toArray()));
-        ArrayList<Product> products = Storage.getProducts();
-        ArrayList<Store> stores = Storage.getStores();
+        Object[] data = Storage.getData();
+
+        ArrayList<User> users = (ArrayList<User> ) data[USER_INDEX];
+
+        ArrayList<Product> products =   (ArrayList<Product> ) data[PRODUCT_INDEX];
+        ArrayList<Store> stores =(ArrayList<Store> ) data[STORE_INDEX];
 
         Scanner scanner = new Scanner(System.in);
         System.out.println("1. Login \n2. Sign Up");
@@ -40,7 +45,7 @@ public class Main {
             System.out.println(e.getMessage());
         }
         System.out.println(workingUser.getName());
-        Storage.storeUsers(users);
+        Storage.storeData(users , stores , products);
     }
 
 }

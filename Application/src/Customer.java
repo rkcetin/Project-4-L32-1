@@ -23,15 +23,17 @@ public class Customer extends User {
         return cart;
     }
 
-    public void addToCart(Store store, String name) {
-        ArrayList<Product> products = Storage.getProducts();
-        for (int i = 0; i < products.size(); i++) {
-            if (store.equals(products.get(i).getStore()) && name.equals(products.get(i).getProductName())) {
-                cart.add(products.get(i));
-                return;
-            }
-        }
-    }
+    //public void addToCart(Store store, String name) {
+        // TODO  fix implementatino of get products
+
+      //  ArrayList<Product> products = Storage.getProducts();
+       // for (int i = 0; i < products.size(); i++) {
+        //    if (store.equals(products.get(i).getStore()) && name.equals(products.get(i).getProductName())) {
+         //       cart.add(products.get(i));
+           //     return;
+         //   }
+       // }
+   // }
 
     public void removeFromCart(Store store, String name) {
         for (int i = 0; i < cart.size(); i++) {
