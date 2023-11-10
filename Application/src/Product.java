@@ -21,9 +21,14 @@ public class Product implements Serializable {
     private String productDescription;//the description of the product
     private int stock;//the number of items in stock
     private double price;//the price of the item
+    private int sold;
+
+    public int getSold() {
+        return sold;
+    }
 
     //basic constructor for Product class
-    public Product(Store store, String productName, String productDescription, int stock, double price) {
+    public Product(Store store, String productName, String productDescription, int stock, double price, int sold) {
         if (store == null || productName == null || productDescription == null) {
             throw new NullPointerException();
         }
@@ -100,8 +105,8 @@ public class Product implements Serializable {
         this.stock --;
     }
 
-    public void incrementSales() {
-
+    public void incrementSold() {
+        sold++;
     }
 
     // Helper methods

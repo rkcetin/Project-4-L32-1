@@ -15,7 +15,18 @@ import java.util.*;
 public class Customer extends User {
     private ArrayList<Product> cart;
     private ArrayList<String> transactionHistory;
-    public Customer(String name, String password, String salt) {
+    private ArrayList<Product> transactionHistoryProducts;
+    private int boughtProduct;
+
+    public int getBoughtProduct() {
+        return boughtProduct;
+    }
+
+    public void incrementBoughtProduct() {
+        boughtProduct++;
+    }
+
+    public Customer(String name, String password, String salt, int boughtProduct) {
         super(name, password , salt);
     }
 
@@ -23,25 +34,13 @@ public class Customer extends User {
         return cart;
     }
 
-    //might not be necessary without "int quantity"
-    public void addToCart(Store store, String name) {
-        ArrayList<Product> products = Storage.getProducts();
-        for (Product product : products) {
-            if (store.equals(product.getStore()) && name.equals(product.getProductName())) {
-                cart.add(product);
-                return;
-            }
-        }
-    }
-
-    //overloaded
+    //has quantity parameter
     public void addToCart(Store store, String name, int quantity) {
         ArrayList<Product> products = Storage.getProducts();
         for (Product product : products) {
             if (store.equals(product.getStore()) && name.equals(product.getProductName())) {
                 for (int j = 0; j < quantity; j++) {
                     cart.add(product);
-
                 }
                 return;
             }
@@ -52,36 +51,27 @@ public class Customer extends User {
         for (int i = 0; i < cart.size(); i++) {
             if (cart.get(i).getProductName().equals(name) && cart.get(i).getStore() == store) {
                 cart.remove(i);
-                return;
+                //don't add return once found the product because addToCart method adds multiple identical products if quantity > 1. 
             }
         }
     }
 
     public void purchaseCart(Scanner scan) {
-        System.out.printf("Purchase all cart items for $%.2f?\n1. Confirm purchase\n2. Exit\n", this.calculatePrice());
-        try {
-            int choice = scan.nextInt();
-            scan.nextLine();
-            if (choice == 1) {
-                for (Product product : cart) {
-                    this.transactionHistory.add(product.toString2());
-                    product.decrementStock();
-                }
-                for (int j = cart.size() - 1; j >= 0; j--) {
-                    cart.get(j).getStore().incrementSales(cart.get(j).getPrice());
-                    cart.remove(j);
-                }
-                this.setTransactionHistory(transactionHistory);
-            } else if (choice == 2) {
-                System.out.println("You have exited the purchase screen.");
-            } else {
-                System.out.println("Invalid input, try again.");
+        for (Product product : cart) {
+            if (product.getStock() < 1) {
+                throw new IllegalArgumentException("Not Enough Stock!");
             }
-        } catch (InputMismatchException ime) {
-            System.out.println("Invalid input, try again.");
-        } catch (IllegalArgumentException iae) {
-            System.out.println("Cannot purchase all items, stock exceeded.");
+            this.transactionHistory.add(product.toString2());
+            this.transactionHistoryProducts.add(product);
+            this.boughtProduct++;
+            product.decrementStock();
+            product.incrementSold();
         }
+        for (int j = cart.size() - 1; j >= 0; j--) {
+            cart.get(j).getStore().incrementSales(cart.get(j).getPrice());
+            cart.remove(j);
+        }
+        this.setTransactionHistory(transactionHistory);
     }
 
     public void setCart(ArrayList<Product> cart) {
@@ -106,5 +96,38 @@ public class Customer extends User {
             price += product.getPrice();
         }
         return price;
+    }
+
+    //Returns a string that contains a list of stores that the customer have purchased from before
+    public String dashboardbyBought() {
+        String x = "";
+        ArrayList<String> dashboard = new ArrayList<>();
+        ArrayList<String> y = new ArrayList<>();
+        for (Product product : transactionHistoryProducts) {
+            y.add(product.getStore().getStoreName()); 
+        }
+        for (String k : y) {
+            if (!dashboard.contains(k)) {
+                dashboard.add(k);
+            }
+        }
+        for (int i = 0; i < dashboard.size(); i++) {
+            x += dashboard.get(i) + "\n";
+        }
+        return x;
+    }
+    
+    //Returns a string that contains a list of stores and the number of products they sold
+    public String dashboardbySold() {
+        String x = "";
+        ArrayList<String> dashboard = new ArrayList<>();
+        ArrayList<Store> stores = Storage.getStores();
+        for (Store store : stores) {
+            dashboard.add(String.format("Store name: %s Sold: %d", store.getStoreName(), store.getSoldProduct()));
+        }
+        for (int i = 0; i < dashboard.size(); i++) {
+            x += dashboard.get(i) + "\n";
+        }
+        return x;
     }
 }
