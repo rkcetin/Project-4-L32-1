@@ -85,6 +85,7 @@ public class StorageTest {
         reset();
 
     }
+
     @Test
     public void invalidInputTest() {
         org.junit.Assert.assertThrows(NullPointerException.class , () -> {
