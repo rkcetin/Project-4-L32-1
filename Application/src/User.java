@@ -23,19 +23,21 @@ public class User implements Serializable {
 
     //standard constructor for the User class
     public User(String name, String password, String salt) {
-
         this.name = name;
         this.password = password;
         this.salt = salt;
     }
+
     //returns the name of the user
     public String getName() {
         return name;
     }
+
     //returns the password of the user
     public String getPassword() {
         return password;
     }
+
     //returns the information of the user in a formatted string
     public String toString() {
         return String.format("%s,%s,%s", name, password, salt);
@@ -46,6 +48,7 @@ public class User implements Serializable {
     public static boolean isValidEmail(String email) {
         return email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
     }
+
     // Generate a random salt for password hashing
     // Function to generate a simple random salt
     private static String generateSalt(int length) {
@@ -59,10 +62,12 @@ public class User implements Serializable {
 
         return salt.toString();
     }
+
     // Hash the password using a secure hashing algorithm
     private static String hashPassword(String password, String salt) {
         return password + salt;
     }
+
     public static User isEmailRegistered(String email , ArrayList<User> users) {
         if(email == null || users == null) {
             throw new NullPointerException();
@@ -76,6 +81,7 @@ public class User implements Serializable {
         }
         return filteredUsers.get(0);
     }
+
     // Save user information to the file
     public static User saveUserToDatabase(String email, String hashedPassword, String salt, int role, ArrayList<User> users) {
         User newUser = null;

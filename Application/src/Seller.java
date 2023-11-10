@@ -50,8 +50,7 @@ public class Seller extends User {
     }
 
     public boolean equals(Object o) {
-        if (o instanceof Seller) {
-            Seller seller = (Seller) o;
+        if (o instanceof Seller seller) {
             return (seller.getName().equals(this.getName()));
         } else {
             return false;

@@ -63,6 +63,14 @@ public class Product implements Serializable {
         this.stock = stock;
     }
 
+    public void decrementStock() throws IllegalArgumentException {
+        if (this.stock > 0) {
+            this.stock --;
+        } else {
+            throw new IllegalArgumentException();
+        }
+    }
+
     //sets the price to the given price, throws illegal argument exception if less than zero
     public void setPrice(double price) {
         if (price < 0) {
@@ -174,10 +182,16 @@ public class Product implements Serializable {
 
    //formats all the information into a string and returns it
     public String toString() {
-        return String.format("Product<Name: %s, Description: %s, Price: %.2f, Stock: %d, Store: %s>",
+        return String.format("Product<Name: %s, Description: %s, Price: %.2f, Stock: %d, Store: %s>\n",
             this.getProductName(), this.getProductDescription(), this.getPrice(), this.getStock(),
-                this.getStore().getStoreName());
+            this.getStore().getStoreName());
     }
+
+    public String toString2() {
+        return String.format("Product<Name: %s, Description: %s, Price: %.2f, Store: %s>\n",
+            this.getProductName(), this.getProductDescription(), this.getPrice(), this.getStore().getStoreName());
+    }
+
     public String toStringCsvFormat(boolean hasCommas) {
         if (hasCommas) {
             return String.format("%s,%s,$%.2f,%s",

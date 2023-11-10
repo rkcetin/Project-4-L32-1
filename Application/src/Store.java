@@ -19,6 +19,7 @@ public class Store implements Serializable {
     private final String storeName;
     private ArrayList<Product> products;
     private Seller seller;
+    private double sales;
 
 
     public Store(String storeName, ArrayList<Product> products , Seller seller ) {
@@ -147,6 +148,14 @@ public class Store implements Serializable {
                 }
             }
         }
+    }
+
+    public double getSales() {
+        return sales;
+    }
+
+    public void incrementSales(double sales) {
+        this.sales += sales;
     }
 
     public boolean equals(Object o) {
