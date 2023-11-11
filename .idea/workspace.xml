@@ -7,6 +7,19 @@
     <list default="true" id="ea99b275-fc17-4f01-94ad-9735e5bfa3ed" name="Changes" comment="printer writer parameter changed to true">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
+
+    <list default="true" id="ea99b275-fc17-4f01-94ad-9735e5bfa3ed" name="Changes" comment="Many coding style changes">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Application/src/Customer.java" beforeDir="false" afterPath="$PROJECT_DIR$/Application/src/Customer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Application/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/Application/src/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Application/src/Seller.java" beforeDir="false" afterPath="$PROJECT_DIR$/Application/src/Seller.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Application/src/Storage.java" beforeDir="false" afterPath="$PROJECT_DIR$/Application/src/Storage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Application/src/Store.java" beforeDir="false" afterPath="$PROJECT_DIR$/Application/src/Store.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Application/test/StorageTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/Application/test/StorageTest.java" afterDir="false" />
+    </list>
+
+    <list default="true" id="ea99b275-fc17-4f01-94ad-9735e5bfa3ed" name="Changes" comment="string to arraylist" />
+
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -85,6 +98,10 @@
     </key>
   </component>
   <component name="RunManager">
+  <component name="RunManager" selected="JUnit.StorageTest.testCrossObjectRelation">
+    <configuration name="TestRunner" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="TestRunner" />
+  <component name="RunManager" selected="Application.Main">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="Main" />
       <module name="Application" />
@@ -92,6 +109,12 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="StorageTest.crossObjectTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Application" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="MAIN_CLASS_NAME" value="StorageTest" />
+      <option name="METHOD_NAME" value="crossObjectTest" />
+      <option name="TEST_OBJECT" value="method" />
     <configuration name="Product" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="Product" />
       <module name="Project-4-L32-1" />
@@ -114,6 +137,21 @@
       <option name="PACKAGE_NAME" value="" />
       <option name="MAIN_CLASS_NAME" value="StorageTest" />
       <option name="METHOD_NAME" value="testStartGet" />
+    <configuration name="StorageTest.getDataTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Application" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="MAIN_CLASS_NAME" value="StorageTest" />
+      <option name="METHOD_NAME" value="getDataTest" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="StorageTest.testCrossObjectRelation" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Application" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="MAIN_CLASS_NAME" value="StorageTest" />
+      <option name="METHOD_NAME" value="testCrossObjectRelation" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -131,11 +169,18 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.StorageTest.testCrossObjectRelation" />
+        <item itemvalue="Application.TestRunner" />
+        <item itemvalue="JUnit.StorageTest.getDataTest" />
+        <item itemvalue="JUnit.StorageTest.crossObjectTest" />
+        <item itemvalue="JUnit.StorageTest.testStartGet" />
+        <item itemvalue="Application.Product" />
         <item itemvalue="Application.Main" />
         <item itemvalue="JUnit.StorageTest.testUser" />
         <item itemvalue="Application.Product" />
         <item itemvalue="Application.Product" />
         <item itemvalue="Application.Main" />
+        <item itemvalue="Application.TestRunner" />
       </list>
     </recent_temporary>
   </component>
