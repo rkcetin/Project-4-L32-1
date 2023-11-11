@@ -111,36 +111,6 @@ public class Customer extends User {
         this.transactionHistory = transactionHistory;
     }
 
-    public static String sortByOccurrences(ArrayList<String> stores, boolean highestToLowest) throws IOException {
-        BufferedReader bfr = new BufferedReader(new FileReader("statistics.txt"));
-        Map<String, Integer> storeOccurrences = new HashMap<>();
-        String a = "";
-        String line;
-
-        while ((line = bfr.readLine()) != null) {
-            for (int i = 0; i < stores.size(); i++) {
-                if (line.split(",")[0].equals(stores.get(i))) {
-                    String key = stores.get(i);
-                    storeOccurrences.put(key, storeOccurrences.getOrDefault(key, 0) + 1);
-                }
-            }
-        }
-
-        List<Map.Entry<String, Integer>> sortedEntries = storeOccurrences.entrySet()
-                .stream()
-                .sorted((entry1, entry2) -> highestToLowest ?
-                        Integer.compare(entry2.getValue(), entry1.getValue()) :
-                        Integer.compare(entry1.getValue(), entry2.getValue()))
-                .collect(Collectors.toList());
-
-        for (Map.Entry<String, Integer> entry : sortedEntries) {
-            String storeName = entry.getKey();
-            int totalOccurrences = entry.getValue();
-            a += totalOccurrences + " purchases from " + storeName + "\n";
-        }
-        return a;
-    }
-
     public double calculatePrice() {
         double price = 0;
         for (Product product : cart) {
