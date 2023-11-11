@@ -1,3 +1,5 @@
 # ignore the class files
 *.class
 *.ser
+*.xml
+*.txt

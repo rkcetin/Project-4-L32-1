@@ -47,8 +47,11 @@ public class Product implements Serializable {
 
     //sets Product name to given name, throws null pointer exception if null
     public void setProductName(String productName) {
-        if (productName == null || productName.isEmpty()) {
+        if (productName == null ) {
             throw new NullPointerException();
+        }
+        if (productName.isEmpty()) {
+            throw new IllegalArgumentException();
         }
         this.productName = productName;
     }
