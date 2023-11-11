@@ -82,8 +82,10 @@ public class User implements Serializable {
         switch(role) {
             case 1:
                 newUser = new Seller(email, hashedPassword , salt);
+                break;
             case 2:
                 newUser = new Customer(email, hashedPassword, salt,0);
+                break;
 
         }
 
