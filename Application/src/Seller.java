@@ -1,7 +1,6 @@
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.util.ArrayList;
+import java.io.*;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Project 4 -- Seller Class
@@ -23,6 +22,7 @@ public class Seller extends User {
     private static final int PRICE_INDEX = 4;
     private static final int SPECIFC_LENGTH = 5;
     private ArrayList<Store> stores;
+    private double totalSales;
 
     //standard constructor that extends from the user class
     public Seller(String name, String password , String salt) {
@@ -57,6 +57,89 @@ public class Seller extends User {
     public String[] getSellerStoreNames() {
         return Store.listStoreNames(this.getStores());
     }
+
+    public double calculateTotalSales() {
+        double sales = 0.0;
+        for (int i = 0; i < this.stores.size(); i++) {
+            sales += this.stores.get(i).getSales();
+        }
+        return sales;
+    }
+
+    public ArrayList<String> displayUnsortedStatistics() throws IOException {
+        BufferedReader bfr = new BufferedReader(new FileReader("statistics.txt"));
+        Map<String, Integer> productCounts = new HashMap<>();
+        ArrayList<String> unsortedStats = new ArrayList<>();
+
+        String line;
+
+        while ((line = bfr.readLine()) != null) {
+            for (Store store : stores) {
+                if (line.split(",")[0].equals(store.getStoreName())) {
+                    String key = line.trim();
+                    productCounts.put(key, productCounts.getOrDefault(key, 0) + 1);
+                }
+            }
+        }
+
+        for (Map.Entry<String, Integer> entry : productCounts.entrySet()) {
+            String product = entry.getKey();
+            int count = entry.getValue();
+            String countString;
+            if (count > 1) {
+                countString = count + "x ";
+            } else {
+                countString = "";
+            }
+            unsortedStats.add(countString + product.split(",")[0] + "," + product.split(",")[1] + ","
+                    + product.split(",")[2]);
+            System.out.println(countString + product);
+        }
+        return unsortedStats;
+    }
+
+    //has to run with displayUnsortedStatistics()
+    public static String sortStatisticsBySales(String statisticsResult, boolean highestToLowest) {
+        List<String> lines = Arrays.asList(statisticsResult.split("\n"));
+        lines.sort((line1, line2) -> {
+            double sales1 = Double.parseDouble(line1.split(",")[2]);
+            double sales2 = Double.parseDouble(line2.split(",")[2]);
+            return highestToLowest ? Double.compare(sales2, sales1) : Double.compare(sales1, sales2);
+        });
+
+        return String.join("\n", lines);
+    }
+
+    public static String sortByOccurrences(ArrayList<String> stores, boolean highestToLowest) throws IOException {
+        BufferedReader bfr = new BufferedReader(new FileReader("statistics.txt"));
+        Map<String, Integer> storeOccurrences = new HashMap<>();
+        String a = "";
+        String line;
+
+        while ((line = bfr.readLine()) != null) {
+            for (int i = 0; i < stores.size(); i++) {
+                if (line.split(",")[0].equals(stores.get(i))) {
+                    String key = stores.get(i);
+                    storeOccurrences.put(key, storeOccurrences.getOrDefault(key, 0) + 1);
+                }
+            }
+        }
+
+        List<Map.Entry<String, Integer>> sortedEntries = storeOccurrences.entrySet()
+                .stream()
+                .sorted((entry1, entry2) -> highestToLowest ?
+                        Integer.compare(entry2.getValue(), entry1.getValue()) :
+                        Integer.compare(entry1.getValue(), entry2.getValue()))
+                .collect(Collectors.toList());
+
+        for (Map.Entry<String, Integer> entry : sortedEntries) {
+            String storeName = entry.getKey();
+            int totalOccurrences = entry.getValue();
+            a += totalOccurrences + " purchases from " + storeName + "\n";
+        }
+        return a;
+    }
+
     public void importProducts(String filepath, ArrayList<Product> products) throws Exception {
         if (filepath == null || products == null) {
             throw new NullPointerException();
@@ -72,17 +155,17 @@ public class Seller extends User {
             String currentLine = bfr.readLine();
             while (currentLine != null) {
                 String[] workingList = currentLine.split(",");
-                if (workingList.length != SPECIFC_LENGTH ) {
+                if (workingList.length != SPECIFC_LENGTH) {
                     throw new Exception();
                 }
-                if(workingList[NAME_INDEX].isEmpty()  || workingList[DESCRIPTION_INDEX].isEmpty()) {
+                if (workingList[NAME_INDEX].isEmpty() || workingList[DESCRIPTION_INDEX].isEmpty()) {
                     throw new Exception();
                 }
-                if (  Store.checkStore( workingList[STORE_INDEX] , this.getStores()) == null) { // will throw exception if not in seller store list
+                if (Store.checkStore(workingList[STORE_INDEX], this.getStores()) == null) { // will throw exception if not in seller store list
                     throw new Exception();
                 }
-                Integer.parseInt( workingList[STOCK_INDEX]); // will throw exception if wrong format
-                Double.parseDouble( workingList[PRICE_INDEX]);  // will throw exception if wrong format
+                Integer.parseInt(workingList[STOCK_INDEX]); // will throw exception if wrong format
+                Double.parseDouble(workingList[PRICE_INDEX]);  // will throw exception if wrong format
                 csvInputs.add(workingList);
 
                 currentLine = bfr.readLine();
@@ -90,22 +173,19 @@ public class Seller extends User {
             fr.close();
             bfr.close();
             for (Object[] line : csvInputs) {
-                Store inputStore = Store.checkStore((String) line[STORE_INDEX] , this.getStores() ) ;
+                Store inputStore = Store.checkStore((String) line[STORE_INDEX], this.getStores());
                 String inputName = (String) line[NAME_INDEX];
                 String inputDesc = (String) line[DESCRIPTION_INDEX];
-                int inputQuantity = Integer.parseInt( (String) line[STOCK_INDEX]);
-                double inputPrice = Double.parseDouble( (String) line[PRICE_INDEX]) ;
-                Product inputProduct = new Product(inputStore , inputName , inputDesc , inputQuantity , inputPrice);
+                int inputQuantity = Integer.parseInt((String) line[STOCK_INDEX]);
+                double inputPrice = Double.parseDouble((String) line[PRICE_INDEX]);
+                Product inputProduct = new Product(inputStore, inputName, inputDesc, inputQuantity, inputPrice);
                 inputStore.addProduct(inputProduct);
                 products.add(inputProduct);
 
             }
 
-
-
         } catch (Exception e) {
-            throw new Exception("problem reading file");
-
+            throw new Exception("Problem reading file");
         }
     }
 

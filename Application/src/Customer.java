@@ -1,3 +1,6 @@
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.*;
 
 /**
@@ -41,7 +44,6 @@ public class Customer extends User {
             if (store.equals(product.getStore()) && name.equals(product.getProductName())) {
                 for (int j = 0; j < quantity; j++) {
                     cart.add(product);
-
                 }
                 return;
             }
@@ -57,8 +59,11 @@ public class Customer extends User {
         }
     }
 
-    public void purchaseCart(Scanner scan) {
+    public void purchaseCart(Scanner scan) throws IOException {
+        PrintWriter pw = new PrintWriter(new FileWriter("statistics.txt", false));
+
         System.out.printf("Purchase all cart items for $%.2f?\n1. Confirm purchase\n2. Exit\n", this.calculatePrice());
+        int count = 0;
         try {
             int choice = scan.nextInt();
             scan.nextLine();
@@ -66,11 +71,15 @@ public class Customer extends User {
                 for (Product product : cart) {
                     this.transactionHistory.add(product.toString2());
                     product.decrementStock();
+                    count++;
                 }
                 for (int j = cart.size() - 1; j >= 0; j--) {
                     cart.get(j).getStore().incrementSales(cart.get(j).getPrice());
+                    pw.println(String.format("%s,%s,%s,%.2f", cart.get(j).getStore().getStoreName(), this.getName(),
+                            cart.get(j).getProductName(), cart.get(j).getPrice()));
                     cart.remove(j);
                 }
+                pw.flush();
                 this.setTransactionHistory(transactionHistory);
             } else if (choice == 2) {
                 System.out.println("You have exited the purchase screen.");
@@ -81,6 +90,9 @@ public class Customer extends User {
             System.out.println("Invalid input, try again.");
         } catch (IllegalArgumentException iae) {
             System.out.println("Cannot purchase all items, stock exceeded.");
+            for (int i = 0; i < count; i++) {
+                cart.get(i).incrementStock();
+            }
         }
     }
 
@@ -90,8 +102,8 @@ public class Customer extends User {
 
     public String getTransactionHistory() {
         String history = "";
-        for (int i  = 0; i < transactionHistory.size(); i++) {
-            history += transactionHistory.get(i) + "\n";
+        for (String s : transactionHistory) {
+            history += s + "\n";
         }
         return history;
     }

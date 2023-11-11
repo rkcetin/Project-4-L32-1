@@ -4,7 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ea99b275-fc17-4f01-94ad-9735e5bfa3ed" name="Changes" comment="string to arraylist" />
+    <list default="true" id="ea99b275-fc17-4f01-94ad-9735e5bfa3ed" name="Changes" comment="re-added accidentally deleted methods">
+      <change afterPath="$PROJECT_DIR$/Application/test/CustomerTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Application/src/Customer.java" beforeDir="false" afterPath="$PROJECT_DIR$/Application/src/Customer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Application/src/Product.java" beforeDir="false" afterPath="$PROJECT_DIR$/Application/src/Product.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Application/src/Seller.java" beforeDir="false" afterPath="$PROJECT_DIR$/Application/src/Seller.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Application/src/Store.java" beforeDir="false" afterPath="$PROJECT_DIR$/Application/src/Store.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -76,7 +83,7 @@
   <component name="Push.Settings">
     <option name="SHOW_DETAILS_PANEL" value="false" />
   </component>
-  <component name="RunManager" selected="Application.Main">
+  <component name="RunManager">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="Main" />
       <module name="Application" />
@@ -87,13 +94,6 @@
     <configuration name="Product" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="Product" />
       <module name="Project-4-L32-1" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="TestRunner" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="TestRunner" />
-      <module name="Application" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -118,13 +118,23 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="StorageTest.testUser" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Application" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="MAIN_CLASS_NAME" value="StorageTest" />
+      <option name="METHOD_NAME" value="testUser" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.Main" />
+        <item itemvalue="JUnit.StorageTest.testUser" />
+        <item itemvalue="Application.Product" />
         <item itemvalue="Application.Product" />
         <item itemvalue="Application.Main" />
-        <item itemvalue="Application.Product" />
-        <item itemvalue="Application.Main" />
-        <item itemvalue="Application.TestRunner" />
       </list>
     </recent_temporary>
   </component>
@@ -141,6 +151,8 @@
       <workItem from="1699307296275" duration="4602000" />
       <workItem from="1699332952772" duration="4095000" />
       <workItem from="1699549743708" duration="4772000" />
+      <workItem from="1699654624293" duration="9455000" />
+      <workItem from="1699672862583" duration="1650000" />
     </task>
     <task id="LOCAL-00001" summary="Edited coding style">
       <option name="closed" value="true" />
@@ -190,7 +202,15 @@
       <option name="project" value="LOCAL" />
       <updated>1699637657975</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="re-added accidentally deleted methods">
+      <option name="closed" value="true" />
+      <created>1699639057912</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1699639057912</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -223,6 +243,18 @@
     <MESSAGE value="Edited coding style" />
     <MESSAGE value="Many coding style changes" />
     <MESSAGE value="string to arraylist" />
-    <option name="LAST_COMMIT_MESSAGE" value="string to arraylist" />
+    <MESSAGE value="re-added accidentally deleted methods" />
+    <option name="LAST_COMMIT_MESSAGE" value="re-added accidentally deleted methods" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/Application/src/Store.java</url>
+          <line>63</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
