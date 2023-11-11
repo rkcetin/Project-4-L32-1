@@ -83,7 +83,7 @@ public class User implements Serializable {
             case 1:
                 newUser = new Seller(email, hashedPassword , salt);
             case 2:
-                newUser = new Customer(email, hashedPassword, salt);
+                newUser = new Customer(email, hashedPassword, salt,0);
 
         }
 

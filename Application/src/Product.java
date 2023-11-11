@@ -21,6 +21,11 @@ public class Product implements Serializable {
     private String productDescription;//the description of the product
     private int stock;//the number of items in stock
     private double price;//the price of the item
+    private int sold;
+
+    public int getSold() {
+        return sold;
+    }
 
     //basic constructor for Product class
     public Product(Store store, String productName, String productDescription, int stock, double price) {
@@ -35,6 +40,7 @@ public class Product implements Serializable {
         this.productDescription = productDescription;
         this.stock = stock;
         this.price = price;
+        this.sold = 0;
     }
 
     // SETTER METHODS
@@ -96,12 +102,19 @@ public class Product implements Serializable {
         return price;
     }
 
-    public void decrementStock() {
-        this.stock --;
+    public void decrementStock() throws IllegalArgumentException {
+        int newStock = this.stock--;
+        if (newStock < 0) {
+            throw new IllegalArgumentException();
+        }
     }
 
-    public void incrementSales() {
+    public void incrementStock() {
+        this.stock++;
+    }
 
+    public void incrementSold() {
+        sold++;
     }
 
     // Helper methods
