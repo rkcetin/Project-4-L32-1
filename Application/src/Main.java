@@ -60,9 +60,9 @@ public class Main {
                         break;
                     case 2:
                         if (role == 1) {
-                            workingUser = new Customer();
+                            workingUser = User.signup(email, password, role, users);
                         } else if (role == 2) {
-                            workingUser = new Seller();
+                            workingUser = User.signup(email, password, role, users);
                         } else {
                             throw new Exception("Invalid Role for Signup");
                         }
@@ -86,11 +86,10 @@ public class Main {
             scanner.nextLine();
             switch (choice) {
                 case 1 -> {
-                    yield Seller.getStoreNames();
+
                     //if seller is new, no stores are shown
                 }
                 case 2 -> {
-                    yield
                     //
                 }
                 case 3 -> {
