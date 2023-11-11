@@ -1,4 +1,6 @@
+import java.io.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Project 4 -- Customer Class
@@ -90,11 +92,40 @@ public class Customer extends User {
         }
     }
 
-    public void purchaseCart() {
-        for (Product product: cart) {
-            if (product.getStock() < 1) {
-                throw new IllegalArgumentException("Not Enough Stock!");
+    public void purchaseCart(Scanner scan) throws IOException, IllegalArgumentException {
+        PrintWriter pw = new PrintWriter(new FileWriter("statistics.txt", true));
+
+        System.out.printf("Purchase all cart items for $%.2f?\n1. Confirm purchase\n2. Exit\n", this.calculatePrice());
+        int count = 0;
+        try {
+            int choice = scan.nextInt();
+            scan.nextLine();
+            if (choice == 1) {
+                for (Product value : cart) {
+                    if (value.getStock() < 1) {
+                        throw new IllegalArgumentException("Stock exceeded!");
+                    }
+                }
+                for (Product product : cart) {
+                    this.transactionHistory.add(product.toString2());
+                    product.decrementStock();
+                    count++;
+                }
+                for (int j = cart.size() - 1; j >= 0; j--) {
+                    cart.get(j).getStore().incrementSales(cart.get(j).getPrice());
+                    pw.println(String.format("%s,%s,%s,%.2f", cart.get(j).getStore().getStoreName(), this.getName(),
+                            cart.get(j).getProductName(), cart.get(j).getPrice()));
+                    cart.remove(j);
+                }
+                pw.flush();
+                this.setTransactionHistory(transactionHistory);
+            } else if (choice == 2) {
+                System.out.println("You have exited the purchase screen.");
+            } else {
+                System.out.println("Invalid input, try again.");
             }
+        } catch (InputMismatchException ime) {
+            System.out.println("Invalid input, try again.");
         }
         for (Product product : cart) {
             this.transactionHistory.add(product.toString2());
@@ -118,14 +149,44 @@ public class Customer extends User {
 
     public String getTransactionHistory() {
         String history = "";
-        for (int i  = 0; i < transactionHistory.size(); i++) {
-            history += transactionHistory.get(i) + "\n";
+        for (String s : transactionHistory) {
+            history += s + "\n";
         }
         return history;
     }
 
     public void setTransactionHistory(ArrayList<String> transactionHistory) {
         this.transactionHistory = transactionHistory;
+    }
+
+    public static String sortByOccurrences(ArrayList<String> stores, boolean highestToLowest) throws IOException {
+        BufferedReader bfr = new BufferedReader(new FileReader("statistics.txt"));
+        Map<String, Integer> storeOccurrences = new HashMap<>();
+        String a = "";
+        String line;
+
+        while ((line = bfr.readLine()) != null) {
+            for (int i = 0; i < stores.size(); i++) {
+                if (line.split(",")[0].equals(stores.get(i))) {
+                    String key = stores.get(i);
+                    storeOccurrences.put(key, storeOccurrences.getOrDefault(key, 0) + 1);
+                }
+            }
+        }
+
+        List<Map.Entry<String, Integer>> sortedEntries = storeOccurrences.entrySet()
+                .stream()
+                .sorted((entry1, entry2) -> highestToLowest ?
+                        Integer.compare(entry2.getValue(), entry1.getValue()) :
+                        Integer.compare(entry1.getValue(), entry2.getValue()))
+                .collect(Collectors.toList());
+
+        for (Map.Entry<String, Integer> entry : sortedEntries) {
+            String storeName = entry.getKey();
+            int totalOccurrences = entry.getValue();
+            a += totalOccurrences + " purchases from " + storeName + "\n";
+        }
+        return a;
     }
 
     public double calculatePrice() {
