@@ -95,8 +95,10 @@ public class Seller extends User {
                 String inputDesc = (String) line[DESCRIPTION_INDEX];
                 int inputQuantity = Integer.parseInt( (String) line[STOCK_INDEX]);
                 double inputPrice = Double.parseDouble( (String) line[PRICE_INDEX]) ;
-                Product inputProduct = new Product(inputStore , inputName , inputDesc , inputQuantity , inputPrice);
-                inputStore.addProduct(inputProduct, products);
+
+                Product inputProduct = new Product(inputStore , inputName , inputDesc , inputQuantity , inputPrice, 0);
+                inputStore.addProduct(inputProduct);
+                products.add(inputProduct);
 
 
             }
@@ -117,5 +119,22 @@ public class Seller extends User {
             return false;
         }
     }
-
+    
+    public String dashboardProducts() {
+        String x = "";
+        ArrayList<String> dashboard = new ArrayList<>();
+        for (Store store : stores) {
+            for (Product product : store.getProducts()) {
+                dashboard.add(String.format("Product name: %s Sold: %d", product.getProductName(), product.getSold()));
+            }
+        }
+        for (int i = 0; i < dashboard.size(); i++) {
+            x += dashboard.get(i);
+        }
+        return x;
+    }
+    //need list of customers
+    // public ArrayList<String> dashboardPurchased() {
+        
+    // }
 }

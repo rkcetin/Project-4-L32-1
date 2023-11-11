@@ -4,6 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
+<<<<<<< HEAD
     <list default="true" id="ea99b275-fc17-4f01-94ad-9735e5bfa3ed" name="Changes" comment="Many coding style changes">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Application/src/Customer.java" beforeDir="false" afterPath="$PROJECT_DIR$/Application/src/Customer.java" afterDir="false" />
@@ -13,6 +14,9 @@
       <change beforePath="$PROJECT_DIR$/Application/src/Store.java" beforeDir="false" afterPath="$PROJECT_DIR$/Application/src/Store.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Application/test/StorageTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/Application/test/StorageTest.java" afterDir="false" />
     </list>
+=======
+    <list default="true" id="ea99b275-fc17-4f01-94ad-9735e5bfa3ed" name="Changes" comment="string to arraylist" />
+>>>>>>> 84c3d43530f4eb3a0d1a27c54ce44f15d8a8d81a
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -28,7 +32,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="main" />
+        <entry key="$PROJECT_DIR$" value="customer-functions" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -84,20 +88,39 @@
   <component name="Push.Settings">
     <option name="SHOW_DETAILS_PANEL" value="false" />
   </component>
+<<<<<<< HEAD
   <component name="RunManager" selected="JUnit.StorageTest.testCrossObjectRelation">
     <configuration name="TestRunner" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="TestRunner" />
+=======
+  <component name="RunManager" selected="Application.Main">
+    <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="Main" />
+>>>>>>> 84c3d43530f4eb3a0d1a27c54ce44f15d8a8d81a
       <module name="Application" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+<<<<<<< HEAD
     <configuration name="StorageTest.crossObjectTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="Application" />
       <option name="PACKAGE_NAME" value="" />
       <option name="MAIN_CLASS_NAME" value="StorageTest" />
       <option name="METHOD_NAME" value="crossObjectTest" />
       <option name="TEST_OBJECT" value="method" />
+=======
+    <configuration name="Product" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="Product" />
+      <module name="Project-4-L32-1" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="TestRunner" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="TestRunner" />
+      <module name="Application" />
+>>>>>>> 84c3d43530f4eb3a0d1a27c54ce44f15d8a8d81a
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -134,11 +157,19 @@
     </configuration>
     <recent_temporary>
       <list>
+<<<<<<< HEAD
         <item itemvalue="JUnit.StorageTest.testCrossObjectRelation" />
         <item itemvalue="Application.TestRunner" />
         <item itemvalue="JUnit.StorageTest.getDataTest" />
         <item itemvalue="JUnit.StorageTest.crossObjectTest" />
         <item itemvalue="JUnit.StorageTest.testStartGet" />
+=======
+        <item itemvalue="Application.Product" />
+        <item itemvalue="Application.Main" />
+        <item itemvalue="Application.Product" />
+        <item itemvalue="Application.Main" />
+        <item itemvalue="Application.TestRunner" />
+>>>>>>> 84c3d43530f4eb3a0d1a27c54ce44f15d8a8d81a
       </list>
     </recent_temporary>
   </component>
@@ -196,7 +227,15 @@
       <option name="project" value="LOCAL" />
       <updated>1699479436830</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="string to arraylist">
+      <option name="closed" value="true" />
+      <created>1699637657975</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1699637657975</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -228,6 +267,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Edited coding style" />
     <MESSAGE value="Many coding style changes" />
-    <option name="LAST_COMMIT_MESSAGE" value="Many coding style changes" />
+    <MESSAGE value="string to arraylist" />
+    <option name="LAST_COMMIT_MESSAGE" value="string to arraylist" />
   </component>
 </project>

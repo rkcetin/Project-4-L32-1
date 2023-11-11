@@ -21,9 +21,14 @@ public class Product implements Serializable {
     private String productDescription;//the description of the product
     private int stock;//the number of items in stock
     private double price;//the price of the item
+    private int sold;
+
+    public int getSold() {
+        return sold;
+    }
 
     //basic constructor for Product class
-    public Product(Store store, String productName, String productDescription, int stock, double price) {
+    public Product(Store store, String productName, String productDescription, int stock, double price, int sold) {
         if (store == null || productName == null || productDescription == null) {
             throw new NullPointerException();
         }
@@ -94,6 +99,14 @@ public class Product implements Serializable {
     //returns the price
     public double getPrice() {
         return price;
+    }
+
+    public void decrementStock() {
+        this.stock --;
+    }
+
+    public void incrementSold() {
+        sold++;
     }
 
     // Helper methods
@@ -178,6 +191,12 @@ public class Product implements Serializable {
             this.getProductName(), this.getProductDescription(), this.getPrice(), this.getStock(),
                 this.getStore().getStoreName());
     }
+
+    public String toString2() {
+        return String.format("Product<Name: %s, Description: %s, Price: %.2f, Store: %s>",
+                this.getProductName(), this.getProductDescription(), this.getPrice(), this.getStore().getStoreName());
+    }
+
     public String toStringCsvFormat(boolean hasCommas) {
         if (hasCommas) {
             return String.format("%s,%s,%.2f,%s",
