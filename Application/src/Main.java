@@ -59,14 +59,12 @@ public class Main {
                         workingUser = User.login(email, password, users);
                         break;
                     case 2:
-                        if (role == 1) {
+                        if (role == 1 || role == 2) {
                             workingUser = User.signup(email, password, role, users);
-                        } else if (role == 2) {
-                            workingUser = User.signup(email, password, role, users);
+                            users.add(workingUser);  // Assuming workingUser is added to the users list
                         } else {
                             throw new Exception("Invalid Role for Signup");
                         }
-                        users.add(workingUser);  // Assuming workingUser is added to the users list
                         break;
                     default:
                         throw new Exception("Invalid Option");
@@ -74,6 +72,13 @@ public class Main {
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
+
+            if (workingUser instanceof Customer) {
+                // direct to customer menu using generateCustomerMenu
+            } else if (workingUser instanceof Seller) {
+                // direct to seller menu using generateSellerMenu
+            }
+
             System.out.println(workingUser.getName());
             Storage.storeData(users, stores, products);
 
@@ -86,14 +91,13 @@ public class Main {
             scanner.nextLine();
             switch (choice) {
                 case 1 -> {
-
                     //if seller is new, no stores are shown
                 }
                 case 2 -> {
-                    //
+                    //edit account
                 }
                 case 3 -> {
-                    //
+                    //delete account
                 }
                 case 4 -> {
                     //create store function
