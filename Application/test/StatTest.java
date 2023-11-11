@@ -27,7 +27,7 @@ public class StatTest {
         while ((line = bfr.readLine()) != null) {
             for (int i = 0; i < stores.size(); i++) {
                 if (line.split(",")[0].equals(stores.get(i))) {
-                    String key = line.trim();  // Assuming leading/trailing whitespaces don't matter
+                    String key = line.trim();
                     productCounts.put(key, productCounts.getOrDefault(key, 0) + 1);
                 }
             }
