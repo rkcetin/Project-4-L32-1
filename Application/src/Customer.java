@@ -1,4 +1,6 @@
+import java.io.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Project 4 -- Customer Class
@@ -58,22 +60,41 @@ public class Customer extends User {
         }
     }
 
-    public void purchaseCart(Scanner scan) {
-        for (Product product : cart) {
-            if (product.getStock() < 1) {
-                throw new IllegalArgumentException("Not Enough Stock!");
+    public void purchaseCart(Scanner scan) throws IOException, IllegalArgumentException {
+        PrintWriter pw = new PrintWriter(new FileWriter("statistics.txt", true));
+
+        System.out.printf("Purchase all cart items for $%.2f?\n1. Confirm purchase\n2. Exit\n", this.calculatePrice());
+        int count = 0;
+        try {
+            int choice = scan.nextInt();
+            scan.nextLine();
+            if (choice == 1) {
+                for (Product value : cart) {
+                    if (value.getStock() < 1) {
+                        throw new IllegalArgumentException("Stock exceeded!");
+                    }
+                }
+                for (Product product : cart) {
+                    this.transactionHistory.add(product.toString2());
+                    product.decrementStock();
+                    count++;
+                }
+                for (int j = cart.size() - 1; j >= 0; j--) {
+                    cart.get(j).getStore().incrementSales(cart.get(j).getPrice());
+                    pw.println(String.format("%s,%s,%s,%.2f", cart.get(j).getStore().getStoreName(), this.getName(),
+                            cart.get(j).getProductName(), cart.get(j).getPrice()));
+                    cart.remove(j);
+                }
+                pw.flush();
+                this.setTransactionHistory(transactionHistory);
+            } else if (choice == 2) {
+                System.out.println("You have exited the purchase screen.");
+            } else {
+                System.out.println("Invalid input, try again.");
             }
-            this.transactionHistory.add(product.toString2());
-            this.transactionHistoryProducts.add(product);
-            this.boughtProduct++;
-            product.decrementStock();
-            product.incrementSold();
+        } catch (InputMismatchException ime) {
+            System.out.println("Invalid input, try again.");
         }
-        for (int j = cart.size() - 1; j >= 0; j--) {
-            cart.get(j).getStore().incrementSales(cart.get(j).getPrice());
-            cart.remove(j);
-        }
-        this.setTransactionHistory(transactionHistory);
     }
 
     public void setCart(ArrayList<Product> cart) {
@@ -82,8 +103,8 @@ public class Customer extends User {
 
     public String getTransactionHistory() {
         String history = "";
-        for (int i  = 0; i < transactionHistory.size(); i++) {
-            history += transactionHistory.get(i) + "\n";
+        for (String s : transactionHistory) {
+            history += s + "\n";
         }
         return history;
     }
