@@ -58,7 +58,7 @@ public class Customer extends User {
         }
     }
 
-    public void purchaseCart(Scanner scan) throws IOException {
+    public void purchaseCart(Scanner scan) throws IOException, IllegalArgumentException {
         PrintWriter pw = new PrintWriter(new FileWriter("statistics.txt", false));
 
         System.out.printf("Purchase all cart items for $%.2f?\n1. Confirm purchase\n2. Exit\n", this.calculatePrice());
@@ -67,6 +67,11 @@ public class Customer extends User {
             int choice = scan.nextInt();
             scan.nextLine();
             if (choice == 1) {
+                for (Product value : cart) {
+                    if (value.getStock() < 1) {
+                        throw new IllegalArgumentException("Stock exceeded!");
+                    }
+                }
                 for (Product product : cart) {
                     this.transactionHistory.add(product.toString2());
                     product.decrementStock();
@@ -87,11 +92,6 @@ public class Customer extends User {
             }
         } catch (InputMismatchException ime) {
             System.out.println("Invalid input, try again.");
-        } catch (IllegalArgumentException iae) {
-            System.out.println("Cannot purchase all items, stock exceeded.");
-            for (int i = 0; i < count; i++) {
-                cart.get(i).incrementStock();
-            }
         }
     }
 
