@@ -23,7 +23,7 @@ public class Store implements Serializable {
     private double sales;
     private int soldProduct;
 
-    public Store(String storeName, ArrayList<Product> products , Seller seller ) {
+    public Store(String storeName, ArrayList<Product> products , Seller seller) {
         if (storeName == null || products == null || seller == null) {
             throw new NullPointerException();
         }

@@ -105,8 +105,15 @@ public class Product implements Serializable {
         return price;
     }
 
-    public void decrementStock() {
-        this.stock --;
+    public void decrementStock() throws IllegalArgumentException {
+        int newStock = this.stock--;
+        if (newStock < 0) {
+            throw new IllegalArgumentException();
+        }
+    }
+
+    public void incrementStock() {
+        this.stock++;
     }
 
     public void incrementSold() {
