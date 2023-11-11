@@ -28,7 +28,7 @@ public class Product implements Serializable {
     }
 
     //basic constructor for Product class
-    public Product(Store store, String productName, String productDescription, int stock, double price, int sold) {
+    public Product(Store store, String productName, String productDescription, int stock, double price) {
         if (store == null || productName == null || productDescription == null) {
             throw new NullPointerException();
         }
@@ -40,6 +40,7 @@ public class Product implements Serializable {
         this.productDescription = productDescription;
         this.stock = stock;
         this.price = price;
+        this.sold = 0;
     }
 
     // SETTER METHODS
