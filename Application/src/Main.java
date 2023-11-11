@@ -1,19 +1,19 @@
+import java.net.SocketImpl;
 import java.util.*;
 
 public class Main {
     private static final int USER_INDEX = 0;
     private static final int STORE_INDEX = 1;
     private static final int PRODUCT_INDEX = 2;
+    private static Scanner scanner = new Scanner(System.in);
+    private static Object[] data = Storage.getData();
+    private static ArrayList<User> users = (ArrayList<User>) data[USER_INDEX];
+    private static ArrayList<Product> products = (ArrayList<Product>) data[PRODUCT_INDEX];
+    private static ArrayList<Store> stores = (ArrayList<Store>) data[STORE_INDEX];
 
-    public static void main(String[] args) {
-        Object[] data = Storage.getData();
-
-        ArrayList<User> users = (ArrayList<User>) data[USER_INDEX];
-
-        ArrayList<Product> products = (ArrayList<Product>) data[PRODUCT_INDEX];
-        ArrayList<Store> stores = (ArrayList<Store>) data[STORE_INDEX];
-
-        Scanner scanner = new Scanner(System.in);
+    public static void main(String[] args) throws Exception {
+        User signUp = User.signup("email@email.com" , "password" , 1, users);
+        User login = User.login("email@email.com" , "password" , users);
         System.out.println("1. Login \n2. Sign Up");
         String input = scanner.nextLine();
         int logOrSign;
@@ -34,100 +34,115 @@ public class Main {
         System.out.print("Enter your password: ");
         String password = scanner.nextLine();
 
-        System.out.println("Enter role:");
-        System.out.println("1. Customer \n2. Seller");
-        role = scanner.nextInt();
-        if (scanner.hasNextInt()) {
+        User user = switch (logOrSign) {
+            case 1:
+            yield User.login(email, password, users);
+            case 2:
+            System.out.println("Enter role:");
+            System.out.println("1. Customer \n2. Seller");
             role = scanner.nextInt();
-            if (role < 1 || role > 2) {
-                System.out.println("Invalid role. Exiting.");
-                return;
-            }
-        } else {
-            String roleInput = scanner.next();
-            if (roleInput.equals("1") || roleInput.equalsIgnoreCase("customer")) {
-                role = 1;
-            } else if (roleInput.equals("2") || roleInput.equalsIgnoreCase("seller")) {
-                role = 2;
-            }
-
-            User workingUser = null;
-
-            try {
-                switch (logOrSign) {
-                    case 1:
-                        workingUser = User.login(email, password, users);
-                        break;
-                    case 2:
-                        if (role == 1) {
-                            workingUser = new Customer();
-                        } else if (role == 2) {
-                            workingUser = new Seller();
-                        } else {
-                            throw new Exception("Invalid Role for Signup");
-                        }
-                        users.add(workingUser);  // Assuming workingUser is added to the users list
-                        break;
-                    default:
-                        throw new Exception("Invalid Option");
-                }
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-            }
-            System.out.println(workingUser.getName());
-            Storage.storeData(users, stores, products);
-
-        }
-        public void generateSellerMenu() {
-            System.out.println("What would you like to do? Choose numbers 1-6.");
-            System.out.println("1. View Stores \n2. Edit Account\n3.Delete Account\n4.Create Store\n5.Edit Store\n" +
-                    "6.Delete Store");
-            int choice = scanner.nextInt();
             scanner.nextLine();
-            switch (choice) {
-                case 1 -> {
-                    yield Seller.getStoreNames();
-                    //if seller is new, no stores are shown
+            yield User.signup(email, password, role, users);
+            default:
+            yield null;
+        };
+        if (user instanceof Seller) {
+            int again;
+            do {
+                generateSellerMenu((Seller) user);
+            } while ((again = Integer.parseInt("Press 1 if you'd like to see the menu again")) == 1);
+        } else if (user instanceof Customer) {
+            user = (Customer) user;
+            int again;
+            do {
+                generateCustomerMenu((Customer) user);
+            } while ((again = Integer.parseInt("Press 1 if you'd like to see the menu again")) == 1);
+        }
+    }
+    public static void generateSellerMenu(Seller seller) throws Exception {
+        System.out.println("What would you like to do? Choose numbers 1-6.");
+        System.out.println("1. View Stores\n2. Create Store\n3. Delete Store\n4. Import products\n5. Edit account\n6. Delete Account");
+        int choice = scanner.nextInt();
+        scanner.nextLine();
+        switch (choice) {
+            case 1:
+            System.out.println(seller.getStores().toString());
+            break;
+            case 2:
+            System.out.println("Enter name of the store");
+            String storeName = scanner.nextLine();
+            seller.createStore(storeName, stores);
+            System.out.println("Store created, would you like to add products right now? Choose between 1 or 2");
+            boolean cont = true;
+            while (cont) {
+                System.out.println("1 - Add Product\n2 - Exit");
+                choice = scanner.nextInt();
+                scanner.nextLine();
+                switch (choice) {
+                case 1:
+                System.out.println("Enter product name");
+                String name = scanner.nextLine();
+                System.out.println("Enter description for the product");
+                String desc = scanner.nextLine();
+                System.out.println("Enter stock");
+                int stock = Integer.parseInt(scanner.nextLine());
+                System.out.println("Enter price");
+                double price = Double.parseDouble(scanner.nextLine());
+                seller.getStore(storeName).addProduct(name, desc, stock, price, products);
+                System.out.println("Would you like to continue adding product? Type 1 for continue");
+                int con = Integer.parseInt(scanner.nextLine());
+                if (con != 1) {
+                    cont = false;
                 }
-                case 2 -> {
-                    yield
-                    //
-                }
-                case 3 -> {
-                    //
-                }
-                case 4 -> {
-                    //create store function
-                }
-                case 5 -> {
-                    //edit store function
-                }
-                case 6 -> {
-                    //delete store function
-                }
-                default -> {
-                    throw new Exception("Invalid Number Choice")
                 }
             }
+            break;
+            case 3:
+            System.out.println("Enter name of the store that you'd like to be deleted");
+            String deleteStore = scanner.nextLine();
+            seller.removeStore(deleteStore);
+            break;
+            case 4:
+            System.out.println("Type the filepath of the .csv file");
+            String csvImportPath = scanner.nextLine();
+            seller.importProducts(csvImportPath, products);
+            break;
+            case 5:
+            System.out.println("Enter new e-mail");
+            String newEmail = scanner.nextLine();
+            System.out.println("Enter new password");
+            String newPassword = scanner.nextLine();
+            seller.setName(newEmail);
+            seller.setPassword(newPassword);
+            break;
+            case 6:
+            seller.deleteUser();
+            break;
         }
-        public void generateCustomerMenu() {
-            System.out.println("What would you like to do? Choose numbers 1-3.");
-            System.out.println("1. View Stores \n2. Edit Account\n3.Delete Account");
-            int choice = scanner.nextInt();
-            scanner.nextLine();
-            switch (choice) {
-                case 1 -> {
-                    //list store names function
-                }
-                case 2 -> {
-                    //edit account
-                }
-                case 3 -> {
-                    //delete account
-                }
-                default -> {
-                    throw new Exception("Invalid Number Choice")
-                }
-        }
+    }
+    public static void generateCustomerMenu(Customer customer) throws Exception {
+        System.out.println("What would you like to do? Choose numbers 1-3.");
+        System.out.println("1. View Stores \n2. Edit Account\n3.Delete Account");
+        int choice = scanner.nextInt();
+        scanner.nextLine();
+        switch (choice) {
+            case 1 -> {
+                System.out.println(Store.listStoreNames(stores));
+            }
+            case 2 -> {
+                System.out.println("Enter new e-mail");
+                String newEmail = scanner.nextLine();
+                System.out.println("Enter new password");
+                String newPassword = scanner.nextLine();
+                customer.setName(newEmail);
+                customer.setPassword(newPassword);
+            }
+            case 3 -> {
+                customer.deleteUser();
+            }
+            default -> {
+                throw new Exception("Invalid Number Choice");
+            }
+        }   
     }
 }

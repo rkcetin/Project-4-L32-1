@@ -18,7 +18,6 @@ public class User implements Serializable {
     private static final long serialVersionUID = 106L;
 
     private String name;
-    private String password;
     private String salt;
 
     //standard constructor for the User class
@@ -126,7 +125,7 @@ public class User implements Serializable {
         // Check if the email is valid
         if (User.isValidEmail(email)) {
             // Check if the email is not already registered
-            User checkUser = User.isEmailRegistered(email, users);
+            User checkUser = User.isEmailRegistered(email, users );
             if (null == checkUser) {
                 // Generate a random salt
                 String salt = generateSalt(16);   ///// 16??????
@@ -146,4 +145,16 @@ public class User implements Serializable {
         }
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+    private String password;
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void deleteUser() {
+        this.name = null;
+        this.password = null;
+    }
 }

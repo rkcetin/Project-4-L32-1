@@ -20,37 +20,6 @@ public class Customer extends User {
     private ArrayList<Product> transactionHistoryProducts = new ArrayList<>();
     private int boughtProduct;
     public static void main(String[] args) {
-        Seller seller1 = new Seller("bob" , "123","123");
-        Store store1 = new Store("store" , seller1);
-        Product product1 = new Product(store1, "test1" , "desc" , 5 ,2.1);
-
-        Seller seller2 = new Seller("rob" , "123","123");
-        Store store2 = new Store("bare" , seller2);
-        Product product2 = new Product(store2, "test2" , "desc" , 5 ,2.1);
-
-        Seller seller3 = new Seller("mob" , "123","123");
-        Store store3 = new Store("stare" , seller3);
-        Product product3 = new Product(store3, "test3" , "desc" , 5 ,2.1);
-        ArrayList<Product> testProducts = new ArrayList<>();
-        testProducts.add(product3);
-        testProducts.add(product2);
-        testProducts.add(product1);
-        Storage.storeProducts(testProducts);
-        ArrayList<Store> testStores = new ArrayList<>();
-        testStores.add(store3);
-        testStores.add(store2);
-        testStores.add(store1);
-        Storage.storeStores(testStores);
-        Customer customer = new Customer("abc", "1232353215234", "1234", 0);
-        customer.addToCart(store3, "test3", 2);
-        customer.addToCart(store2, "test2", 5);
-        customer.addToCart(store1, "test1", 1);
-        System.out.println(customer.getCart().toString());
-        customer.purchaseCart();
-        System.out.println("\n\n\n");
-        System.out.println("BOUGHT STORES ARE BELOW");
-        System.out.println(customer.dashboardbyBought());
-        System.out.println(customer.dashboardbySold());
     }
     public int getBoughtProduct() {
         return boughtProduct;
@@ -71,7 +40,6 @@ public class Customer extends User {
 
     //has quantity parameter
     public void addToCart(Store store, String name, int quantity , ArrayList<Product> products) {
-
         for (Product product : products) {
             if (store.equals(product.getStore()) && name.equals(product.getProductName())) {
                 for (int j = 0; j < quantity; j++) {
