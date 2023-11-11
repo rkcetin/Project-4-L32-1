@@ -59,7 +59,7 @@ public class Customer extends User {
     }
 
     public void purchaseCart(Scanner scan) throws IOException, IllegalArgumentException {
-        PrintWriter pw = new PrintWriter(new FileWriter("statistics.txt", false));
+        PrintWriter pw = new PrintWriter(new FileWriter("statistics.txt", true));
 
         System.out.printf("Purchase all cart items for $%.2f?\n1. Confirm purchase\n2. Exit\n", this.calculatePrice());
         int count = 0;
