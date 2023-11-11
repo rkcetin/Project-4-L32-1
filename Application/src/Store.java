@@ -93,12 +93,10 @@ public class Store implements Serializable {
     public String getStoreName() {
         return storeName;
     }
-    public ArrayList<Product> getProducts() {
-        return products;
-    }
+
 
     public void addProduct( String name, String description, int stock, double price , ArrayList<Product> product) {
-        Product addedProduct = new Product(this , name , description, stock , price, 0);
+        Product addedProduct = new Product(this , name , description, stock , price);
         this.products.add(addedProduct);
         product.add(addedProduct);
     }

@@ -36,8 +36,8 @@ public class Customer extends User {
 
 
     //has quantity parameter
-    public void addToCart(Store store, String name, int quantity) {
-        ArrayList<Product> products = Storage.getProducts();
+    public void addToCart(Store store, String name, int quantity , ArrayList<Product> products) {
+
         for (Product product : products) {
             if (store.equals(product.getStore()) && name.equals(product.getProductName())) {
                 for (int j = 0; j < quantity; j++) {
@@ -120,10 +120,10 @@ public class Customer extends User {
     }
     
     //Returns a string that contains a list of stores and the number of products they sold
-    public String dashboardbySold() {
+    public String dashboardbySold(ArrayList<Store> stores) {
         String x = "";
         ArrayList<String> dashboard = new ArrayList<>();
-        ArrayList<Store> stores = Storage.getStores();
+
         for (Store store : stores) {
             dashboard.add(String.format("Store name: %s Sold: %d", store.getStoreName(), store.getSoldProduct()));
         }
