@@ -96,8 +96,9 @@ public class Seller extends User {
                 int inputQuantity = Integer.parseInt( (String) line[STOCK_INDEX]);
                 double inputPrice = Double.parseDouble( (String) line[PRICE_INDEX]) ;
                 Product inputProduct = new Product(inputStore , inputName , inputDesc , inputQuantity , inputPrice);
-                inputStore.addProduct(inputProduct);
-                products.add(inputProduct);
+                inputStore.addProduct(inputProduct , products);
+
+
 
             }
 

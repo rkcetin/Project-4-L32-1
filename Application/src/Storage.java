@@ -13,142 +13,45 @@ import java.util.*;
  */
 
 public class Storage {
-    /**
-     * Writes an Arraylist of Users as an object to the Users.ser file
-     *
-     * @param users ArrayList of Users to write to Users.ser file
-     */
-    public static void storeUsers(ArrayList<User> users) {
-        if (users == null) {
+    private static final int USER_INDEX = 0;
+    private static final int STORE_INDEX = 1 ;
+    private static final int PRODUCT_INDEX = 2;
+    public static void storeData(ArrayList<User> users , ArrayList<Store> stores , ArrayList<Product> products) {
+        if (users == null || stores == null || products == null) {
             throw new NullPointerException();
         }
-        File userFile = new File("Users.ser");
-
+        Object[] data = {users , stores , products};
+        File databaseFile = new File("Data.ser");
         try {
-            userFile.createNewFile();
-            FileOutputStream fos = new FileOutputStream(userFile);
+            databaseFile.createNewFile();
+            FileOutputStream fos = new FileOutputStream(databaseFile);
             ObjectOutputStream oos = new ObjectOutputStream(fos);
-            oos.writeObject(users);
+            oos.writeObject(data);
             oos.flush();
             oos.close();
             fos.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+
+
     }
 
-    /**
-     * Writes an Arraylist of Stores as an object to the Stores.ser file
-     *
-     * @param stores ArrayList of Stores to write to Store.ser file
-     */
-    public static void storeStores(ArrayList<Store> stores) {
-        if (stores == null) {
-            throw new NullPointerException();
-        }
-        File storeFile = new File("Stores.ser");
 
+
+    public static Object[] getData() {
+        Object[] data = null;
         try {
-            storeFile.createNewFile();
-            FileOutputStream fos = new FileOutputStream(storeFile);
-            ObjectOutputStream oos = new ObjectOutputStream(fos);
-            oos.writeObject(stores);
-            oos.flush();
-            oos.close();
-            fos.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Writes an Arraylist of products as an object to the Products.ser file
-     *
-     * @param products ArrayList of Products to write to Products.ser file
-     */
-    public static void storeProducts(ArrayList<Product> products) {
-        if (products == null) {
-            throw new NullPointerException();
-        }
-        File productFile = new File("Products.ser");
-
-        try {
-            productFile.createNewFile();
-            FileOutputStream fos = new FileOutputStream(productFile);
-            ObjectOutputStream oos = new ObjectOutputStream(fos);
-            oos.writeObject(products);
-            oos.flush();
-            oos.close();
-            fos.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Reads the ArrayList written to the Users.ser file
-     *
-     * @returns an ArrayList which is either a new Arraylist or the ArrayList<User> written to Users.ser
-     */
-    public static ArrayList<User> getUsers() {
-        ArrayList<User> users = new ArrayList<>();
-        try {
-            File userFile = new File("Users.ser");
-            if (userFile.createNewFile()) {
-                storeUsers(users);
+            File dataFile = new File("Data.ser");
+            if (dataFile.createNewFile()) {
+                storeData(new ArrayList<User>() , new ArrayList<Store>(), new ArrayList<Product> () );
 
             }
-            FileInputStream fis = new FileInputStream(userFile);
+            FileInputStream fis = new FileInputStream(dataFile);
             ObjectInputStream ois = new ObjectInputStream(fis);
-            users = (ArrayList<User>) ois.readObject();
-            fis.close();
-            ois.close();
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        return users;
-    }
+            data = (Object[]) ois.readObject();
 
-    /**
-     * Reads the ArrayList written to the Stores.ser file
-     *
-     * @returns an ArrayList which is either a new Arraylist or the ArrayList<Store> written to Stores.ser
-     */
-    public static ArrayList<Store> getStores() {
-        ArrayList<Store> stores = new ArrayList<>();
-        try {
-            File storeFile = new File("Stores.ser");
-            if (storeFile.createNewFile()) {
-                storeStores(stores);
-
-            }
-            FileInputStream fis = new FileInputStream(storeFile);
-            ObjectInputStream ois = new ObjectInputStream(fis);
-            stores = (ArrayList<Store>) ois.readObject();
-            fis.close();
-            ois.close();
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        return stores;
-    }
-
-    /**
-     * Reads the ArrayList written to the Products.ser file
-     *
-     * @returns an ArrayList which is either a new Arraylist or the ArrayList<Product> written to Products.ser
-     */
-    public static ArrayList<Product> getProducts() {
-        ArrayList<Product> products = new ArrayList<>();
-        try {
-            File productFile = new File("Products.ser");
-            if (productFile.createNewFile()) {
-                storeProducts(products);
-
-            }
-            FileInputStream fis = new FileInputStream(productFile);
-            ObjectInputStream ois = new ObjectInputStream(fis);
-            products = (ArrayList<Product>) ois.readObject();
             fis.close();
             ois.close();
 
@@ -156,7 +59,7 @@ public class Storage {
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
-        return products;
+        return data;
     }
 
 }
