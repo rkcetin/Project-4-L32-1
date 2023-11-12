@@ -87,6 +87,7 @@ public class ProductTest {
         stores.get(0).addProduct("prodLowQ" , "description", 0 , 100.00 ,products);
         org.junit.Assert.assertTrue( Product.generateListing(stores.get(0).getProducts()).toString().contains("prodHighQ")
                 && Product.generateListing(stores.get(0).getProducts()).toString().contains("prodLowQ"));
+
         Product.sortStock(false ,stores.get(0).getProducts());
         org.junit.Assert.assertEquals( stores.get(0).getProducts().get(0).getStock() , 100);
 

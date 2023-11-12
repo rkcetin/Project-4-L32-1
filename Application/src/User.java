@@ -84,7 +84,10 @@ public class User implements Serializable {
                 newUser = new Seller(email, hashedPassword , salt);
                 break;
             case 2:
+                newUser = new Customer(email , hashedPassword , salt);
                 break;
+
+
 
         }
 

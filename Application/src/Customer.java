@@ -28,8 +28,9 @@ public class Customer extends User {
         boughtProduct++;
     }
 
-    public Customer(String name, String password, String salt, int boughtProduct) {
+    public Customer(String name, String password, String salt) {
         super(name, password , salt);
+        boughtProduct = 0;
     }
 
     public ArrayList<Product> getCart() {
