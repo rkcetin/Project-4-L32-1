@@ -5,14 +5,18 @@ public class Main {
     private static final int STORE_INDEX = 1;
     private static final int PRODUCT_INDEX = 2;
     private static Scanner scanner = new Scanner(System.in);
-    private static Object[] data = Storage.getData();
-    private static ArrayList<User> users = (ArrayList<User>) data[USER_INDEX];
-    private static ArrayList<Product> products = (ArrayList<Product>) data[PRODUCT_INDEX];
-    private static ArrayList<Store> stores = (ArrayList<Store>) data[STORE_INDEX];
+    private static Object[] data = null;
+    private static ArrayList<User> users = null;
+    private static ArrayList<Product> products = null;
+    private static ArrayList<Store> stores = null;
 
 
 
     public static void main(String[] args) throws Exception {
+        data = Storage.getData();
+        users = users = (ArrayList<User>) data[USER_INDEX];
+        products = (ArrayList<Product>) data[PRODUCT_INDEX];
+        stores = (ArrayList<Store>) data[STORE_INDEX];
         User workingUser = null;
         while (workingUser == null) {
             System.out.println("Input desired Action as number");
@@ -133,7 +137,7 @@ public class Main {
     }
 
 
-    public static void generateSellerMenu( Seller seller, ArrayList<User> users,  ArrayList<Store> stores, ArrayList<Product> products) throws Exception {
+    public static void generateSellerMenu( Seller seller) throws Exception {
 
         System.out.println("What would you like to do? Choose numbers 1-6.");
         boolean sellerMain = true;
@@ -215,7 +219,7 @@ public class Main {
         } while(sellerMain);
     }
 
-    public static void generateCustomerMenu(Customer customer, ArrayList<User> users, ArrayList<Store> stores, ArrayList<Product> products) throws Exception {
+    public static void generateCustomerMenu(Customer customer) throws Exception {
         System.out.println("What would you like to do? Choose numbers 1-6.");
 
         boolean customerMain = true;
