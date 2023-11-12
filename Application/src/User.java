@@ -33,20 +33,10 @@ public class User implements Serializable {
     public String getName() {
         return name;
     }
-    
     //returns the password of the user
     public String getPassword() {
         return password;
     }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-    
     //returns the information of the user in a formatted string
     public String toString() {
         return String.format("%s,%s,%s", name, password, salt);
@@ -56,7 +46,6 @@ public class User implements Serializable {
     public static boolean isValidEmail(String email) {
         return email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
     }
-    
     // Generate a random salt for password hashing
     // Function to generate a simple random salt
     private static String generateSalt(int length) {
@@ -98,7 +87,7 @@ public class User implements Serializable {
                 newUser = new Seller(email, hashedPassword , salt);
                 break;
             case 2:
-                newUser = new Customer(email , hashedPassword , salt);
+                newUser = new Customer(email , hashedPassword , salt, 0);
                 break;
 
         }
@@ -161,5 +150,16 @@ public class User implements Serializable {
         } else {
             throw new Exception("Invalid email format");
         }
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+    public void setPassword(String password) {
+        this.password = password;
+    }
+    public void deleteUser() {
+        this.name = null;
+        this.password = null;
+        this.salt = null;
     }
 }
