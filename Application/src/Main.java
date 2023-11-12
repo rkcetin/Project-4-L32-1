@@ -104,10 +104,10 @@ public class Main {
         if (workingUser instanceof Customer) {
 
             Customer customer = (Customer) workingUser;
-            generateCustomerMenu(customer, users , stores, products);
+            generateCustomerMenu(customer);
         } else if (workingUser instanceof Seller) {
             Seller seller = (Seller) workingUser;
-            generateSellerMenu(seller , users, stores, products);
+            generateSellerMenu(seller);
 
         }
 
