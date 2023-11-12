@@ -1,4 +1,3 @@
-import java.net.SocketImpl;
 import java.util.*;
 
 public class Main {
@@ -45,16 +44,10 @@ public class Main {
             yield null;
         };
         if (user instanceof Seller) {
-            int again;
-            do {
                 generateSellerMenu((Seller) user);
-            } while ((again = Integer.parseInt("Press 1 if you'd like to see the menu again")) == 1);
         } else if (user instanceof Customer) {
             user = (Customer) user;
-            int again;
-            do {
                 generateCustomerMenu((Customer) user);
-            } while ((again = Integer.parseInt("Press 1 if you'd like to see the menu again")) == 1);
         }
     }
     public static void generateSellerMenu(Seller seller) throws Exception {
