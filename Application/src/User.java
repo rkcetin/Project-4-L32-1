@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
  *
  * @author Steven Chang, Alexander Benson, Stephanie Sun, Chris Xu, Ramazan Cetin, L32
  *
- * @version November 6, 2023
+ * @version November 12, 2023
  *
  */
 
@@ -30,35 +30,72 @@ public class User implements Serializable {
     }
 
     //returns the name of the user
+    /**
+     * returns the name of the seller
+     * @return returns the name of the user
+     *
+     */
     public String getName() {
         return name;
     }
     
     //returns the password of the user
+    /**
+     * returns the password of the user
+     * @return returns the password of the user
+     *
+     */
     public String getPassword() {
         return password;
     }
+    /**
+     * changes the users name
+     * @param name updates the username
+     * @throws Exception when invalid email
+     */
 
-    public void setName(String name) {
+    public void setName(String name, ArrayList<User> users) throws Exception {
+        if (!User.isValidEmail(name) || User.isEmailRegistered(name, users) != null) {
+            throw new Exception("invalid email");
+        }
         this.name = name;
     }
+    /**
+     * updates the password
+     * @param password updates the userpassword
 
+     */
     public void setPassword(String password) {
         this.password = password;
     }
     
     //returns the information of the user in a formatted string
+    /**
+     * returns string representation of the user
+     * @return String representation of the user
+
+     */
     public String toString() {
         return String.format("%s,%s,%s", name, password, salt);
     }
 
     //user auth methods
+    /**
+     * returns if email is a valid email
+     * @return boolean if email is a valid email
+
+     */
     public static boolean isValidEmail(String email) {
         return email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
     }
     
     // Generate a random salt for password hashing
     // Function to generate a simple random salt
+    /**
+     * @param length length to use to generate salt
+     * @return expression to help hash the password
+
+     */
     private static String generateSalt(int length) {
         String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         StringBuilder salt = new StringBuilder(length);
@@ -72,10 +109,24 @@ public class User implements Serializable {
     }
 
     // Hash the password using a secure hashing algorithm
+    /**
+     * generates a hashed password
+     * @param password the password to be hashed
+     * @param salt the password to salt with
+     * @return the hashed password
+
+     */
     private static String hashPassword(String password, String salt) {
         return password + salt;
     }
+    /**
+     * checks if user is already registered within an arraylist of users
+     * @param email email to search for
+     * @param users an arraylist of users to search
+     * @return expression to help hash the password
+     * return user if its registered
 
+     */
     public static User isEmailRegistered(String email , ArrayList<User> users) {
         if(email == null || users == null) {
             throw new NullPointerException();
@@ -91,6 +142,17 @@ public class User implements Serializable {
     }
 
     // Save user information to the file
+    /**
+     * saves a user to the an arraylist of users and returns the user
+     * @param email email
+     * @param hashedPassword password
+     * @param salt salt to help authentication
+     * @param role role to assign to the new user
+     * @param users arraylist to save the new user to
+     * @return expression to help hash the password
+     * return user after saving user to the database
+
+     */
     public static User saveUserToDatabase(String email, String hashedPassword, String salt, int role, ArrayList<User> users) {
         User newUser = null;
         switch(role) {
@@ -105,7 +167,16 @@ public class User implements Serializable {
         users.add(newUser);
         return newUser;
     }
+    /**
+     * logs the user in if information is correct returns object for their account
+     * @param email email to identify user
+     * @param password password to verify
+     * @param users arraylist to serach for email and password
+     * @return User if correctly logged in
+     * @throws Exception if invalid information
+     * returns the object for a user if they are logged in
 
+     */
     public static User login(String email, String password, ArrayList<User> users) throws Exception{
         User currentUser = null;
         if (User.isValidEmail(email)) {
@@ -138,7 +209,18 @@ public class User implements Serializable {
             throw new Exception("Incorrect Email Format");
         }
     }
+    /**
+     * signs the user up with the email and password and role. if the information is correct
+     * returns object for the user
+     * @param email email to identify user
+     * @param password password to verify
+     * @param users arraylist to serach for email and password
+     * @param role role to assign to the user
+     * @return User if correctly signed up
+     * @throws Exception if invalid information
+     *
 
+     */
     public static User signup(String email, String password , int role, ArrayList<User> users) throws Exception {
         // Check if the email is valid
         if (User.isValidEmail(email)) {

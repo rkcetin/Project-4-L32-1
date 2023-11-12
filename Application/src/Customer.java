@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
  *
  * @author Steven Chang, Alexander Benson, Stephanie Sun, Chris Xu, Ramazan Cetin, L32
  *
- * @version November 6, 2023
+ * @version November 12, 2023
  *
  */
 
@@ -22,17 +22,33 @@ public class Customer extends User {
     public Customer(String name, String password, String salt) {
         super(name, password , salt);
     }
-
+    /**
+     * Adds a specific item to the users cart a particular number of times
+     * pulls products from collectino of products in arraylist
+     *
+     * @return returns an ArrayList of products representing the customers cart
+     *
+     */
     public ArrayList<Product> getCart() {
         return cart;
     }
-
+    /**
+     * Allows the customer to make a purchase without having them having to use the cart
+     *
+     *
+     * @param store relates to the store the customer of the product the customer is buying
+     * @param name name of the product the customer is purchasing
+     * @param quantity the quantity of the item that the customer is adding
+     * @param products the arraylist of products the program will get the products from
+     * @throws IOException from use of print writer and files
+     * @throws IllegalArgumentException when quantity purchased exceed item stock
+     */
     public void singlePurchase(Store store, String name, int quantity, ArrayList<Product> products)
             throws IOException, IllegalArgumentException {
         PrintWriter pw = new PrintWriter(new FileWriter("statistics.txt", true));
         for (Product product : products) {
             if (store.equals(product.getStore()) && name.equals(product.getProductName())) {
-                if (quantity < product.getStock()) {
+                if (quantity > product.getStock()) {
                     throw new IllegalArgumentException("Stock exceeded!");
                 }
                 for (int j = 0; j < quantity; j++) {
@@ -46,6 +62,16 @@ public class Customer extends User {
     }
 
     //has quantity parameter
+    /**
+     * Adds a specific item to the users cart a particular number of times
+     * pulls products from collectino of products in arraylist
+     *
+     * @param store relates to the store the customer of the product the customer to their cart
+     * @param name name of the product the customer is purchasing
+     * @param quantity the quantity of the item that the customer is adding
+     * @param products the arraylist of products the program will get the products from
+     *
+     */
     public void addToCart(Store store, String name, int quantity, ArrayList<Product> products) {
         for (Product product : products) {
             if (store.equals(product.getStore()) && name.equals(product.getProductName())) {
@@ -56,7 +82,15 @@ public class Customer extends User {
             }
         }
     }
-
+    /**
+     * removes a particular quantity of an item from the users cart
+     *
+     *
+     * @param store relates to the store the customer of the product the customer to their cart
+     * @param name name of the product the customer is purchasing
+     * @param quantity the quantity of the item that the customer is removing
+     *
+     */
 
     public void removeFromCart(Store store, String name, int quantity) {
         for (int i = cart.size() - 1; i >= 0; i--) {
@@ -67,7 +101,12 @@ public class Customer extends User {
             }
         }
     }
-
+    /**
+     * counts and returns occurances of products within the cart
+     *
+     * @return returns an arraylist of the occurances of particular product in the cart
+     *
+     */
     public ArrayList<Integer> getProductOccurrences() {
         Map<Product, Integer> productCountMap = new HashMap<>();
 
@@ -82,7 +121,13 @@ public class Customer extends User {
         }
         return productOccurrencesList;
     }
-
+    /**
+     * purchases cart and adds the inforaiton to statistics.txt
+     *
+     *
+     * @param scan represents a scanner the user passes in to handle the input for the confirmation of the cart purchase
+     * @throws IllegalArgumentException when input in invalid
+     */
     public void purchaseCart(Scanner scan) throws IOException, IllegalArgumentException {
         PrintWriter pw = new PrintWriter(new FileWriter("statistics.txt", true));
         ArrayList<Integer> quantity = this.getProductOccurrences();
@@ -121,7 +166,14 @@ public class Customer extends User {
             System.out.println("Invalid input, try again.");
         }
     }
+    /**
+     * updates the cart based on a new arraylist of products as cart
+     *
+     *
+     * @param cart arraylist of products representing cart
 
+     *
+     */
     public void setCart(ArrayList<Product> cart) {
         this.cart = cart;
     }
@@ -133,11 +185,23 @@ public class Customer extends User {
         }
         return history;
     }
+    /**
+     * updates the transaction history based off array list of strings provided
+     * as the transaction history
+     *
+     * @param transactionHistory array list of the transaction history
+     *
+     */
 
     public void setTransactionHistory(ArrayList<String> transactionHistory) {
         this.transactionHistory = transactionHistory;
     }
-
+    /**
+     * calculates price of products in cart
+     *
+     * @ return returns the price of the cart
+     *
+     */
     public double calculatePrice() {
         double price = 0;
         for (Product product : cart) {
@@ -145,6 +209,11 @@ public class Customer extends User {
         }
         return price;
     }
+    /**
+     * generates a string represetation of a dashboard the customer has purchased from before
+     *
+     * @return returns a string representation of the stores the customer has purchased from before
+     */
 
     //Returns a string that contains a list of stores that the customer have purchased from before
     public String dashboardByBought() {
@@ -164,8 +233,13 @@ public class Customer extends User {
         }
         return x;
     }
-
-    //Returns a string that contains a list of stores and the number of products they sold
+    /**
+     * generates a dashboard with an arraylist of stores by on the
+     * quantity of products they have sold
+     *
+     * @param stores relates to the store the customer of the product the customer to their cart
+     * @return returns a string representation of the dashboard of stores by how much each has sold
+     */
     public String dashboardBySold(ArrayList<Store> stores) {
         String x = "";
         ArrayList<String> dashboard = new ArrayList<>();

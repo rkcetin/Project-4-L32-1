@@ -6,11 +6,12 @@ import java.util.stream.Collectors;
  * Project 4 -- Seller Class
  *
  * Class represents a Seller and extends User. Contains methods relating to Seller permissions
- * such as editing their stores
+ * such as editing their stores. Contains method for importing products in addition to dashboard
+ * methods for organizing and generate seller dashboards
  *
  * @author Steven Chang, Alexander Benson, Stephanie Sun, Chris Xu, Ramazan Cetin, L32
  *
- * @version November 6, 2023
+ * @version November 12, 2023
  *
  */
 
@@ -31,33 +32,65 @@ public class Seller extends User {
     }
 
     //creates a new store with the given store name
+    /**
+     * creates a store and adds it to the provided list of stores in additino
+     * to the seller's list of stores
+     * @param storeName the new store name
+     * @param bigStores the arraylist of stores to add to
+     * @return returns the object of the created store
+     */
     public Store createStore(String storeName, ArrayList<Store> bigStores) {
         Store createdStore = new Store(storeName , this);
         stores.add(createdStore);
         bigStores.add(createdStore);
         return createdStore;
     }
-
+    /**
+     * returns the object corresponding to a store name from the sellers owned stores
+     * @param storeName the new store name
+     * @return returns the store object of a particular store name
+     */
     //returns a store with the given storeName
+
     public Store getStore(String storeName) {
         return Store.checkStore(storeName, this.stores);
     }
 
     //removes a store of the given name
-    public void removeStore(String storeName) {
+    /**
+     * removes the store from the seller's list and the larger bank of stores
+     * @param storeName the target store name
+     * @param stores large bank of stores to remove from
+     */
+    public void removeStore(String storeName , ArrayList<Store> stores) {
         Store.removeStore(storeName, this.stores);
+        Store.removeStore(storeName, stores);
     }
 
     //returns an arraylist of stores
+    /**
+     * returns the seller's list of stores
+     * @return returns the arraylist of a sellers stores
+     */
     public ArrayList<Store> getStores() {
         return stores;
     }
 
     //returns all the store names associated with a given store
+    /**
+     * gets all the names of the sellers stores
+
+     * @return returns the string representation all the seller's store names
+     */
     public String[] getSellerStoreNames() {
         return Store.listStoreNames(this.getStores());
     }
 
+    /**
+     * calulates the total sales for a store
+     *
+     * @return returns a double of all the sales of all the stores
+     */
     public double calculateTotalSales() {
         double sales = 0.0;
         for (int i = 0; i < this.stores.size(); i++) {
@@ -65,7 +98,12 @@ public class Seller extends User {
         }
         return sales;
     }
-
+    /**
+     * returns the statistics for a particular sellers stores
+     *
+     * @throws IOException from invalid reading of files
+     * @return returns the statistics for the sellers stores
+     */
     public ArrayList<String> displayUnsortedStatistics() throws IOException {
         BufferedReader bfr = new BufferedReader(new FileReader("statistics.txt"));
         Map<String, Integer> productCounts = new HashMap<>();
@@ -99,6 +137,12 @@ public class Seller extends User {
     }
 
     //has to run with displayUnsortedStatistics()
+    /**
+     * returns a sorted representation of the statistics based upon sales either high or low
+     * @param statisticsResult the string of unsorted statistics
+     * @param highestToLowest a boolean deteremining whether statistics sorted starting high or low
+     * @return returns the store object of a particular store name
+     */
     public static String sortStatisticsBySales(String statisticsResult, boolean highestToLowest) {
         List<String> lines = Arrays.asList(statisticsResult.split("\n"));
         lines.sort((line1, line2) -> {
@@ -109,7 +153,12 @@ public class Seller extends User {
 
         return String.join("\n", lines);
     }
-
+    /**
+     * returns a sorted representation of the statistics based upon quantity of sales high or low
+     * @param stores arraylist of stores to reference
+     * @param highestToLowest a boolean deteremining whether statistics sorted starting high or low
+     * @return returns a String of store statistics sorted based upon of quantity of slaes
+     */
     public static String sortByOccurrences(ArrayList<String> stores, boolean highestToLowest) throws IOException {
         BufferedReader bfr = new BufferedReader(new FileReader("statistics.txt"));
         Map<String, Integer> storeOccurrences = new HashMap<>();
@@ -139,7 +188,13 @@ public class Seller extends User {
         }
         return a;
     }
-
+    /**
+     * imports products from a csv file only imports if all customers are valid
+     * @param filepath string representation of filepath arraylist of stores to reference
+     * @param products arraylist of products to import the products too
+     * @throws NullPointerException when null input
+     * @throws Exception when invalid file format or trouble reading file
+     */
     public void importProducts(String filepath, ArrayList<Product> products) throws Exception {
         if (filepath == null || products == null) {
             throw new NullPointerException();
@@ -187,7 +242,12 @@ public class Seller extends User {
             throw new Exception("Problem reading file");
         }
     }
+    /**
+     * checks if 2 sellers are equal based upon their name
+     * @param o object for comparison
+     * @return retuns if the object has equal name to the seller
 
+     */
     public boolean equals(Object o) {
         if (o instanceof Seller) {
             Seller seller = (Seller) o;
@@ -196,6 +256,11 @@ public class Seller extends User {
             return false;
         }
     }
+    /**
+     * returns dashboard of products for all the stores of a seller showing product name and quantity sold
+
+     * @return returns a dashboard of the products for a seller showing product sold and product name
+     */
     
     public String dashboardProducts() {
         String x = "";

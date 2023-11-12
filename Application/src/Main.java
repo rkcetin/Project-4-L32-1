@@ -104,11 +104,11 @@ public class Main {
         if (workingUser instanceof Customer) {
             // direct to customer menu using generateCustomerMenu
             Customer currentUser = (Customer) workingUser;
-            Main.generateCustomerMenu(scanner, currentUser, stores, products);
+            Main.generateCustomerMenu(scanner, currentUser,users, stores, products);
         } else if (workingUser instanceof Seller) {
             // direct to seller menu using generateSellerMenu
             Seller currentUser = (Seller) workingUser;
-            Main.generateSellerMenu(scanner, currentUser, stores, products);
+            Main.generateSellerMenu(scanner, currentUser, users,  stores, products);
         }
 
 
@@ -135,7 +135,7 @@ public class Main {
         return numInput;
     }
 
-    public static void generateSellerMenu(Scanner scanner, Seller seller, ArrayList<Store> stores, ArrayList<Product> products) throws Exception {
+    public static void generateSellerMenu(Scanner scanner, Seller seller, ArrayList<User> users,  ArrayList<Store> stores, ArrayList<Product> products) throws Exception {
         System.out.println("What would you like to do? Choose numbers 1-6.");
         boolean sellerMain = true;
         do {
@@ -175,7 +175,7 @@ public class Main {
                 case 3 -> {
                     System.out.println("Enter name of the store that you'd like to be deleted");
                     String deleteStore = scanner.nextLine();
-                    seller.removeStore(deleteStore);
+                    seller.removeStore(deleteStore , stores);
                 }
                 case 4 -> {
                     System.out.println("Type the filepath of the .csv file");
@@ -187,7 +187,7 @@ public class Main {
                     String newEmail = scanner.nextLine();
                     System.out.println("Enter new password");
                     String newPassword = scanner.nextLine();
-                    seller.setName(newEmail);
+                    seller.setName(newEmail , users);
                     seller.setPassword(newPassword);
                 }
                 case 6 -> System.out.println("placeholder");//seller.deleteUser();
@@ -199,7 +199,7 @@ public class Main {
             }
         } while(sellerMain);
     }
-    public static void generateCustomerMenu(Scanner scanner, Customer customer, ArrayList<Store> stores, ArrayList<Product> products) throws Exception {
+    public static void generateCustomerMenu(Scanner scanner, Customer customer, ArrayList<User> users, ArrayList<Store> stores, ArrayList<Product> products) throws Exception {
         System.out.println("What would you like to do? Choose numbers 1-3.");
         boolean customerMain = true;
         do {
@@ -255,7 +255,7 @@ public class Main {
                     String newEmail = scanner.nextLine();
                     System.out.println("Enter new password");
                     String newPassword = scanner.nextLine();
-                    customer.setName(newEmail);
+                    customer.setName(newEmail, users);
                     customer.setPassword(newPassword);
                 }
                 case 3 -> {

@@ -7,7 +7,8 @@ import java.io.*;
  * Project 4 -- Store Class
  *
  * Class holds information about a store which contains a list of products associated with that store.
- * Includes methods to edit the Store
+ * Includes methods to edit the Store. Also functions to generate dashboards and assist
+ * with sales information.
  *
  * @author Steven Chang, Alexander Benson, Stephanie Sun, Chris Xu, Ramazan Cetin, L32
  *
@@ -47,7 +48,14 @@ public class Store implements Serializable {
         this.seller = seller;
 
     }
-
+    /**
+     * searches provided list for a store with the provided storename and returns the object if it is found
+     * @param storeName storeName to look for
+     * @param stores arraylist of stores to lookwithin
+     * @return returns the object for the store with corresponding storeName null if otherwise
+     * @throws NullPointerException when null input
+     *
+     */
     //helper function for determining to determine if a store exists within a list of stores; returns null if it doesn't
     public static Store checkStore(String storeName, ArrayList<Store> stores) {
       if (stores == null || storeName == null) {
@@ -62,7 +70,13 @@ public class Store implements Serializable {
       }
       return filteredStores.get(0);
     }
-
+    /**
+     * removes store from list of store
+     * @param storeName storeName to look for
+     * @param stores arraylist of stores to lookwithinse
+     * @throws NullPointerException when null input or if invalid store
+     *
+     */
     //helper function to remove a store from a list based on its name
     public static void removeStore(String storeName, ArrayList<Store> stores) {
         Store storeToRemove = checkStore(storeName, stores);
@@ -74,6 +88,12 @@ public class Store implements Serializable {
     }
 
     //helper function to get names of list of stores
+    /**
+     * creates a list of store names from a ArrayList of stores
+     * @param stores arraylist of stores to list from
+     * @throws NullPointerException when null input or if invalid store
+     * @return returns String[] or store names
+     */
     public static String[] listStoreNames(ArrayList<Store> stores) {
         if (stores == null) {
             throw new NullPointerException();
@@ -89,31 +109,67 @@ public class Store implements Serializable {
         output.toArray(storeList);
         return storeList;
     }
+    /**
+     * gets the store name
 
+     * @return returns storename
+     */
     public String getStoreName() {
         return storeName;
     }
 
-
-    public void addProduct( String name, String description, int stock, double price , ArrayList<Product> product) {
+    /**
+     *  creates a product in a store if it doesnt already exist in the store
+     * @param name name of the product
+     * @param description description of the product
+     * @param stock stock of the product
+     * @param price price of the product
+     * @param product arraylist of products to add to
+     *
+     */
+    public void addProduct( String name, String description, int stock, double price , ArrayList<Product> product) throws Exception {
+        if (Product.checkProduct(name , this.products) != null) {
+            throw new Exception("Already Exists");
+        }
         Product addedProduct = new Product(this , name , description, stock , price);
         this.products.add(addedProduct);
         product.add(addedProduct);
     }
-    public void addProduct(Product product , ArrayList<Product> products) {
+    /**
+     *  creates a product in a store if it doesnt already exist in the store
+     * @param product to add to the store
+     * @param products arraylist of products to add to
+     *
+     */
+    public void addProduct(Product product , ArrayList<Product> products) throws Exception {
+        if (Product.checkProduct(product.getProductName() , products) != null) {
+            throw new Exception();
+        }
         this.products.add(product);
         products.add(product);
     }
-
-    public void removeProduct(String name) {
-        for (int i = 0; i < products.size(); i++) {
-            if (name.equals(products.get(i).getProductName())) {
-                products.remove(i);
-                return;
-            }
+    /**
+     *  removes a product from the store
+     * @param name name of the product to remove
+     * @param bigProducts arraylist to remove from
+     *
+     *
+     */
+    public void removeProduct(String name , ArrayList<Product> bigProducts) {
+        Product productToRemove = Product.checkProduct(name , this.getProducts());
+        if (productToRemove == null) {
+            throw new IllegalArgumentException();
         }
+        products.remove(productToRemove);
+        bigProducts.remove(productToRemove);
     }
-
+    /**
+     *  edits the information about a product
+     * @param name name of to edit
+     * @param scan scanner to read user input
+     *
+     *
+     */
     public void editProduct(String name, Scanner scan) {
         for (Product product : products) {
             if (name.equals(product.getProductName())) {
@@ -177,7 +233,12 @@ public class Store implements Serializable {
     public ArrayList<Product> getProducts() {
         return products;
     }
-
+    /**
+     * sees if two objects are equivalent in storename and seller
+     * @param o object of comparison
+     * @return boolean value seeing if the stores are equal
+     *
+     */
     public boolean equals(Object o) {
         if (o instanceof Store) {
             Store store = (Store) o;
@@ -186,7 +247,12 @@ public class Store implements Serializable {
             return false;
         }
     }
-
+    /**
+     * generates to string for store
+     *
+     * @return returns string representation of store
+     *
+     */
     public String toString() {
         String itemList = "";
         for (int i = 0; i < products.size(); i++) {
