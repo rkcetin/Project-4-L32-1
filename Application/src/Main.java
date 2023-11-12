@@ -1,5 +1,4 @@
-/*
-import java.util.*;
+/*import java.util.*;
 
 public class Main {
     private static final int USER_INDEX = 0;
@@ -82,56 +81,6 @@ public class Main {
 
             System.out.println(workingUser.getName());
             Storage.storeData(users, stores, products);
-
-        }
-        public void generateSellerMenu() {
-            System.out.println("What would you like to do? Choose numbers 1-6.");
-            System.out.println("1. View Stores \n2. Edit Account\n3.Delete Account\n4.Create Store\n5.Edit Store\n" +
-                    "6.Delete Store");
-            int choice = scanner.nextInt();
-            scanner.nextLine();
-            switch (choice) {
-                case 1 -> {
-                    //if seller is new, no stores are shown
-                }
-                case 2 -> {
-                    //edit account
-                }
-                case 3 -> {
-                    //delete account
-                }
-                case 4 -> {
-                    //create store function
-                }
-                case 5 -> {
-                    //edit store function
-                }
-                case 6 -> {
-                    //delete store function
-                }
-                default -> {
-                    throw new Exception("Invalid Number Choice")
-                }
-            }
-        }
-        public void generateCustomerMenu() {
-            System.out.println("What would you like to do? Choose numbers 1-3.");
-            System.out.println("1. View Stores \n2. Edit Account\n3.Delete Account");
-            int choice = scanner.nextInt();
-            scanner.nextLine();
-            switch (choice) {
-                case 1 -> {
-                    //list store names function
-                }
-                case 2 -> {
-                    //edit account
-                }
-                case 3 -> {
-                    //delete account
-                }
-                default -> {
-                    throw new Exception("Invalid Number Choice")
-                }
         }
     }
 }

@@ -36,10 +36,26 @@ public class Customer extends User {
         return cart;
     }
 
+    public void singlePurchase(Store store, String name, int quantity, ArrayList<Product> products)
+            throws IOException, IllegalArgumentException {
+        PrintWriter pw = new PrintWriter(new FileWriter("statistics.txt", true));
+        for (Product product : products) {
+            if (store.equals(product.getStore()) && name.equals(product.getProductName())) {
+                if (quantity < product.getStock()) {
+                    throw new IllegalArgumentException("Stock exceeded!");
+                }
+                for (int j = 0; j < quantity; j++) {
+                    pw.println(String.format("%s,%s,%s,%.2f", product.getStore().getStoreName(), this.getName(),
+                            product.getProductName(), product.getPrice()));
+                    product.decrementStock();
+                }
+                return;
+            }
+        }
+    }
 
     //has quantity parameter
-    public void addToCart(Store store, String name, int quantity , ArrayList<Product> products) {
-
+    public void addToCart(Store store, String name, int quantity, ArrayList<Product> products) {
         for (Product product : products) {
             if (store.equals(product.getStore()) && name.equals(product.getProductName())) {
                 for (int j = 0; j < quantity; j++) {
@@ -51,17 +67,34 @@ public class Customer extends User {
     }
 
 
-    public void removeFromCart(Store store, String name) {
-        for (int i = 0; i < cart.size(); i++) {
-            if (cart.get(i).getProductName().equals(name) && cart.get(i).getStore() == store) {
-                cart.remove(i);
-                //don't add return once found the product because addToCart method adds multiple identical products if quantity > 1. 
+    public void removeFromCart(Store store, String name, int quantity) {
+        for (int i = cart.size() - 1; i >= 0; i--) {
+            for (int j = 0; j < quantity; j++) {
+                if (cart.get(i).getProductName().equals(name) && cart.get(i).getStore() == store) {
+                    cart.remove(i);
+                }
             }
         }
     }
 
+    public ArrayList<Integer> getProductOccurrences() {
+        Map<Product, Integer> productCountMap = new HashMap<>();
+
+        for (Product product : cart) {
+            productCountMap.put(product, productCountMap.getOrDefault(product, 0) + 1);
+        }
+
+        ArrayList<Integer> productOccurrencesList = new ArrayList<>();
+
+        for (Product product : cart) {
+            productOccurrencesList.add(productCountMap.get(product));
+        }
+        return productOccurrencesList;
+    }
+
     public void purchaseCart(Scanner scan) throws IOException, IllegalArgumentException {
         PrintWriter pw = new PrintWriter(new FileWriter("statistics.txt", true));
+        ArrayList<Integer> quantity = this.getProductOccurrences();
 
         System.out.printf("Purchase all cart items for $%.2f?\n1. Confirm purchase\n2. Exit\n", this.calculatePrice());
         int count = 0;
@@ -69,8 +102,8 @@ public class Customer extends User {
             int choice = scan.nextInt();
             scan.nextLine();
             if (choice == 1) {
-                for (Product value : cart) {
-                    if (value.getStock() < 1) {
+                for (int i = 0; i < cart.size(); i++) {
+                    if (cart.get(i).getStock() < quantity.get(i)) {
                         throw new IllegalArgumentException("Stock exceeded!");
                     }
                 }
@@ -127,7 +160,7 @@ public class Customer extends User {
         ArrayList<String> dashboard = new ArrayList<>();
         ArrayList<String> y = new ArrayList<>();
         for (Product product : transactionHistoryProducts) {
-            y.add(product.getStore().getStoreName()); 
+            y.add(product.getStore().getStoreName());
         }
         for (String k : y) {
             if (!dashboard.contains(k)) {
@@ -139,7 +172,7 @@ public class Customer extends User {
         }
         return x;
     }
-    
+
     //Returns a string that contains a list of stores and the number of products they sold
     public String dashboardbySold(ArrayList<Store> stores) {
         String x = "";
