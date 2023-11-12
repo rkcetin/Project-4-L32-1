@@ -133,7 +133,7 @@ public class Main {
         return numInput;
     }
 }
-
+/*
     public void generateSellerMenu() {
         System.out.println("What would you like to do? Choose numbers 1-6.");
         System.out.println("1. View Stores \n2. Edit Account\n3.Delete Account\n4.Create Store\n5.Edit Store\n" +
@@ -186,5 +186,5 @@ public class Main {
     }
 }
 }
-
+*/
 
