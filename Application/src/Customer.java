@@ -17,20 +17,10 @@ import java.util.stream.Collectors;
 public class Customer extends User {
     private ArrayList<Product> cart;
     private ArrayList<String> transactionHistory;
-    private ArrayList<Product> transactionHistoryProducts;
-    private int boughtProduct;
-
-    public int getBoughtProduct() {
-        return boughtProduct;
-    }
-
-    public void incrementBoughtProduct() {
-        boughtProduct++;
-    }
+    private ArrayList<Product> transactionHistoryProducts = new ArrayList<>();
 
     public Customer(String name, String password, String salt) {
         super(name, password , salt);
-        boughtProduct = 0;
     }
 
     public ArrayList<Product> getCart() {
@@ -110,6 +100,7 @@ public class Customer extends User {
                 }
                 for (Product product : cart) {
                     this.transactionHistory.add(product.toString2());
+                    transactionHistoryProducts.add(product);
                     product.decrementStock();
                     count++;
                 }
@@ -156,7 +147,7 @@ public class Customer extends User {
     }
 
     //Returns a string that contains a list of stores that the customer have purchased from before
-    public String dashboardbyBought() {
+    public String dashboardByBought() {
         String x = "";
         ArrayList<String> dashboard = new ArrayList<>();
         ArrayList<String> y = new ArrayList<>();
@@ -175,7 +166,7 @@ public class Customer extends User {
     }
 
     //Returns a string that contains a list of stores and the number of products they sold
-    public String dashboardbySold(ArrayList<Store> stores) {
+    public String dashboardBySold(ArrayList<Store> stores) {
         String x = "";
         ArrayList<String> dashboard = new ArrayList<>();
 
