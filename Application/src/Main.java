@@ -1,5 +1,7 @@
 
+
 import java.util.*;
+
 
 public class Main {
     private static final int USER_INDEX = 0;
@@ -49,6 +51,7 @@ public class Main {
                     if (exitCommand == 1) {
                         break;
                     }
+
 
 
                 }
@@ -130,7 +133,7 @@ public class Main {
         return numInput;
     }
 }
-/*
+
     public void generateSellerMenu() {
         System.out.println("What would you like to do? Choose numbers 1-6.");
         System.out.println("1. View Stores \n2. Edit Account\n3.Delete Account\n4.Create Store\n5.Edit Store\n" +
@@ -159,6 +162,7 @@ public class Main {
             default -> {
                 throw new Exception("Invalid Number Choice")
             }
+
         }
     }
     public void generateCustomerMenu() {
@@ -182,5 +186,5 @@ public class Main {
     }
 }
 }
-*/
+
 

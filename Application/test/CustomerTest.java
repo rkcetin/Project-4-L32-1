@@ -1,9 +1,7 @@
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.InputMismatchException;
-import java.util.Scanner;
+import java.util.*;
 
 public class CustomerTest {
     public static void main(String[] args) throws IOException {
@@ -25,6 +23,16 @@ public class CustomerTest {
             count++;
         }
         System.out.println(count); //should be 0
+
+        ArrayList<String> cart2 = new ArrayList<>();
+        cart2.add("store1");
+        cart2.add("store1");
+        cart2.add("store2");
+        cart2.add("store1");
+        cart2.add("store3");
+        cart2.add("store3");
+
+        System.out.println(CustomerTest.getProductOccurrences(cart2));
     }
 
     public static void purchaseCart(Scanner scan, ArrayList<Double[]> cart, double cost) throws IOException, IllegalArgumentException {
@@ -72,5 +80,20 @@ public class CustomerTest {
             price += cart.get(i)[0];
         }
         return price;
+    }
+
+    public static ArrayList<Integer> getProductOccurrences(ArrayList<String> cart) {
+        Map<String, Integer> productCountMap = new HashMap<>();
+
+        for (String name : cart) {
+            productCountMap.put(name, productCountMap.getOrDefault(name, 0) + 1);
+        }
+
+        ArrayList<Integer> productOccurrencesList = new ArrayList<>();
+
+        for (String name : cart) {
+            productOccurrencesList.add(productCountMap.get(name));
+        }
+        return productOccurrencesList;
     }
 }

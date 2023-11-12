@@ -33,12 +33,7 @@ public class Storage {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
-
     }
-
-
 
     public static Object[] getData() {
         Object[] data = null;
@@ -61,6 +56,4 @@ public class Storage {
         }
         return data;
     }
-
 }
-

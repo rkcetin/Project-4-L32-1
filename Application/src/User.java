@@ -28,6 +28,7 @@ public class User implements Serializable {
         this.password = password;
         this.salt = salt;
     }
+
     //returns the name of the user
     public String getName() {
         return name;
@@ -42,7 +43,6 @@ public class User implements Serializable {
     }
 
     //user auth methods
-
     public static boolean isValidEmail(String email) {
         return email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
     }
@@ -59,10 +59,12 @@ public class User implements Serializable {
 
         return salt.toString();
     }
+
     // Hash the password using a secure hashing algorithm
     private static String hashPassword(String password, String salt) {
         return password + salt;
     }
+
     public static User isEmailRegistered(String email , ArrayList<User> users) {
         if(email == null || users == null) {
             throw new NullPointerException();
@@ -76,6 +78,7 @@ public class User implements Serializable {
         }
         return filteredUsers.get(0);
     }
+
     // Save user information to the file
     public static User saveUserToDatabase(String email, String hashedPassword, String salt, int role, ArrayList<User> users) {
         User newUser = null;
@@ -87,13 +90,11 @@ public class User implements Serializable {
                 newUser = new Customer(email , hashedPassword , salt);
                 break;
 
-
-
         }
-
         users.add(newUser);
         return newUser;
     }
+
     public static User login(String email, String password, ArrayList<User> users) throws Exception{
         User currentUser = null;
         if (User.isValidEmail(email)) {
@@ -126,6 +127,7 @@ public class User implements Serializable {
             throw new Exception("Incorrect Email Format");
         }
     }
+
     public static User signup(String email, String password , int role, ArrayList<User> users) throws Exception {
         // Check if the email is valid
         if (User.isValidEmail(email)) {
@@ -149,5 +151,4 @@ public class User implements Serializable {
             throw new Exception("Invalid email format");
         }
     }
-
 }
