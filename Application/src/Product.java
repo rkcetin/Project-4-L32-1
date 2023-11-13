@@ -202,7 +202,7 @@ public class Product implements Serializable {
      * @param productName string name of the product looking for
      * @param products list of products to search for the name
      * @throws NullPointerException when input is null
-     * @return Product if the value exists within products null if it doesnt
+     * @return Product if the value exists within products null if it does not
      */
     public static Product checkProduct(String productName, ArrayList<Product> products) {
         if(productName == null || products == null) {
@@ -300,8 +300,6 @@ public class Product implements Serializable {
         }
 
     }
-
-
 
    //formats all the information into a string and returns it
     /**

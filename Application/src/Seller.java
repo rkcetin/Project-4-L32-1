@@ -33,7 +33,7 @@ public class Seller extends User {
 
     //creates a new store with the given store name
     /**
-     * creates a store and adds it to the provided list of stores in additino
+     * creates a store and adds it to the provided list of stores in addition
      * to the seller's list of stores
      * @param storeName the new store name
      * @param bigStores the arraylist of stores to add to
@@ -76,6 +76,14 @@ public class Seller extends User {
         return stores;
     }
 
+    public ArrayList<String> getStoreNames() {
+        ArrayList<String> storeNames = new ArrayList<>();
+        for (int i = 0; i < stores.size(); i++) {
+            storeNames.add(stores.get(i).getStoreName());
+        }
+        return storeNames;
+    }
+
     public String getStoresString(ArrayList<Store> stores) {
         String list = "";
         for (int i = 0; i < stores.size(); i++) {
@@ -112,17 +120,16 @@ public class Seller extends User {
      * @throws IOException from invalid reading of files
      * @return returns the statistics for the sellers stores
      */
-    public ArrayList<String> displayUnsortedStatistics() throws IOException {
+    public String displayUnsortedStatistics() throws IOException {
         BufferedReader bfr = new BufferedReader(new FileReader("statistics.txt"));
         Map<String, Integer> productCounts = new HashMap<>();
-        ArrayList<String> unsortedStats = new ArrayList<>();
-
+        String a = "";
         String line;
 
         while ((line = bfr.readLine()) != null) {
-            for (Store store : stores) {
-                if (line.split(",")[0].equals(store.getStoreName())) {
-                    String key = line.trim();
+            for (int i = 0; i < stores.size(); i++) {
+                if (line.split(",")[0].equals(stores.get(i).getStoreName())) {
+                    String key = line.trim();  // Assuming leading/trailing whitespaces don't matter
                     productCounts.put(key, productCounts.getOrDefault(key, 0) + 1);
                 }
             }
@@ -131,24 +138,17 @@ public class Seller extends User {
         for (Map.Entry<String, Integer> entry : productCounts.entrySet()) {
             String product = entry.getKey();
             int count = entry.getValue();
-            String countString;
-            if (count > 1) {
-                countString = count + "x ";
-            } else {
-                countString = "";
-            }
-            unsortedStats.add(countString + product.split(",")[0] + "," + product.split(",")[1] + ","
-                    + product.split(",")[2]);
-            System.out.println(countString + product);
+            String countString = (count > 1) ? count + "x " : "1x ";
+            a += String.format("%s%s,%s,%.2f\n",countString , product.split(",")[0], product.split(",")[2], (Double.parseDouble(product.split(",")[3]) * count));
         }
-        return unsortedStats;
+        return a;
     }
 
     //has to run with displayUnsortedStatistics()
     /**
      * returns a sorted representation of the statistics based upon sales either high or low
      * @param statisticsResult the string of unsorted statistics
-     * @param highestToLowest a boolean deteremining whether statistics sorted starting high or low
+     * @param highestToLowest a boolean determining whether statistics sorted starting high or low
      * @return returns the store object of a particular store name
      */
     public String sortStatisticsBySales(String statisticsResult, boolean highestToLowest) {
@@ -164,10 +164,10 @@ public class Seller extends User {
     /**
      * returns a sorted representation of the statistics based upon quantity of sales high or low
      * @param stores arraylist of stores to reference
-     * @param highestToLowest a boolean deteremining whether statistics sorted starting high or low
-     * @return returns a String of store statistics sorted based upon of quantity of slaes
+     * @param highestToLowest a boolean determining whether statistics sorted starting high or low
+     * @return returns a String of store statistics sorted based upon of quantity of sales
      */
-    public static String sortByOccurrences(ArrayList<String> stores, boolean highestToLowest) throws IOException {
+    public String sortByOccurrences(ArrayList<String> stores, boolean highestToLowest) throws IOException {
         BufferedReader bfr = new BufferedReader(new FileReader("statistics.txt"));
         Map<String, Integer> storeOccurrences = new HashMap<>();
         String a = "";
@@ -253,7 +253,7 @@ public class Seller extends User {
     /**
      * checks if 2 sellers are equal based upon their name
      * @param o object for comparison
-     * @return retuns if the object has equal name to the seller
+     * @return returns if the object has equal name to the seller
 
      */
     public boolean equals(Object o) {
@@ -264,11 +264,13 @@ public class Seller extends User {
             return false;
         }
     }
-    /**
+
+    //THE METHOD BELOW IS OBSOLETE
+    /*/**
      * returns dashboard of products for all the stores of a seller showing product name and quantity sold
 
      * @return returns a dashboard of the products for a seller showing product sold and product name
-     */
+     *
     
     public String dashboardProducts() {
         String x = "";
@@ -282,9 +284,34 @@ public class Seller extends User {
             x += dashboard.get(i);
         }
         return x;
+    }*/
+
+    public List<String> customersOfStores(ArrayList<String> storeNames) {
+        Map<String, Set<String>> storeToUserMap = new HashMap<>();
+
+        try (BufferedReader br = new BufferedReader(new FileReader("statistics.txt"))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length == 4) {
+                    String storeName = parts[0].trim();
+                    String userName = parts[1].trim();
+
+                    if (storeNames.contains(storeName)) {
+                        storeToUserMap.computeIfAbsent(storeName, k -> new HashSet<>()).add(userName);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        List<String> result = new ArrayList<>();
+        for (String storeName : storeNames) {
+            Set<String> users = storeToUserMap.getOrDefault(storeName, new HashSet<>());
+            result.add(String.join(", ", users));
+        }
+
+        return result;
     }
-    //need list of customers
-    // public ArrayList<String> dashboardPurchased() {
-        
-    // }
 }

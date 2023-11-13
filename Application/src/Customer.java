@@ -35,7 +35,7 @@ public class Customer extends User {
 
     /**
      * Adds a specific item to the users cart a particular number of times
-     * pulls products from collectino of products in arraylist
+     * pulls products from collection of products in arraylist
      *
      * @return returns an ArrayList of products representing the customers cart
      *
@@ -59,6 +59,7 @@ public class Customer extends User {
         PrintWriter pw = new PrintWriter(new FileWriter("statistics.txt", true));
         for (Product product : products) {
             if (store.equals(product.getStore()) && name.equals(product.getProductName())) {
+                System.out.printf("Purchasing %d of these items for %.2f....Purchased\n", quantity, product.getPrice() * quantity);
                 if (quantity > product.getStock()) {
                     throw new IllegalArgumentException("Stock exceeded!");
                 }
@@ -75,7 +76,7 @@ public class Customer extends User {
     //has quantity parameter
     /**
      * Adds a specific item to the users cart a particular number of times
-     * pulls products from collectino of products in arraylist
+     * pulls products from collection of products in arraylist
      *
      * @param store relates to the store the customer of the product the customer to their cart
      * @param name name of the product the customer is purchasing
@@ -137,7 +138,7 @@ public class Customer extends User {
         return productOccurrencesList;
     }
     /**
-     * purchases cart and adds the inforaiton to statistics.txt
+     * purchases cart and adds the information to statistics.txt
      *
      *
      * @param scan represents a scanner the user passes in to handle the input for the confirmation of the cart purchase
@@ -225,44 +226,12 @@ public class Customer extends User {
         this.transactionHistory = transactionHistory;
     }
 
-
-    public static String sortByOccurrences(ArrayList<String> stores, boolean highestToLowest) throws IOException {
-        BufferedReader bfr = new BufferedReader(new FileReader("statistics.txt"));
-        Map<String, Integer> storeOccurrences = new HashMap<>();
-        String a = "";
-        String line;
-
-        while ((line = bfr.readLine()) != null) {
-            for (int i = 0; i < stores.size(); i++) {
-                if (line.split(",")[0].equals(stores.get(i))) {
-                    String key = stores.get(i);
-                    storeOccurrences.put(key, storeOccurrences.getOrDefault(key, 0) + 1);
-                }
-            }
-        }
-
-        List<Map.Entry<String, Integer>> sortedEntries = storeOccurrences.entrySet()
-                .stream()
-                .sorted((entry1, entry2) -> highestToLowest ?
-                        Integer.compare(entry2.getValue(), entry1.getValue()) :
-                        Integer.compare(entry1.getValue(), entry2.getValue()))
-                .collect(Collectors.toList());
-
-        for (Map.Entry<String, Integer> entry : sortedEntries) {
-            String storeName = entry.getKey();
-            int totalOccurrences = entry.getValue();
-            a += totalOccurrences + " purchases from " + storeName + "\n";
-        }
-        return a;
-    }
-
-
-        /**
-         * calculates price of products in cart
-         *
-         * @ return returns the price of the cart
-         *
-         */
+    /**
+     * calculates price of products in cart
+     *
+     * @ return returns the price of the cart
+     *
+     */
     public double calculatePrice() {
         double price = 0;
         for (Product product : cart) {
@@ -271,7 +240,7 @@ public class Customer extends User {
         return price;
     }
     /**
-     * generates a string represetation of a dashboard the customer has purchased from before
+     * generates a string representation of a dashboard the customer has purchased from before
      *
      * @return returns a string representation of the stores the customer has purchased from before
      */
@@ -282,7 +251,7 @@ public class Customer extends User {
         ArrayList<String> dashboard = new ArrayList<>();
         ArrayList<String> y = new ArrayList<>();
         for (Product product : transactionHistoryProducts) {
-            y.add(product.getStore().getStoreName()); 
+            y.add(product.getStore().getStoreName());
         }
         for (String k : y) {
             if (!dashboard.contains(k)) {
@@ -317,7 +286,9 @@ public class Customer extends User {
         System.out.println(x);
         return x;
     }
-    //Sorts the dashboard according to the number after second ":"
+
+    //THE BELOW METHOD IS OBSOLETE
+    /*Sorts the dashboard according to the number after second ":"
     public String sortDashboard(String x) {
         String willReturn = "";
         if (x.indexOf(":") == -1) {
@@ -330,7 +301,7 @@ public class Customer extends User {
                 int soldNext = Integer.parseInt(lines[i+1].split(":")[2].trim());
                 if (soldNext > sold) {
                     lines[i] = lines[i + 1];
-                    lines[i + 1] = lines[i]; 
+                    lines[i + 1] = lines[i];
                 }
             }
             for (int i = 0; i < lines.length; i++) {
@@ -338,7 +309,8 @@ public class Customer extends User {
             }
             return willReturn;
         }
-    }
+    }*/
+
     //Extracts transaction history as a file 
     public File extractTransactionHistory() throws Exception {
         File f = new File("transactionHistory.txt");
@@ -350,5 +322,55 @@ public class Customer extends User {
         pw.flush();
         System.out.println("Extracted to -transactionHistory.txt-");
         return f;
+    }
+
+    public Map<String, Integer> getPurchaseCounts() throws IOException {
+        BufferedReader reader = new BufferedReader(new FileReader("statistics.txt"));
+        Map<String, Integer> purchaseCounts = new HashMap<>();
+        String line;
+
+        while ((line = reader.readLine()) != null) {
+            String[] parts = line.split(",");
+            if (parts.length == 4 && parts[1].equals(this.getName())) {
+                String storeName = parts[0];
+                purchaseCounts.put(storeName, purchaseCounts.getOrDefault(storeName, 0) + 1);
+            }
+        }
+
+        reader.close();
+        return purchaseCounts;
+    }
+
+    public String sortPurchaseCounts(Map<String, Integer> purchaseCounts, boolean highestToLowest) {
+        return purchaseCounts.entrySet()
+                .stream()
+                .sorted((entry1, entry2) -> highestToLowest ?
+                        Integer.compare(entry2.getValue(), entry1.getValue()) :
+                        Integer.compare(entry1.getValue(), entry2.getValue()))
+                .map(entry -> entry.getKey() + ": " + entry.getValue() + " purchases")
+                .collect(Collectors.joining("\n"));
+    }
+
+    public Map<String, Integer> countStoreOccurrences() throws IOException {
+        Map<String, Integer> storeCounts = new HashMap<>();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader("statistics.txt"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String storeName = line.split(",")[0].trim();
+                storeCounts.put(storeName, storeCounts.getOrDefault(storeName, 0) + 1);
+            }
+        }
+
+        return storeCounts;
+    }
+
+    public String sortStoreCounts(Map<String, Integer> storeCounts, boolean highestToLowest) {
+        return storeCounts.entrySet().stream()
+                .sorted((entry1, entry2) -> highestToLowest ?
+                        Integer.compare(entry2.getValue(), entry1.getValue()) :
+                        Integer.compare(entry1.getValue(), entry2.getValue()))
+                .map(entry -> entry.getKey() + ": " + entry.getValue() + " purchases")
+                .collect(Collectors.joining("\n"));
     }
 }

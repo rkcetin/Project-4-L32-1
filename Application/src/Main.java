@@ -42,7 +42,8 @@ public class Main {
                             exitCommand = binaryInputHandler(exitInput);
 
                         } catch (NumberFormatException e) {
-                            System.out.println("Input Valid option");
+                            System.out.println("Invalid input! Pick either 1 or 2.");
+                            continue outerLoop;
                         }
                     }
                     if (exitCommand == 1) {
@@ -50,6 +51,7 @@ public class Main {
                     }
                 }
             } else if (input.equals("2") || input.equalsIgnoreCase("sign up")) {
+                innerLoop:
                 while (workingUser == null) {
 
                     try {
@@ -74,9 +76,11 @@ public class Main {
                         }
                         break;
                     } catch (NumberFormatException e) {
-                        System.out.println("Invalid input! Pick either 1 or 2.");
-                    } catch (Exception e) {
-                        System.out.println(e.getMessage());
+                        System.out.println("Invalid input! Pick either 1 or 2. Try again");
+                        continue innerLoop;
+                    } catch (IllegalArgumentException iae) {
+                        System.out.println(iae.getMessage());
+
                     }
                     int exitCommand = 0;
 
@@ -210,14 +214,45 @@ public class Main {
                     seller.deleteUser();
                 }
                 case 7 -> {
-                    System.out.println(seller.displayUnsortedStatistics().toString());
+                    String b = seller.displayUnsortedStatistics().toString();
+                    System.out.println("1. View unsorted statistics\n2. View statistics sorted by sales\n3. View statistics sorted by number of purchases made from each store\n4. View who has purchased from your stores.");
+                    int a = scanner.nextInt();
+                    int c = -1;
+                    scanner.nextLine();
+                    if (a == 1) {
+                        System.out.println(b);
+                    } else if (a == 2) {
+                        System.out.println("1. Sort sales from highest to lowest\n2. Sort sales from lowest to highest");
+                        c = scanner.nextInt();
+                        scanner.nextLine();
+                        if (c == 1) {
+                            System.out.println(seller.sortStatisticsBySales(b, true));
+                        } else if (c == 2) {
+                            System.out.println(seller.sortStatisticsBySales(b, false));
+                        }
+                    } else if (a == 3) {
+                        System.out.println("1. Sort sales from highest to lowest\n2. Sort sales from lowest to highest");
+                        c = scanner.nextInt();
+                        scanner.nextLine();
+                        if (c == 1) {
+                            System.out.println(seller.sortByOccurrences(seller.getStoreNames(), true));
+                        } else if (c == 2) {
+                            System.out.println(seller.sortStatisticsBySales(b, false));
+                        }
+                    } else if (a == 4) {
+                        List<String> result = seller.customersOfStores(seller.getStoreNames());
+                        for (int i = 0; i < seller.getStoreNames().size(); i++) {
+                            String storeName = seller.getStoreNames().get(i);
+                            System.out.println("Users who purchased from " + storeName + ": " + result.get(i));
+                        }
+                    }
                 }
                 case 8 -> {
                     Storage.storeData(users, stores, products);
                     return;
                 }
             }
-            System.out.println("Enter 1 if you want to go to main menu");
+            System.out.println("Enter 1 if you want to return to the main menu");
             int cont = Integer.parseInt(scanner.nextLine());
             if (cont != 1) {
                 sellerMain = false;
@@ -228,7 +263,7 @@ public class Main {
         System.out.println("What would you like to do? Choose numbers 1-7.");
         boolean customerMain = true;
         do {
-            System.out.println("1. View Products \n2. Edit Account\n3. Delete Account\n4. View Cart\n5. View Dashboard\n6. Extract Transaction History\n7. Exit marketplace");
+            System.out.println("1. View Products \n2. Edit Account\n3. Delete Account\n4. View Cart\n5. View Dashboard\n6. Extract Transaction History\n7. View statistics\n8. Exit marketplace");
             int choice = scanner.nextInt();
             scanner.nextLine();
             switch (choice) {
@@ -248,13 +283,18 @@ public class Main {
                             break;
                         }
                         System.out.println(String.format("Description: %s - Stock: %d", products.get(x - 1).getProductDescription(), products.get(x - 1).getStock()));
-                        System.out.println("Do you want to add this product to your cart? If so, enter 1.");
-                        if (Integer.parseInt(scanner.nextLine()) == 1) {
+                        System.out.println("If you want to add this item to your cart enter 1.\nIf you want to purchase this item individually enter 2.");
+                        String z = scanner.nextLine();
+                        if (z.equals("1")) {
                             System.out.println("Enter quantity");
                             int quantity = Integer.parseInt(scanner.nextLine());
                             customer.addToCart(products.get(x - 1).getStore(), products.get(x - 1).getProductName(), quantity, products);
+                        } else if (z.equals("2")) {
+                            System.out.println("Enter quantity");
+                            int quantity = Integer.parseInt(scanner.nextLine());
+                            customer.singlePurchase(products.get(x - 1).getStore(), products.get(x - 1).getProductName(), quantity, products);
                         }
-                        System.out.println("Enter 1 if you want to keep searching for products");
+                        System.out.println("Enter 1 if you want to keep searching for products.");
                         if (Integer.parseInt(scanner.nextLine()) != 1) {
                             mainCont = false;
                         }
@@ -309,11 +349,40 @@ public class Main {
                         break;
                     } else if (x == 1) {
                         System.out.println(customer.getTransactionHistory());
-                    } else if (x == 2) {
+                    } else {
                         customer.extractTransactionHistory();
                     }
                 }
                 case 7 -> {
+                    System.out.println("1. View what stores you have purchased from\n2. View total purchases from stores");
+                    int a = scanner.nextInt();
+                    int c;
+                    scanner.nextLine();
+                    if (a == 1) {
+                        System.out.println("1. Sort from highest to lowest\n2. Sort from lowest to highest");
+                        c = scanner.nextInt();
+                        scanner.nextLine();
+                        if (c == 1) {
+                            Map<String, Integer> purchaseCounts = customer.getPurchaseCounts();
+                            System.out.println(customer.sortPurchaseCounts(purchaseCounts, true));
+                        } else if (c == 2) {
+                            Map<String, Integer> purchaseCounts = customer.getPurchaseCounts();
+                            System.out.println(customer.sortPurchaseCounts(purchaseCounts, false));
+                        }
+                    } else if (a == 2) {
+                        System.out.println("1. Sort from highest to lowest\n2. Sort from lowest to highest");
+                        c = scanner.nextInt();
+                        scanner.nextLine();
+                        if (c == 1) {
+                            Map<String, Integer> storeCounts = customer.countStoreOccurrences();
+                            System.out.println(customer.sortStoreCounts(storeCounts, true));
+                        } else if (c == 2) {
+                            Map<String, Integer> storeCounts = customer.countStoreOccurrences();
+                            System.out.println(customer.sortStoreCounts(storeCounts, false));
+                        }
+                    }
+                }
+                case 8 -> {
                     Storage.storeData(users, stores, products);
                     return;
                 }
@@ -321,7 +390,7 @@ public class Main {
                     System.out.println("Invalid input! Please choose a number from 1-7.");
                 }
             }
-            System.out.println("Enter 1 if would like to return to the main menu.");
+            System.out.println("Enter 1 if you want to return to the main menu");
             if (Integer.parseInt(scanner.nextLine()) != 1) {
                 customerMain = false;
             }

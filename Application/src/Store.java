@@ -51,7 +51,7 @@ public class Store implements Serializable {
     /**
      * searches provided list for a store with the provided storename and returns the object if it is found
      * @param storeName storeName to look for
-     * @param stores arraylist of stores to lookwithin
+     * @param stores arraylist of stores to look within
      * @return returns the object for the store with corresponding storeName null if otherwise
      * @throws NullPointerException when null input
      *
@@ -74,7 +74,7 @@ public class Store implements Serializable {
     /**
      * removes store from list of store
      * @param storeName storeName to look for
-     * @param stores arraylist of stores to lookwithinse
+     * @param stores arraylist of stores to look within
      * @throws NullPointerException when null input or if invalid store
      *
      */
@@ -120,7 +120,7 @@ public class Store implements Serializable {
     }
 
     /**
-     *  creates a product in a store if it doesnt already exist in the store
+     *  creates a product in a store if it does not already exist in the store
      * @param name name of the product
      * @param description description of the product
      * @param stock stock of the product
@@ -150,7 +150,7 @@ public class Store implements Serializable {
         products.add(product);
     }
     /**
-     *  removes a product from the store
+     * removes a product from the store
      * @param name name of the product to remove
      * @param bigProducts arraylist to remove from
      *
@@ -165,10 +165,9 @@ public class Store implements Serializable {
         bigProducts.remove(productToRemove);
     }
     /**
-     *  edits the information about a product
+     * edits the information about a product
      * @param name name of to edit
      * @param scan scanner to read user input
-     *
      *
      */
     public void editProduct(String name, Scanner scan) {

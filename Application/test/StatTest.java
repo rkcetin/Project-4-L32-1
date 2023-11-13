@@ -7,8 +7,8 @@ import java.util.stream.Collectors;
 public class StatTest {
     public static void main(String[] args) throws IOException {
         ArrayList<String> stores = new ArrayList<>();
-        stores.add("store1");
-        stores.add("store2");
+        stores.add("Pollo");
+        stores.add("Food");
 
         String statisticsResult = getStatistics(stores);
         String sortedResult = sortStatisticsBySales(statisticsResult, false);

@@ -62,7 +62,7 @@ public class User implements Serializable {
     }
     /**
      * updates the password
-     * @param password updates the userpassword
+     * @param password updates the user password
 
      */
     public void setPassword(String password) {
@@ -143,7 +143,7 @@ public class User implements Serializable {
 
     // Save user information to the file
     /**
-     * saves a user to the an arraylist of users and returns the user
+     * saves a user to an arraylist of users and returns the user
      * @param email email
      * @param hashedPassword password
      * @param salt salt to help authentication
@@ -171,7 +171,7 @@ public class User implements Serializable {
      * logs the user in if information is correct returns object for their account
      * @param email email to identify user
      * @param password password to verify
-     * @param users arraylist to serach for email and password
+     * @param users arraylist to search for email and password
      * @return User if correctly logged in
      * @throws Exception if invalid information
      * returns the object for a user if they are logged in
@@ -197,7 +197,7 @@ public class User implements Serializable {
                     if (storedHashedPassword.equals(hashedPassword)) {
                         return currentUser;
                     } else {
-                        throw new Exception("login failed");
+                        throw new Exception("Login failed");
                     }
                 } else {
                     throw new Exception("Missing data?");
@@ -238,16 +238,15 @@ public class User implements Serializable {
                 return endUser;
                 // Store the email, hashed password, and salt in a file
             } else {
-                throw new Exception("Email Already Registerd");
+                throw new IllegalArgumentException("Email already registered!");
             }
         } else {
-            throw new Exception("Invalid email format");
+            throw new IllegalArgumentException("Invalid e-mail format!");
         }
     }
 
 
     public void deleteUser() {
-
         this.name = null;
         this.password = null;
         this.salt = null;
