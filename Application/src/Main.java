@@ -466,6 +466,48 @@ public class Main {
                 switch (choice) {
                     case 1 -> {
                         boolean mainCont = true;
+                        boolean leaveSort = false;
+                        do {
+                            try {
+                                System.out.println("Do you want to sort the products? \n 1. By price \n 2. By stock available \n 3. no");
+                                String sortInput = scanner.nextLine();
+                                int sortHandled = numberInputHandler(sortInput , 3);
+                                switch (sortHandled) {
+                                    case 1:
+                                        System.out.println("Do you want to start \n 1.high\n2. low?");
+                                        String highlow = scanner.nextLine();
+                                        int highLowInt = binaryInputHandler(highlow);
+                                        if (highLowInt == 1) {
+                                            Product.sortPrice(false, products);
+                                        } else {
+                                            Product.sortPrice(true , products);
+                                        }
+                                        leaveSort = true;
+                                        break;
+                                    case 2:
+                                        System.out.println("Do you want to start \n 1.high\n2. low?");
+                                        String lowHigh = scanner.nextLine();
+                                        int lowHighInt = binaryInputHandler(lowHigh);
+                                        if (lowHighInt == 1) {
+                                            Product.sortStock(false, products);
+                                        } else {
+                                            Product.sortStock(true , products);
+                                        }
+                                        leaveSort = true;
+                                        break;
+                                    case 3:
+                                        throw new NumberFormatException();
+
+                                }
+
+
+
+                            } catch (NumberFormatException e) {
+                                if (!leaveSort)
+                                    System.out.println("invalid input");
+                                break;
+                            }
+                        } while (leaveSort == false);
                         do {
                             System.out.println("Enter the index of the product that you want to know more about. Enter -1 to return to the main menu");
                             for (int i = 1; i <= products.size(); i++) {
