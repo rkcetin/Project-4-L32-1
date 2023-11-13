@@ -469,14 +469,14 @@ public class Main {
                         System.out.println("Invalid input! Please enter a number.");
                     }
                 }
-
+                innerLoop:
                 switch (choice) {
                     case 1 -> {
                         boolean mainCont = true;
                         boolean leaveSort = false;
                         do {
                             try {
-                                System.out.println("Do you want to sort the products? \n1. Sort by price\n2. Sort by stock available");
+                                System.out.println("Do you want to sort the products? \n1. Sort by price\n2. Sort by stock available\n3. Search for specifics\n4. Return to main menu");
                                 int sortInput = scanner.nextInt();
                                 scanner.nextLine();
                                 switch (sortInput) {
@@ -501,6 +501,63 @@ public class Main {
                                             Product.sortStock(true, products);
                                         }
                                         leaveSort = true;
+                                    } case 3 -> {
+                                        System.out.println("Enter the string to search upon.");
+                                        String searchText = scanner.nextLine();
+                                        ArrayList<Product> searchArrayList = Product.search(searchText, products);
+                                        System.out.println("Enter the index of the product that you want to know more about. Enter -1 to return to the main menu");
+                                        for (int i = 1; i <= searchArrayList.size(); i++) {
+                                            System.out.printf("%d - Store: %s | Product: %s | Price: %.2f | Remaining Stock: %d\n", i, searchArrayList.get(i - 1).getStore().getStoreName(), searchArrayList.get(i - 1).getProductName(), searchArrayList.get(i - 1).getPrice(), searchArrayList.get(i - 1).getStock());
+                                        }
+                                        int x;
+                                        while (true) {
+                                            try {
+                                                x = Integer.parseInt(scanner.nextLine());
+                                                break;
+                                            } catch (NumberFormatException e) {
+                                                System.out.println("Invalid input! Please enter a number.");
+                                            }
+                                        }
+                                        if (x == -1) {
+                                            break;
+                                        }
+                                        if (x < 1 || x > products.size()) {
+                                            System.out.println("Invalid input!");
+                                            break;
+                                        }
+                                        System.out.println(String.format("Description: %s - Stock: %d", searchArrayList.get(x - 1).getProductDescription(), searchArrayList.get(x - 1).getStock()));
+                                        System.out.println("If you want to add this item to your cart enter 1.\nIf you want to purchase this item individually enter 2.");
+                                        String z = scanner.nextLine();
+                                        if (z.equals("1")) {
+                                            System.out.println("Enter quantity.");
+                                            int quantity;
+                                            while (true) {
+                                                try {
+                                                    quantity = Integer.parseInt(scanner.nextLine());
+                                                    System.out.println(quantity + " of these items were added to your cart");
+                                                    break;
+                                                } catch (NumberFormatException e) {
+                                                    System.out.println("Invalid input! Please enter a number.");
+                                                }
+                                            }
+                                            customer.addToCart(searchArrayList.get(x - 1).getStore(), searchArrayList.get(x - 1).getProductName(), quantity, products);
+                                        } else if (z.equals("2")) {
+                                            System.out.println("Enter quantity.");
+                                            int quantity;
+                                            while (true) {
+                                                try {
+                                                    quantity = Integer.parseInt(scanner.nextLine());
+                                                    System.out.println(quantity);
+                                                    break;
+                                                } catch (NumberFormatException e) {
+                                                    System.out.println("Invalid input! Please enter a number.");
+                                                }
+                                            }
+                                            customer.singlePurchase(searchArrayList.get(x - 1).getStore(), searchArrayList.get(x - 1).getProductName(), quantity, products);
+                                        }
+                                    }
+                                    case 4 -> {
+                                        break innerLoop;
                                     }
                                     default -> throw new NumberFormatException();
                                 }
