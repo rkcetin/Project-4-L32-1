@@ -39,7 +39,10 @@ public class Seller extends User {
      * @param bigStores the arraylist of stores to add to
      * @return returns the object of the created store
      */
-    public Store createStore(String storeName, ArrayList<Store> bigStores) {
+    public Store createStore(String storeName, ArrayList<Store> bigStores) throws Exception {
+        if (Store.checkStore(storeName , bigStores) != null || storeName.isEmpty()) {
+            throw new Exception("Invalid store name");
+        }
         Store createdStore = new Store(storeName , this);
         stores.add(createdStore);
         bigStores.add(createdStore);
@@ -197,6 +200,37 @@ public class Seller extends User {
         return a;
     }
     /**
+     * exports products to a csv file
+     * @param store store's products to export from
+     * @param filename filename to export to
+     * @throws Exception when invalid filename
+     */
+    public void exportProducts(Store store , String filename) throws Exception{
+        if(filename.isEmpty()) {
+            throw new Exception("invalid file name");
+        }
+        try {
+            File f = new File(filename + ".csv");
+            int counter = 0;
+            while(f.exists()) {
+                f = new File(filename + counter + ".csv");
+                counter++;
+            }
+            f.createNewFile();
+            FileWriter fr = new FileWriter(f , false);
+            PrintWriter pr = new PrintWriter(fr);
+            for (Product product : store.getProducts()) {
+                pr.println(product.allInfoCsvToString());
+            }
+            pr.flush();
+            pr.close();
+            fr.close();
+
+        } catch (IOException e) {
+            throw new Exception("problem reading file");
+        }
+    }
+    /**
      * imports products from a csv file only imports if all customers are valid
      * @param filepath string representation of filepath arraylist of stores to reference
      * @param products arraylist of products to import the products too
@@ -211,44 +245,42 @@ public class Seller extends User {
             throw new Exception("invalid file format");
         }
         ArrayList<Object[]> csvInputs = new ArrayList<>();
-        try {
-            File csv = new File(filepath);
-            FileReader fr = new FileReader(csv);
-            BufferedReader bfr = new BufferedReader(fr);
-            String currentLine = bfr.readLine();
-            while (currentLine != null) {
-                String[] workingList = currentLine.split(",");
-                if (workingList.length != SPECIFC_LENGTH) {
-                    throw new Exception();
-                }
-                if (workingList[NAME_INDEX].isEmpty() || workingList[DESCRIPTION_INDEX].isEmpty()) {
-                    throw new Exception();
-                }
-                if (Store.checkStore(workingList[STORE_INDEX], this.getStores()) == null) { // will throw exception if not in seller store list
-                    throw new Exception();
-                }
-                Integer.parseInt(workingList[STOCK_INDEX]); // will throw exception if wrong format
-                Double.parseDouble(workingList[PRICE_INDEX]);  // will throw exception if wrong format
-                csvInputs.add(workingList);
 
-                currentLine = bfr.readLine();
+        File csv = new File(filepath);
+        FileReader fr = new FileReader(csv);
+        BufferedReader bfr = new BufferedReader(fr);
+        String currentLine = bfr.readLine();
+        while (currentLine != null) {
+            String[] workingList = currentLine.split(",");
+            if (workingList.length != SPECIFC_LENGTH) {
+                throw new Exception("file problem format length");
             }
-            fr.close();
-            bfr.close();
-            for (Object[] line : csvInputs) {
-                Store inputStore = Store.checkStore((String) line[STORE_INDEX], this.getStores());
-                String inputName = (String) line[NAME_INDEX];
-                String inputDesc = (String) line[DESCRIPTION_INDEX];
-                int inputQuantity = Integer.parseInt( (String) line[STOCK_INDEX]);
-                double inputPrice = Double.parseDouble( (String) line[PRICE_INDEX]) ;
-
-                Product inputProduct = new Product(inputStore , inputName , inputDesc , inputQuantity , inputPrice);
-                inputStore.addProduct(inputProduct , products);
+            if (workingList[NAME_INDEX].isEmpty() || workingList[DESCRIPTION_INDEX].isEmpty()) {
+                throw new Exception("file problem missing product name");
             }
+            if (Store.checkStore(workingList[STORE_INDEX], this.getStores()) == null) { // will throw exception if not in seller store list
+                throw new Exception("file problem invalid store");
+            }
+            Integer.parseInt(workingList[STOCK_INDEX]); // will throw exception if wrong format
+            Double.parseDouble(workingList[PRICE_INDEX]);  // will throw exception if wrong format
+            csvInputs.add(workingList);
 
-        } catch (Exception e) {
-            throw new Exception("Problem reading file");
+            currentLine = bfr.readLine();
         }
+        fr.close();
+        bfr.close();
+        for (Object[] line : csvInputs) {
+            Store inputStore = Store.checkStore((String) line[STORE_INDEX], this.getStores());
+            String inputName = (String) line[NAME_INDEX];
+            String inputDesc = (String) line[DESCRIPTION_INDEX];
+            int inputQuantity = Integer.parseInt( (String) line[STOCK_INDEX]);
+            double inputPrice = Double.parseDouble( (String) line[PRICE_INDEX]) ;
+
+            Product inputProduct = new Product(inputStore , inputName , inputDesc , inputQuantity , inputPrice);
+            inputStore.addProduct(inputProduct , products);
+        }
+
+
     }
     /**
      * checks if 2 sellers are equal based upon their name

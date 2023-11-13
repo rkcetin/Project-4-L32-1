@@ -211,7 +211,7 @@ public class Main {
                     seller.setPassword(newPassword);
                 }
                 case 6 -> {
-                    seller.deleteUser();
+                    seller.deleteUser(users);
                 }
                 case 7 -> {
                     String b = seller.displayUnsortedStatistics().toString();
@@ -339,7 +339,7 @@ public class Main {
                     customer.setPassword(newPassword);
                 }
                 case 3 -> {
-                    customer.deleteUser();
+                    customer.deleteUser(users);
                 }
                 case 4 -> {//view cart needs to show how many items of that item are in the cart
                     if (customer.getCart() != null) {

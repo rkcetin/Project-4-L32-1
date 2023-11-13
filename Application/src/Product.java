@@ -339,5 +339,15 @@ public class Product implements Serializable {
                     this.getStore().getStoreName());
         }
     }
+    public String allInfoCsvToString() {
+        return String.format(
+            "%s,%s,%s,%d,%.2f",
+            this.getProductName(),
+            this.getStore().getStoreName(),
+            this.getProductDescription(),
+            this.getStock(),
+            this.getPrice()
+        );
+    }
 
 }
