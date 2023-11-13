@@ -2,7 +2,7 @@
 
 ## Compilation Instructions
 
-In order to compile the program one must compile all the classes within the src folder and run the Main.java file. To run the test cases for the project one must compile all the classes within the test folder and run the TestRunner.java file. 
+In order to compile the program one must compile all the classes within the src folder and run the Main.java file. To run the test cases for the project one must compile all the classes within the test folder and run the TestRunner.java file. To run the junit test cases you must have the releveant dependencies installed.
 
 ## Submitters
 
