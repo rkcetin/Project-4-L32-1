@@ -1,5 +1,17 @@
 import java.util.*;
 
+/**
+ * Project 4 -- Main Class
+ *
+ * The central hub of the marketplace where a User is able to login, designate themselves as a customer
+ * and browse the marketplace in accordance with their roles.
+ *
+ * @author Steven Chang, Alexander Benson, Stephanie Sun, Chris Xu, Ramazan Cetin, L32
+ *
+ * @version November 13, 2023
+ *
+ */
+
 public class Main {
     private static final int USER_INDEX = 0;
     private static final int STORE_INDEX = 1;
