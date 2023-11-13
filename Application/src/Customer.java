@@ -74,7 +74,8 @@ public class Customer extends User {
         PrintWriter pw = new PrintWriter(new FileWriter("statistics.txt", true));
         for (Product product : products) {
             if (store.equals(product.getStore()) && name.equals(product.getProductName())) {
-                System.out.printf("Purchasing %d of these items for %.2f....Purchased\n", quantity, product.getPrice() * quantity);
+                System.out.printf("Purchasing %d of these items for %.2f....Purchased\n",
+                        quantity, product.getPrice() * quantity);
                 if (quantity > product.getStock()) {
                     throw new IllegalArgumentException("Stock exceeded!");
                 }
@@ -127,7 +128,7 @@ public class Customer extends User {
      */
 
     public void removeFromCart(Store store, String name) {
-        while(Product.checkProduct(name, this.cart) != null) {
+        while (Product.checkProduct(name, this.cart) != null) {
             cart.remove(Product.checkProduct(name, this.cart));
         }
     }
@@ -182,7 +183,7 @@ public class Customer extends User {
                 for (int j = cart.size() - 1; j >= 0; j--) {
                     cart.get(j).getStore().incrementSales(cart.get(j).getPrice());
                     pw.println(String.format("%s,%s,%s,%.2f", cart.get(j).getStore().getStoreName(), this.getName(),
-                                                                    cart.get(j).getProductName(), cart.get(j).getPrice()));
+                            cart.get(j).getProductName(), cart.get(j).getPrice()));
                     cart.remove(j);
                 }
                 pw.flush();

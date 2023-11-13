@@ -63,10 +63,10 @@ public class Seller extends User {
     /**
      * removes the store from the seller's list and the larger bank of stores
      * @param storeName the target store name
-     * @param stores large bank of stores to remove from
+     * @param paramStores large bank of stores to remove from
      */
-    public void removeStore(String storeName, ArrayList<Store> stores, ArrayList<Product> allProducts) {
-        Iterator<Store> storeIterator = stores.iterator();
+    public void removeStore(String storeName, ArrayList<Store> paramStores, ArrayList<Product> allProducts) {
+        Iterator<Store> storeIterator = paramStores.iterator();
 
         while (storeIterator.hasNext()) {
             Store store = storeIterator.next();
@@ -105,10 +105,10 @@ public class Seller extends User {
         return storeNames;
     }
 
-    public String getStoresString(ArrayList<Store> stores) {
+    public String getStoresString(ArrayList<Store> paramStores) {
         String list = "";
-        for (int i = 0; i < stores.size(); i++) {
-            list += stores.get(i).toString() + "\n";
+        for (int i = 0; i < paramStores.size(); i++) {
+            list += paramStores.get(i).toString() + "\n";
         }
         return list;
     }
@@ -160,7 +160,8 @@ public class Seller extends User {
             String product = entry.getKey();
             int count = entry.getValue();
             String countString = (count > 1) ? count + "x " : "1x ";
-            a += String.format("%s%s,%s,%.2f\n",countString , product.split(",")[0], product.split(",")[2], (Double.parseDouble(product.split(",")[3]) * count));
+            a += String.format("%s%s,%s,%.2f\n", countString, product.split(",")[0], product.split(",")[2],
+                    (Double.parseDouble(product.split(",")[3]) * count));
         }
         return a;
     }
@@ -184,20 +185,20 @@ public class Seller extends User {
     }
     /**
      * returns a sorted representation of the statistics based upon quantity of sales high or low
-     * @param stores arraylist of stores to reference
+     * @param paramStores arraylist of stores to reference
      * @param highestToLowest a boolean determining whether statistics sorted starting high or low
      * @return returns a String of store statistics sorted based upon of quantity of sales
      */
-    public String sortByOccurrences(ArrayList<String> stores, boolean highestToLowest) throws IOException {
+    public String sortByOccurrences(ArrayList<String> paramStores, boolean highestToLowest) throws IOException {
         BufferedReader bfr = new BufferedReader(new FileReader("statistics.txt"));
         Map<String, Integer> storeOccurrences = new HashMap<>();
         String a = "";
         String line;
 
         while ((line = bfr.readLine()) != null) {
-            for (int i = 0; i < stores.size(); i++) {
-                if (line.split(",")[0].equals(stores.get(i))) {
-                    String key = stores.get(i);
+            for (int i = 0; i < paramStores.size(); i++) {
+                if (line.split(",")[0].equals(paramStores.get(i))) {
+                    String key = paramStores.get(i);
                     storeOccurrences.put(key, storeOccurrences.getOrDefault(key, 0) + 1);
                 }
             }
@@ -217,20 +218,21 @@ public class Seller extends User {
         }
         return a;
     }
+
     /**
      * exports products to a csv file
      * @param store store's products to export from
      * @param filename filename to export to
      * @throws Exception when invalid filename
      */
-    public void exportProducts(Store store , String filename) throws Exception{
-        if(filename.isEmpty()) {
+    public void exportProducts(Store store, String filename) throws Exception {
+        if (filename.isEmpty()) {
             throw new Exception("invalid file name");
         }
         try {
             File f = new File(filename + ".csv");
             int counter = 0;
-            while(f.exists()) {
+            while (f.exists()) {
                 f = new File(filename + counter + ".csv");
                 counter++;
             }
@@ -245,7 +247,7 @@ public class Seller extends User {
             fr.close();
 
         } catch (IOException e) {
-            throw new Exception("problem reading file");
+            throw new Exception("Problem reading file");
         }
     }
     /**
@@ -276,7 +278,8 @@ public class Seller extends User {
             if (workingList[NAME_INDEX].isEmpty() || workingList[DESCRIPTION_INDEX].isEmpty()) {
                 throw new Exception("file problem missing product name");
             }
-            if (Store.checkStore(workingList[STORE_INDEX], this.getStores()) == null) { // will throw exception if not in seller store list
+            if (Store.checkStore(workingList[STORE_INDEX], this.getStores()) == null) {
+                // will throw exception if not in seller store list
                 throw new Exception("file problem invalid store");
             }
             Integer.parseInt(workingList[STOCK_INDEX]); // will throw exception if wrong format

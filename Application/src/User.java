@@ -50,12 +50,12 @@ public class User implements Serializable {
 
     /**
      * changes the users name
-     * @param name updates the username
+     * @param paramName updates the username
      * @throws Exception when invalid email
      */
 
-    public void setName(String name, ArrayList<User> users) throws Exception {
-        if (!User.isValidEmail(name) || User.isEmailRegistered(name, users) != null) {
+    public void setName(String paramName, ArrayList<User> users) throws Exception {
+        if (!User.isValidEmail(paramName) || User.isEmailRegistered(paramName, users) != null) {
             throw new Exception("invalid email");
         }
         this.name = name;
@@ -128,14 +128,14 @@ public class User implements Serializable {
 
      */
     public static User isEmailRegistered(String email , ArrayList<User> users) {
-        if(email == null || users == null) {
+        if (email == null || users == null) {
             throw new NullPointerException();
         }
         ArrayList<User> filteredUsers = new ArrayList<User>(users
                 .stream()
                 .filter(user -> user.getName().equals(email) )
                 .collect(Collectors.toList()));
-        if(filteredUsers.isEmpty()) {
+        if (filteredUsers.isEmpty()) {
             return null;
         }
         return filteredUsers.get(0);
@@ -153,7 +153,8 @@ public class User implements Serializable {
      * return user after saving user to the database
 
      */
-    public static User saveUserToDatabase(String email, String hashedPassword, String salt, int role, ArrayList<User> users) {
+    public static User saveUserToDatabase(String email, String hashedPassword, String salt, int role, ArrayList<User>
+            users) {
         User newUser = null;
         switch(role) {
             case 1:
@@ -177,7 +178,7 @@ public class User implements Serializable {
      * returns the object for a user if they are logged in
 
      */
-    public static User login(String email, String password, ArrayList<User> users) throws Exception{
+    public static User login(String email, String password, ArrayList<User> users) throws Exception {
         User currentUser = null;
         if (User.isValidEmail(email)) {
             // Check if the email is registered

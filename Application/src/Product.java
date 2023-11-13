@@ -17,12 +17,12 @@ import java.util.stream.Collectors;
 
 public class Product implements Serializable {
     private static final long serialVersionUID = 1234L;
-    private Store store;//the store a product is associated with
+    private Store store; //the store a product is associated with
 
     private String productName; //the description of the product
-    private String productDescription;//the description of the product
-    private int stock;//the number of items in stock
-    private double price;//the price of the item
+    private String productDescription; //the description of the product
+    private int stock; //the number of items in stock
+    private double price; //the price of the item
     private int sold;
 
     public int getSold() {
@@ -52,11 +52,11 @@ public class Product implements Serializable {
      * updates product name
      *
      *
-     * @param productName new product name of the product
+     * @param paramProductName new product name of the product
      * @throws NullPointerException when null is provided
      * @throws IllegalArgumentException when productName is empty
      */
-    public void setProductName(String productName , ArrayList<Product> products)   {
+    public void setProductName(String paramProductName , ArrayList<Product> products)   {
         if (productName == null ) {
             throw new NullPointerException();
         }
@@ -206,14 +206,14 @@ public class Product implements Serializable {
      * @return Product if the value exists within products null if it does not
      */
     public static Product checkProduct(String productName, ArrayList<Product> products) {
-        if(productName == null || products == null) {
+        if (productName == null || products == null) {
             throw new NullPointerException();
         }
         ArrayList<Product> filteredProduct = new ArrayList<Product>(products
                 .stream()
                 .filter(product -> product.getProductName().equalsIgnoreCase(productName))
                 .collect(Collectors.toCollection(ArrayList::new)));
-        if(filteredProduct.isEmpty()) {
+        if (filteredProduct.isEmpty()) {
             return null;
         }
         return filteredProduct.get(0);
@@ -254,7 +254,7 @@ public class Product implements Serializable {
             throw new NullPointerException();
         }
         ArrayList<String> output = new ArrayList<>();
-        for(Product product : products) {
+        for (Product product : products) {
             String listing = String.format("Store: %s, Name: %s , Price: $%.2f" ,
                     product.getStore().getStoreName() ,
                     product.getProductName() ,

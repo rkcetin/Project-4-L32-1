@@ -58,17 +58,15 @@ public class Store implements Serializable {
      */
     //helper function for determining to determine if a store exists within a list of stores; returns null if it doesn't
     public static Store checkStore(String storeName, ArrayList<Store> stores) {
-      if (stores == null || storeName == null) {
-          throw new NullPointerException();
-      }
-      ArrayList<Store> filteredStores = new ArrayList<Store>(stores
-              .stream()
-              .filter(store -> store.getStoreName().equalsIgnoreCase(storeName) )
-              .collect(Collectors.toList()));
-      if (filteredStores.isEmpty()) {
-          return null;
-      }
-      return filteredStores.get(0);
+        if (stores == null || storeName == null) {
+            throw new NullPointerException();
+        }
+        ArrayList<Store> filteredStores = new ArrayList<Store>(stores.stream().filter(store ->
+                store.getStoreName().equalsIgnoreCase(storeName) ).collect(Collectors.toList()));
+        if (filteredStores.isEmpty()) {
+            return null;
+        }
+        return filteredStores.get(0);
     }
 
     /**
@@ -128,7 +126,8 @@ public class Store implements Serializable {
      * @param product arraylist of products to add to
      *
      */
-    public void addProduct(String name, String description, int stock, double price , ArrayList<Product> product) throws Exception {
+    public void addProduct(String name, String description, int stock, double price , ArrayList<Product> product)
+            throws Exception {
         if (Product.checkProduct(name , this.products) != null) {
             throw new Exception("Already Exists");
         }
@@ -138,16 +137,16 @@ public class Store implements Serializable {
     }
     /**
      *  creates a product in a store if it does not already exist in the store
-     * @param product to add to the store
+     * @param paramProduct to add to the store
      * @param products arraylist of products to add to
      *
      */
-    public void addProduct(Product product , ArrayList<Product> products) throws Exception {
-        if (Product.checkProduct(product.getProductName() , products) != null) {
+    public void addProduct(Product paramProduct, ArrayList<Product> products) throws Exception {
+        if (Product.checkProduct(paramProduct.getProductName() , products) != null) {
             throw new Exception();
         }
-        this.products.add(product);
-        products.add(product);
+        this.products.add(paramProduct);
+        products.add(paramProduct);
     }
     /**
      * removes a product from the store
@@ -226,18 +225,18 @@ public class Store implements Serializable {
         return sales;
     }
 
-    public void incrementSales(double sales) {
-        this.sales += sales;
+    public void incrementSales(double paramSales) {
+        this.sales += paramSales;
     }
 
     public ArrayList<Product> getProducts() {
         return products;
     }
 
-    public String getProductsString(ArrayList<Product> products) {
+    public String getProductsString(ArrayList<Product> paramProducts) {
         String productsList = "";
-        for (int i = 0; i < products.size(); i++) {
-            productsList += (i + 1) + ". " + products.get(i).toString2() + "\n";
+        for (int i = 0; i < paramProducts.size(); i++) {
+            productsList += (i + 1) + ". " + paramProducts.get(i).toString2() + "\n";
         }
         return productsList;
     }

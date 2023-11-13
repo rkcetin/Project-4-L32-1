@@ -54,7 +54,7 @@ public class Storage {
         try {
             File dataFile = new File("Data.ser");
             if (dataFile.createNewFile()) {
-                storeData(new ArrayList<User>() , new ArrayList<Store>(), new ArrayList<Product> () );
+                storeData(new ArrayList<User>(), new ArrayList<Store>(), new ArrayList<Product>());
 
             }
             FileInputStream fis = new FileInputStream(dataFile);

@@ -160,7 +160,8 @@ public class Main {
             boolean sellerMain = true;
 
             do {
-                System.out.println("1. View Stores\n2. Create Store\n3. Import products\n4. Edit account\n5. Delete Account\n6. View Statistics\n7. Edit stores\n8. Exit marketplace");
+                System.out.println("1. View Stores\n2. Create Store\n3. Import products\n4. Edit account\n" +
+                        "5. Delete Account\n6. View Statistics\n7. Edit stores\n8. Exit marketplace");
                 int choice;
                 while (true) {
                     try {
@@ -186,7 +187,8 @@ public class Main {
                             System.out.println("Enter name of the store");
                             String storeName = scanner.nextLine();
                             seller.createStore(storeName, stores);
-                            System.out.println("Store created, would you like to add products right now? Choose between 1 or 2");
+                            System.out.println("Store created, would you like to add products right now? " +
+                                    "Choose between 1 or 2");
                             boolean cont2 = true;
                             try {
                                 do {
@@ -218,7 +220,8 @@ public class Main {
                                                     stock = Integer.parseInt(stockInput);
                                                     break;
                                                 } catch (NumberFormatException e) {
-                                                    System.out.println("Invalid input! Please enter a valid integer for stock.");
+                                                    System.out.println("Invalid input! " +
+                                                            "Please enter a valid integer for stock.");
                                                 }
                                             }
 
@@ -233,12 +236,14 @@ public class Main {
                                                     price = Double.parseDouble(priceInput);
                                                     break;
                                                 } catch (NumberFormatException e) {
-                                                    System.out.println("Invalid input! Please enter a valid number for price.");
+                                                    System.out.println("Invalid input! " +
+                                                            "Please enter a valid number for price.");
                                                 }
                                             }
 
                                             seller.getStore(storeName).addProduct(name, desc, stock, price, products);
-                                            System.out.println("Would you like to continue adding product?\n1. Yes\n2. No, return to the main menu.");
+                                            System.out.println("Would you like to continue adding product?" +
+                                                    "\n1. Yes\n2. No, return to the main menu.");
                                             int con;
                                             while (true) {
                                                 try {
@@ -273,7 +278,8 @@ public class Main {
                             int contChoice;
                             while (true) {
                                 try {
-                                    System.out.println("Would you like to keep adding stores?\n1. Yes\n2. No, return to the main menu ");
+                                    System.out.println("Would you like to keep adding stores?" +
+                                            "\n1. Yes\n2. No, return to the main menu ");
                                     System.out.print("Enter your choice (1 or 2): ");
                                     contChoice = Integer.parseInt(scanner.nextLine());
                                     if (contChoice == 1 || contChoice == 2) {
@@ -319,7 +325,9 @@ public class Main {
                     }
                     case 6 -> {
                         String b = seller.displayUnsortedStatistics().toString();
-                        System.out.println("1. View unsorted statistics\n2. View statistics sorted by sales\n3. View statistics sorted by number of purchases made from each store\n4. View who has purchased from your stores.\n5. View transaction history");
+                        System.out.println("1. View unsorted statistics\n2. View statistics sorted by sales" +
+                                "\n3. View statistics sorted by number of purchases made from each store" +
+                                "\n4. View who has purchased from your stores.\n5. View transaction history");
                         int a;
                         int c = -1;
                         while (true) {
@@ -338,7 +346,8 @@ public class Main {
                         if (a == 1) {
                             System.out.println(b);
                         } else if (a == 2) {
-                            System.out.println("1. Sort sales from highest to lowest\n2. Sort sales from lowest to highest");
+                            System.out.println("1. Sort sales from highest to lowest\n" +
+                                    "2. Sort sales from lowest to highest");
                             while (true) {
                                 try {
                                     System.out.print("Enter your choice (1 or 2): ");
@@ -358,7 +367,8 @@ public class Main {
                                 System.out.println(seller.sortStatisticsBySales(b, false));
                             }
                         } else if (a == 3) {
-                            System.out.println("1. Sort sales from highest to lowest\n2. Sort sales from lowest to highest");
+                            System.out.println("1. Sort sales from highest to lowest\n" +
+                                    "2. Sort sales from lowest to highest");
                             while (true) {
                                 try {
                                     System.out.print("Enter your choice (1 or 2): ");
@@ -414,7 +424,8 @@ public class Main {
                                 System.out.print("Enter the index: ");
                                 index = Integer.parseInt(scanner.nextLine());
                                 if (index < 1 || index > productsToString.size()) {
-                                    System.out.println("Invalid input! Please enter a number between 1 and " + productsToString.size() + ".");
+                                    System.out.println("Invalid input! Please enter a number between 1 and "
+                                            + productsToString.size() + ".");
                                 } else {
                                     break;
                                 }
@@ -475,7 +486,8 @@ public class Main {
             boolean customerMain = true;
 
             do {
-                System.out.println("1. View Products \n2. Edit Account\n3. Delete Account\n4. View Cart\n5. View Dashboard\n6. Extract Transaction History\n7. View statistics\n8. Exit marketplace");
+                System.out.println("1. View Products \n2. Edit Account\n3. Delete Account\n4. View Cart\n" +
+                        "5. View Dashboard\n6. Extract Transaction History\n7. View statistics\n8. Exit marketplace");
                 int choice;
                 while (true) {
                     try {
@@ -493,7 +505,8 @@ public class Main {
                         boolean leaveSort = false;
                         do {
                             try {
-                                System.out.println("Do you want to sort the products? \n1. Sort by price\n2. Sort by stock available\n3. Search for specifics\n4. Return to main menu");
+                                System.out.println("Do you want to sort the products? \n1. Sort by price\n" +
+                                        "2. Sort by stock available\n3. Search for specifics\n4. Return to main menu");
                                 int sortInput = scanner.nextInt();
                                 scanner.nextLine();
                                 switch (sortInput) {
@@ -522,9 +535,15 @@ public class Main {
                                         System.out.println("Enter the string to search upon.");
                                         String searchText = scanner.nextLine();
                                         ArrayList<Product> searchArrayList = Product.search(searchText, products);
-                                        System.out.println("Enter the index of the product that you want to know more about. Enter -1 to return to the main menu");
+                                        System.out.println("Enter the index of the product that you want to " +
+                                                "know more about. Enter -1 to return to the main menu");
                                         for (int i = 1; i <= searchArrayList.size(); i++) {
-                                            System.out.printf("%d - Store: %s | Product: %s | Price: %.2f | Remaining Stock: %d\n", i, searchArrayList.get(i - 1).getStore().getStoreName(), searchArrayList.get(i - 1).getProductName(), searchArrayList.get(i - 1).getPrice(), searchArrayList.get(i - 1).getStock());
+                                            System.out.printf("%d - Store: %s | Product: %s | Price: %.2f | " +
+                                                    "Remaining Stock: %d\n", i,
+                                                    searchArrayList.get(i - 1).getStore().getStoreName(),
+                                                    searchArrayList.get(i - 1).getProductName(),
+                                                    searchArrayList.get(i - 1).getPrice(),
+                                                    searchArrayList.get(i - 1).getStock());
                                         }
                                         int x;
                                         while (true) {
@@ -542,8 +561,11 @@ public class Main {
                                             System.out.println("Invalid input!");
                                             break;
                                         }
-                                        System.out.println(String.format("Description: %s - Stock: %d", searchArrayList.get(x - 1).getProductDescription(), searchArrayList.get(x - 1).getStock()));
-                                        System.out.println("If you want to add this item to your cart enter 1.\nIf you want to purchase this item individually enter 2.");
+                                        System.out.println(String.format("Description: %s - Stock: %d",
+                                                searchArrayList.get(x - 1).getProductDescription(),
+                                                searchArrayList.get(x - 1).getStock()));
+                                        System.out.println("If you want to add this item to your cart enter 1.\n" +
+                                                "If you want to purchase this item individually enter 2.");
                                         String z = scanner.nextLine();
                                         if (z.equals("1")) {
                                             System.out.println("Enter quantity.");
@@ -551,13 +573,15 @@ public class Main {
                                             while (true) {
                                                 try {
                                                     quantity = Integer.parseInt(scanner.nextLine());
-                                                    System.out.println(quantity + " of these items were added to your cart");
+                                                    System.out.println(quantity +
+                                                            " of these items were added to your cart");
                                                     break;
                                                 } catch (NumberFormatException e) {
                                                     System.out.println("Invalid input! Please enter a number.");
                                                 }
                                             }
-                                            customer.addToCart(searchArrayList.get(x - 1).getStore(), searchArrayList.get(x - 1).getProductName(), quantity, products);
+                                            customer.addToCart(searchArrayList.get(x - 1).getStore(),
+                                                    searchArrayList.get(x - 1).getProductName(), quantity, products);
                                         } else if (z.equals("2")) {
                                             System.out.println("Enter quantity.");
                                             int quantity;
@@ -570,7 +594,8 @@ public class Main {
                                                     System.out.println("Invalid input! Please enter a number.");
                                                 }
                                             }
-                                            customer.singlePurchase(searchArrayList.get(x - 1).getStore(), searchArrayList.get(x - 1).getProductName(), quantity, products);
+                                            customer.singlePurchase(searchArrayList.get(x - 1).getStore(),
+                                                    searchArrayList.get(x - 1).getProductName(), quantity, products);
                                         }
                                     }
                                     case 4 -> {
@@ -586,9 +611,13 @@ public class Main {
                             }
                         } while (leaveSort == false);
                         do {
-                            System.out.println("Enter the index of the product that you want to know more about. Enter -1 to return to the main menu");
+                            System.out.println("Enter the index of the product that you want to know more about. " +
+                                    "Enter -1 to return to the main menu");
                             for (int i = 1; i <= products.size(); i++) {
-                                System.out.printf("%d - Store: %s | Product: %s | Price: %.2f | Remaining Stock: %d\n", i, products.get(i - 1).getStore().getStoreName(), products.get(i - 1).getProductName(), products.get(i - 1).getPrice(), products.get(i - 1).getStock());
+                                System.out.printf("%d - Store: %s | Product: %s | Price: %.2f | Remaining Stock: %d\n",
+                                        i, products.get(i - 1).getStore().getStoreName(),
+                                        products.get(i - 1).getProductName(), products.get(i - 1).getPrice(),
+                                        products.get(i - 1).getStock());
                             }
                             int x;
                             while (true) {
@@ -607,8 +636,10 @@ public class Main {
                                 System.out.println("Invalid input!");
                                 break;
                             }
-                            System.out.println(String.format("Description: %s - Stock: %d", products.get(x - 1).getProductDescription(), products.get(x - 1).getStock()));
-                            System.out.println("If you want to add this item to your cart enter 1.\nIf you want to purchase this item individually enter 2.");
+                            System.out.println(String.format("Description: %s - Stock: %d",
+                                    products.get(x - 1).getProductDescription(), products.get(x - 1).getStock()));
+                            System.out.println("If you want to add this item to your cart enter 1.\n" +
+                                    "If you want to purchase this item individually enter 2.");
                             String z = scanner.nextLine();
                             if (z.equals("1")) {
                                 System.out.println("Enter quantity.");
@@ -621,7 +652,8 @@ public class Main {
                                         System.out.println("Invalid input! Please enter a number.");
                                     }
                                 }
-                                customer.addToCart(products.get(x - 1).getStore(), products.get(x - 1).getProductName(), quantity, products);
+                                customer.addToCart(products.get(x - 1).getStore(),
+                                        products.get(x - 1).getProductName(), quantity, products);
                             } else if (z.equals("2")) {
                                 System.out.println("Enter quantity.");
                                 int quantity;
@@ -633,7 +665,8 @@ public class Main {
                                         System.out.println("Invalid input! Please enter a number.");
                                     }
                                 }
-                                customer.singlePurchase(products.get(x - 1).getStore(), products.get(x - 1).getProductName(), quantity, products);
+                                customer.singlePurchase(products.get(x - 1).getStore(),
+                                        products.get(x - 1).getProductName(), quantity, products);
                             }
                             System.out.println("Enter a number if you want to keep searching for products.");
                             int contChoice;
@@ -673,7 +706,9 @@ public class Main {
                     }
                     case 4 -> {
                         if (customer.getCart() != null) {
-                            System.out.println("If you want to purchase the cart, enter 0. If you want to remove the product from the cart, enter the product index. Otherwise, enter -1 to exit");
+                            System.out.println("If you want to purchase the cart, enter 0. " +
+                                    "If you want to remove the product from the cart, enter the product index. " +
+                                    "Otherwise, enter -1 to exit");
                             ArrayList<Product> newList = new ArrayList<>();
                             for (Product product : customer.getCart()) {
                                 if (!newList.contains(product)) {
@@ -730,7 +765,8 @@ public class Main {
                         }
                     }
                     case 7 -> {
-                        System.out.println("1. View what stores you have purchased from\n2. View total purchases from stores");
+                        System.out.println("1. View what stores you have purchased from\n2." +
+                                " View total purchases from stores");
                         int a;
                         while (true) {
                             try {
