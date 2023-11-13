@@ -1,15 +1,23 @@
 # Project-4-L32-1
 
+## Compilation Instructions
+
+In order to compile the program one must compile all the classes within the src folder and run the Main.java file. To run the test cases for the project one must compile all the classes within the test folder and run the TestRunner.java file. 
+
+## Submitters
+
+### Report - Steven Chang submitted report on brightspace
+
+### Project 4 - 
 
 
 ## Class Descriptions
 
 ### Storage.java
-  Storage.java is the means of persistant storage for our project and stores the ArrayLists of objects that hold our product, store, and user information. Within the class are functions to read and write to the individual .ser files which these ArrayLists are stored and they are used within the Main.java class at the beginning and end of the programs to store the information. /// NEED TO ADD TESTING SECTION FOR THIS CLASS
+  Storage.java is the means of persistant storage for our project and stores the ArrayLists of objects that hold our product, store, and user information. Within the class are functions to read and write to the individual .ser files which these ArrayLists are stored and they are used within the Main.java class at the beginning and end of the programs to store the information. The testing for this class is done within the StorageTesting class and also there are some test cases within SharedFunctionality. 
   
 ### User.java
-  User.java is the means of creating new instances of the User class, holding its information, and defining the variables associated with it. This class implements the Serializable interface. The variables associated with this class include the users name, their password, and their salt. The User class is used when creating a new account, and is used as the basis for both the Customer and Seller classes.
-  //space for testing information
+  User.java is the means of creating new instances of the User class, holding its information, and defining the variables associated with it. This class implements the Serializable interface. The variables associated with this class include the users name, their password, and their salt. The User class is used when creating a new account, and is used as the basis for both the Customer and Seller classes. 
   
 ### Store.java
   Store.java is the means of creating new instances of the Store class, holding its information, and defining the variables associated with it. It implements the serializable interface. The variables associated with this class include the stores name, its products, the Seller associated with it, its sales, and its amount of sold products. Store has to ability make and remove stores, make and remove products, edit those products, and increment its own sales.
