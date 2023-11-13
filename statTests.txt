@@ -1,0 +1,10 @@
+Meal,User1,Burger,8.00
+Drink,User1,Lemonade,2.00
+Snack,User1,Chips,1.00
+Meal,User2,Burger,8.00
+Drink,User1,Lemonade,2.00
+Snack,User3,Chips,1.00
+Drink,User3,Lemonade,2.00
+Snack,User1,Chips,1.00
+Snack,User4,Chips,1.00
+Meal,User1,Burger,8.00
