@@ -70,6 +70,7 @@ public class Store implements Serializable {
       }
       return filteredStores.get(0);
     }
+
     /**
      * removes store from list of store
      * @param storeName storeName to look for
@@ -78,7 +79,7 @@ public class Store implements Serializable {
      *
      */
     //helper function to remove a store from a list based on its name
-    public static void removeStore(String storeName, ArrayList<Store> stores) {
+    public static void removeStore(String storeName, ArrayList<Store> stores) throws IllegalArgumentException {
         Store storeToRemove = checkStore(storeName, stores);
         if (storeToRemove == null) {
             throw new IllegalArgumentException();
@@ -136,7 +137,7 @@ public class Store implements Serializable {
         product.add(addedProduct);
     }
     /**
-     *  creates a product in a store if it doesnt already exist in the store
+     *  creates a product in a store if it does not already exist in the store
      * @param product to add to the store
      * @param products arraylist of products to add to
      *
