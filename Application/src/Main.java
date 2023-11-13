@@ -241,7 +241,8 @@ public class Main {
                                                 }
                                             }
 
-                                            seller.getStore(storeName).addProduct(name, desc, stock, price, products);
+                                            seller.getStore(storeName).addProduct(name, desc, stock, price,
+                                                    products);
                                             System.out.println("Would you like to continue adding product?" +
                                                     "\n1. Yes\n2. No, return to the main menu.");
                                             int con;
@@ -506,7 +507,8 @@ public class Main {
                         do {
                             try {
                                 System.out.println("Do you want to sort the products? \n1. Sort by price\n" +
-                                        "2. Sort by stock available\n3. Search for specifics\n4. Return to main menu");
+                                        "2. Sort by stock available\n3. Search for specifics\n" +
+                                        "4. Return to main menu");
                                 int sortInput = scanner.nextInt();
                                 scanner.nextLine();
                                 switch (sortInput) {
@@ -581,7 +583,8 @@ public class Main {
                                                 }
                                             }
                                             customer.addToCart(searchArrayList.get(x - 1).getStore(),
-                                                    searchArrayList.get(x - 1).getProductName(), quantity, products);
+                                                    searchArrayList.get(x - 1).getProductName(), quantity,
+                                                    products);
                                         } else if (z.equals("2")) {
                                             System.out.println("Enter quantity.");
                                             int quantity;
@@ -595,7 +598,8 @@ public class Main {
                                                 }
                                             }
                                             customer.singlePurchase(searchArrayList.get(x - 1).getStore(),
-                                                    searchArrayList.get(x - 1).getProductName(), quantity, products);
+                                                    searchArrayList.get(x - 1).getProductName(), quantity,
+                                                    products);
                                         }
                                     }
                                     case 4 -> {
@@ -611,11 +615,12 @@ public class Main {
                             }
                         } while (leaveSort == false);
                         do {
-                            System.out.println("Enter the index of the product that you want to know more about. " +
-                                    "Enter -1 to return to the main menu");
+                            System.out.println("Enter the index of the product that you want to know more about. "
+                                    + "Enter -1 to return to the main menu");
                             for (int i = 1; i <= products.size(); i++) {
-                                System.out.printf("%d - Store: %s | Product: %s | Price: %.2f | Remaining Stock: %d\n",
-                                        i, products.get(i - 1).getStore().getStoreName(),
+                                System.out.printf("%d - Store: %s | Product: %s | Price: %.2f | " +
+                                                "Remaining Stock: %d\n", i,
+                                        products.get(i - 1).getStore().getStoreName(),
                                         products.get(i - 1).getProductName(), products.get(i - 1).getPrice(),
                                         products.get(i - 1).getStock());
                             }

@@ -138,15 +138,15 @@ public class Store implements Serializable {
     /**
      *  creates a product in a store if it does not already exist in the store
      * @param paramProduct to add to the store
-     * @param products arraylist of products to add to
+     * @param paramproducts arraylist of products to add to
      *
      */
-    public void addProduct(Product paramProduct, ArrayList<Product> products) throws Exception {
-        if (Product.checkProduct(paramProduct.getProductName() , products) != null) {
+    public void addProduct(Product paramProduct, ArrayList<Product> paramproducts) throws Exception {
+        if (Product.checkProduct(paramProduct.getProductName() , paramproducts) != null) {
             throw new Exception();
         }
         this.products.add(paramProduct);
-        products.add(paramProduct);
+        paramproducts.add(paramProduct);
     }
     /**
      * removes a product from the store
