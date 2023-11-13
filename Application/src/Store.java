@@ -128,7 +128,7 @@ public class Store implements Serializable {
      * @param product arraylist of products to add to
      *
      */
-    public void addProduct( String name, String description, int stock, double price , ArrayList<Product> product) throws Exception {
+    public void addProduct(String name, String description, int stock, double price , ArrayList<Product> product) throws Exception {
         if (Product.checkProduct(name , this.products) != null) {
             throw new Exception("Already Exists");
         }
@@ -232,6 +232,14 @@ public class Store implements Serializable {
 
     public ArrayList<Product> getProducts() {
         return products;
+    }
+
+    public String getProductsString(ArrayList<Product> products) {
+        String productsList = "";
+        for (int i = 0; i < products.size(); i++) {
+            productsList += (i + 1) + ". " + products.get(i).toString2() + "\n";
+        }
+        return productsList;
     }
     /**
      * sees if two objects are equivalent in storename and seller

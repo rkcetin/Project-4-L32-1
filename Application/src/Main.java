@@ -145,7 +145,7 @@ public class Main {
         System.out.println("What would you like to do? Choose numbers 1-7.");
         boolean sellerMain = true;
         do {
-            System.out.println("1. View Stores\n2. Create Store\n3. Delete Store\n4. Import products\n5. Edit account\n6. Delete Account\n7. View Statistics\n8. Exit marketplace");
+            System.out.println("1. View Stores\n2. Create Store\n3. Delete Store\n4. Import products\n5. Edit account\n6. Delete Account\n7. View Statistics\n8. Edit stores\n9. Exit marketplace");
             int choice = scanner.nextInt();
             scanner.nextLine();
             switch (choice) {
@@ -248,6 +248,31 @@ public class Main {
                     }
                 }
                 case 8 -> {
+                    System.out.println("Enter name of the store whose products you would like to edit.");
+                    String editStore = scanner.nextLine();
+                    Store currentStore = null;
+                    System.out.println("Products inside " + editStore + ":");
+                    for (int i = 0; i < seller.getStores().size(); i++) {
+                        if (editStore.equals(seller.getStores().get(i).getStoreName())) {
+                            currentStore = seller.getStores().get(i);
+                            break;
+                        }
+                    }
+                    ArrayList<Product> productsToString = currentStore.getProducts();
+                    System.out.println(currentStore.getProductsString(productsToString));
+                    System.out.println("Enter the index of the product you would like to edit or remove.");
+                    int index = scanner.nextInt();
+                    scanner.nextLine();
+                    System.out.println("1. Edit product\n2. Delete product");
+                    int choice2 = scanner.nextInt();
+                    scanner.nextLine();
+                    if (choice2 == 1) {
+                        currentStore.editProduct(productsToString.get(index - 1).getProductName(), scanner);
+                    } else if (choice2 == 2) {
+                        currentStore.removeProduct(productsToString.get(index - 1).getProductName(), productsToString);
+                    }
+                }
+                case 9 -> {
                     Storage.storeData(users, stores, products);
                     return;
                 }
