@@ -14,8 +14,8 @@ public class StorageTest {
     private static Seller seller3 = new Seller("mob" , "123","123");
     private static Store store3 = new Store("stare" , seller3);
     private static Product product3 = new Product(store3, "test3" , "desc" , 5 ,2.1);
-    @After
-    public void reset() {
+
+    public static void reset() {
         String[] commands =  {"bash" , "-c" , "rm *.ser"};
         try {
             Runtime.getRuntime().exec(commands);
@@ -24,7 +24,7 @@ public class StorageTest {
         }
     }
     @Test
-    public void testCrossObjectRelation() {
+    public void testCrossObjectRelation() throws Exception {
         ArrayList<Product> products = new ArrayList<>();
         ArrayList<Store> stores = new ArrayList<>();
         ArrayList<User> users = new ArrayList<>();
@@ -59,7 +59,7 @@ public class StorageTest {
         reset();
     }
     @Test
-    public void storageRetrievalTest() {
+    public void storageRetrievalTest() throws Exception {
         ArrayList<Product> products = new ArrayList<>();
         ArrayList<Store> stores = new ArrayList<>();
         ArrayList<User> users = new ArrayList<>();

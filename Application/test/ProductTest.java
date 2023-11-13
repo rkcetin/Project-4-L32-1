@@ -3,7 +3,7 @@ import org.junit.*;
 import java.util.ArrayList;
 public class ProductTest {
     @Test
-    public void testInvalidInput() {
+    public void testInvalidInput() throws Exception {
         ArrayList<Object> input = TestRunner.setUp();
         ArrayList<User> users = (ArrayList<User> ) input.get(0);
         ArrayList<Store> stores = (ArrayList<Store> ) input.get(1);
@@ -46,7 +46,7 @@ public class ProductTest {
 
     }
     @Test
-    public void testSetAndGet() {
+    public void testSetAndGet() throws Exception {
         ArrayList<Object> input = TestRunner.setUp();
         ArrayList<User> users = (ArrayList<User> ) input.get(0);
         ArrayList<Store> stores = (ArrayList<Store> ) input.get(1);
@@ -63,7 +63,7 @@ public class ProductTest {
         org.junit.Assert.assertEquals( 232323 , testProduct.getStock());
     }
     @Test
-    public void testHelperFunctions() {
+    public void testHelperFunctions() throws Exception {
         ArrayList<Object> input = TestRunner.setUp();
         ArrayList<User> users = (ArrayList<User> ) input.get(0);
         ArrayList<Store> stores = (ArrayList<Store> ) input.get(1);
@@ -77,7 +77,7 @@ public class ProductTest {
 
     }
     @Test
-    public void listingRelatedTesting() {
+    public void listingRelatedTesting()  throws Exception {
         ArrayList<Object> input = TestRunner.setUp();
         ArrayList<User> users = (ArrayList<User> ) input.get(0);
         ArrayList<Store> stores = (ArrayList<Store> ) input.get(1);
@@ -102,5 +102,6 @@ public class ProductTest {
 
 
     }
+
 
 }

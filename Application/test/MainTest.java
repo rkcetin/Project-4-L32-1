@@ -18,7 +18,7 @@ public class MainTest {
         Assert.assertEquals("hello", outputStream.toString());
     }
     @Test
-    public void invalidInputTestForLoginSequence() {
+    public void invalidInputTestForLoginSequence() throws Exception {
 
         TestRunner.setUp();
         String invalidInputSequence = String.format("%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n",
@@ -40,6 +40,7 @@ public class MainTest {
         Assert.assertEquals(outputs[4] , "Invalid input");
         Assert.assertEquals(outputs[14] , "input valid number for role");
         Assert.assertEquals(outputs[18] , "Input Valid option");
+
     }
     @After
     public void setDown() {
