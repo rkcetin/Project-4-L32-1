@@ -269,8 +269,15 @@ public class Main {
                     }
                     case 3 -> {
                         System.out.println("Enter name of the store that you'd like to be deleted");
-                        String deleteStore = scanner.nextLine();
-                        seller.removeStore(deleteStore, stores);
+                        while (true) {
+                            try {
+                                String deleteStore = scanner.nextLine();
+                                seller.removeStore(deleteStore, stores);
+                                break;
+                            } catch (IllegalArgumentException iae) {
+                                System.out.println(iae.getMessage() + " try again.");
+                            }
+                        }
                     }
                     case 4 -> {
                         System.out.println("Type the filepath of the .csv file");
@@ -426,7 +433,7 @@ public class Main {
                     }
                 }
 
-                System.out.println("Enter a number if you want to return to the main menu");
+                System.out.println("Enter a number to return to the main menu");
                 int cont;
                 while (true) {
                     try {
@@ -725,7 +732,7 @@ public class Main {
                     }
                 }
 
-                System.out.println("Enter a number if you want to return to the main menu");
+                System.out.println("Enter a number to return to the main menu");
                 int returnChoice;
                 while (true) {
                     try {
