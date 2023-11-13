@@ -476,42 +476,38 @@ public class Main {
                         boolean leaveSort = false;
                         do {
                             try {
-                                System.out.println("Do you want to sort the products? \n 1. By price \n 2. By stock available \n 3. no");
-                                String sortInput = scanner.nextLine();
-                                int sortHandled = numberInputHandler(sortInput , 3);
-                                switch (sortHandled) {
-                                    case 1:
-                                        System.out.println("Do you want to start \n 1.high\n2. low?");
+                                System.out.println("Do you want to sort the products? \n1. Sort by price\n2. Sort by stock available");
+                                int sortInput = scanner.nextInt();
+                                scanner.nextLine();
+                                switch (sortInput) {
+                                    case 1 -> {
+                                        System.out.println("Do you want to start at\n1. Highest\n2. Lowest");
                                         String highlow = scanner.nextLine();
                                         int highLowInt = binaryInputHandler(highlow);
                                         if (highLowInt == 1) {
                                             Product.sortPrice(false, products);
                                         } else {
-                                            Product.sortPrice(true , products);
+                                            Product.sortPrice(true, products);
                                         }
                                         leaveSort = true;
-                                        break;
-                                    case 2:
-                                        System.out.println("Do you want to start \n 1.high\n2. low?");
+                                    }
+                                    case 2 -> {
+                                        System.out.println("Do you want to start at\n1. Highest\n2. Lowest");
                                         String lowHigh = scanner.nextLine();
                                         int lowHighInt = binaryInputHandler(lowHigh);
                                         if (lowHighInt == 1) {
                                             Product.sortStock(false, products);
                                         } else {
-                                            Product.sortStock(true , products);
+                                            Product.sortStock(true, products);
                                         }
                                         leaveSort = true;
-                                        break;
-                                    case 3:
-                                        throw new NumberFormatException();
-
+                                    }
+                                    default -> throw new NumberFormatException();
                                 }
-
-
 
                             } catch (NumberFormatException e) {
                                 if (!leaveSort)
-                                    System.out.println("invalid input");
+                                    System.out.println("Invalid input.");
                                 break;
                             }
                         } while (leaveSort == false);
@@ -541,7 +537,7 @@ public class Main {
                             System.out.println("If you want to add this item to your cart enter 1.\nIf you want to purchase this item individually enter 2.");
                             String z = scanner.nextLine();
                             if (z.equals("1")) {
-                                System.out.println("Enter quantity");
+                                System.out.println("Enter quantity.");
                                 int quantity;
                                 while (true) {
                                     try {
@@ -553,7 +549,7 @@ public class Main {
                                 }
                                 customer.addToCart(products.get(x - 1).getStore(), products.get(x - 1).getProductName(), quantity, products);
                             } else if (z.equals("2")) {
-                                System.out.println("Enter quantity");
+                                System.out.println("Enter quantity.");
                                 int quantity;
                                 while (true) {
                                     try {
