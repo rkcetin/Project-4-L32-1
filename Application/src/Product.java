@@ -309,10 +309,11 @@ public class Product implements Serializable {
      * @return returns a string representation of the product
      */
     public String toString() {
-        return String.format("Product<Name: %s, Description: %s, Price: %.2f, Stock: %d, Store: %s>",
+        return String.format("Product<Name:%s, Description:%s, Price: %.2f, Stock: %d, Store: %s>\n",
             this.getProductName(), this.getProductDescription(), this.getPrice(), this.getStock(),
                 this.getStore().getStoreName());
     }
+
     /**
      * generates + returns string representation of the product in different format without stock
      * @return returns a string representation of the product

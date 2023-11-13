@@ -259,6 +259,6 @@ public class Store implements Serializable {
         for (int i = 0; i < products.size(); i++) {
             itemList += products.get(i).toString();
         }
-        return String.format("Store name: %s\nItems: %s", this.storeName, itemList);
+        return String.format("Store name: %s\nItems:\n%s", this.storeName, itemList);
     }
 }

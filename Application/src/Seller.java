@@ -76,6 +76,14 @@ public class Seller extends User {
         return stores;
     }
 
+    public String getStoresString(ArrayList<Store> stores) {
+        String list = "";
+        for (int i = 0; i < stores.size(); i++) {
+            list += stores.get(i).toString() + "\n";
+        }
+        return list;
+    }
+
     //returns all the store names associated with a given store
     /**
      * gets all the names of the sellers stores
@@ -143,7 +151,7 @@ public class Seller extends User {
      * @param highestToLowest a boolean deteremining whether statistics sorted starting high or low
      * @return returns the store object of a particular store name
      */
-    public static String sortStatisticsBySales(String statisticsResult, boolean highestToLowest) {
+    public String sortStatisticsBySales(String statisticsResult, boolean highestToLowest) {
         List<String> lines = Arrays.asList(statisticsResult.split("\n"));
         lines.sort((line1, line2) -> {
             double sales1 = Double.parseDouble(line1.split(",")[2]);

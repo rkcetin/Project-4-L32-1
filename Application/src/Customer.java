@@ -84,11 +84,14 @@ public class Customer extends User {
      *
      */
     public void addToCart(Store store, String name, int quantity, ArrayList<Product> products) {
-
         for (Product product : products) {
             if (store.equals(product.getStore()) && name.equals(product.getProductName())) {
-                for (int j = 0; j < quantity; j++) {
-                    cart.add(product);
+                if (quantity <= product.getStock()) {
+                    for (int j = 0; j < quantity; j++) {
+                        cart.add(product);
+                    }
+                } else {
+                    System.out.println("You cannot add more than there is stock for!");
                 }
                 return;
             }
@@ -114,9 +117,9 @@ public class Customer extends User {
     }
 
     /**
-     * counts and returns occurances of products within the cart
+     * counts and returns occurrences of products within the cart
      *
-     * @return returns an arraylist of the occurances of particular product in the cart
+     * @return returns an arraylist of the occurrences of particular product in the cart
      *
      */
     public ArrayList<Integer> getProductOccurrences() {

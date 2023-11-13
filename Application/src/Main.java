@@ -34,7 +34,7 @@ public class Main {
                         System.out.println(e.getMessage());
                     }
                     int exitCommand = 0;
-                    System.out.println("Do you want to Exit Login\n 1. Yes \n2. No");
+                    System.out.println("Do you want to Exit Login\n1. Yes \n2. No");
                     while (exitCommand == 0) {
                         try {
 
@@ -141,13 +141,12 @@ public class Main {
         System.out.println("What would you like to do? Choose numbers 1-7.");
         boolean sellerMain = true;
         do {
-            System.out.println("1. View Stores\n2. Create Store\n3. Delete Store\n4. Import products\n5. Edit account\n6. Delete Account\n7. Exit marketplace");
+            System.out.println("1. View Stores\n2. Create Store\n3. Delete Store\n4. Import products\n5. Edit account\n6. Delete Account\n7. View Statistics\n8. Exit marketplace");
             int choice = scanner.nextInt();
             scanner.nextLine();
             switch (choice) {
                 case 1 -> {
-                    System.out.println(seller.getStores().toString());
-                    //needs stock remaining
+                    System.out.println(seller.getStoresString(seller.getStores()));
                 }
                 case 2 -> {
                     boolean cont = true;
@@ -172,7 +171,7 @@ public class Main {
                                 System.out.println("Enter price.");
                                 double price = Double.parseDouble(scanner.nextLine());
                                 seller.getStore(storeName).addProduct(name, desc, stock, price, products);
-                                System.out.println("Would you like to continue adding product? 1. Yes\n2. No, return to main menu.");
+                                System.out.println("Would you like to continue adding product?\n1. Yes\n2. No, return to main menu.");
                                 int con = Integer.parseInt(scanner.nextLine());
                                 if (con != 1) {
                                     cont2 = false;
@@ -183,7 +182,7 @@ public class Main {
                             }
                             }
                         } while (cont2);
-                        System.out.println("Would you like to keep adding stores? Enter 1 for yes");
+                        System.out.println("Would you like to keep adding stores?\n1. Yes\n2. No, return to main menu.");
                         if (Integer.parseInt(scanner.nextLine()) != 1) {
                             cont = false;
                         }
@@ -211,6 +210,9 @@ public class Main {
                     seller.deleteUser();
                 }
                 case 7 -> {
+                    System.out.println(seller.displayUnsortedStatistics().toString());
+                }
+                case 8 -> {
                     Storage.storeData(users, stores, products);
                     return;
                 }
@@ -233,11 +235,14 @@ public class Main {
                 case 1 -> {
                     boolean mainCont = true;
                     do {
-                        System.out.println("Enter the index of the product that you want to see more of.");
+                        System.out.println("Enter the index of the product that you want to know more about. Enter -1 to return to the main menu");
                         for (int i = 1 ; i <= products.size(); i++) {
-                            System.out.println(String.format("%d - Store: %s - Product name: %s - Price: %2.1f", i ,products.get(i - 1).getStore().getStoreName(), products.get(i- 1).getProductName(), products.get(i- 1).getPrice()));
+                            System.out.printf("%d - Store: %s | Product: %s | Price: %.2f | Remaining Stock: %d\n", i , products.get(i - 1).getStore().getStoreName(), products.get(i- 1).getProductName(), products.get(i- 1).getPrice(), products.get(i-1).getStock());
                         }
                         int x = Integer.parseInt(scanner.nextLine());
+                        if (x == -1) {
+                            break;
+                        }
                         if (x < 1 || x > products.size()) {
                             System.out.println("Invalid input!");
                             break;
