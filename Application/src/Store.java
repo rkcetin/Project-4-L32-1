@@ -186,7 +186,7 @@ public class Store implements Serializable {
                             case 1 -> {
                                 System.out.println("Enter the new product name.");
                                 String newName = scan.nextLine();
-                                product.setProductName(newName);
+                                product.setProductName(newName, products);
                             }
                             case 2 -> {
                                 System.out.println("Enter the new product description.");

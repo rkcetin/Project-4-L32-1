@@ -16,10 +16,10 @@ public class ProductTest {
             testProduct.setStock(-10);
         });
         org.junit.Assert.assertThrows(NullPointerException.class, () -> {
-            testProduct.setProductName(null);
+            testProduct.setProductName(null , products);
         });
         org.junit.Assert.assertThrows(IllegalArgumentException.class, () -> {
-            testProduct.setProductName("");
+            testProduct.setProductName("" , products);
         });
         org.junit.Assert.assertThrows(NullPointerException.class, () -> {
             testProduct.setProductDescription(null);
@@ -53,7 +53,7 @@ public class ProductTest {
         ArrayList<Product> products =  (ArrayList<Product> ) input.get(2);
         stores.get(0).addProduct("storeName" , "description", 23 , 10.23 ,products);
         Product testProduct = Product.checkProduct("storeName" , products);
-        testProduct.setProductName("changedName");
+        testProduct.setProductName("changedName" , products);
         testProduct.setStock(232323);
         testProduct.setPrice(12.34);
         testProduct.setProductDescription("a description");

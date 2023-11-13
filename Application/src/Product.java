@@ -56,13 +56,14 @@ public class Product implements Serializable {
      * @throws NullPointerException when null is provided
      * @throws IllegalArgumentException when productName is empty
      */
-    public void setProductName(String productName) {
+    public void setProductName(String productName , ArrayList<Product> products)   {
         if (productName == null ) {
             throw new NullPointerException();
         }
         if (productName.isEmpty()) {
             throw new IllegalArgumentException();
         }
+
         this.productName = productName;
     }
 
