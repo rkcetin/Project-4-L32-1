@@ -22,7 +22,12 @@ public class CustomerTest {
             System.out.println(cart.get(i)[0]);
             count++;
         }
-        System.out.println(count); //should be 0
+        System.out.print("Test 1 Running....");
+        if (count == 0) {
+            System.out.println("Test 1 passed");
+        } else {
+            System.out.println("Test 1 failed");
+        }
 
         ArrayList<String> cart2 = new ArrayList<>();
         cart2.add("store1");
@@ -32,7 +37,11 @@ public class CustomerTest {
         cart2.add("store3");
         cart2.add("store3");
 
-        System.out.println(CustomerTest.getProductOccurrences(cart2));
+        System.out.print("Test 2 running....");
+        ArrayList<Integer> occurrences = CustomerTest.getProductOccurrences(cart2);
+        if (occurrences.get(0) == 3 && occurrences.get(1) == 3 && occurrences.get(2) == 1 && occurrences.get(3) == 3 && occurrences.get(4) == 2 && occurrences.get(5) == 2) {
+            System.out.println("Test 2 passed.");
+        }
     }
 
     public static void purchaseCart(Scanner scan, ArrayList<Double[]> cart, double cost) throws IOException, IllegalArgumentException {
