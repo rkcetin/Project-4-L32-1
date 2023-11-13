@@ -44,6 +44,21 @@ public class Customer extends User {
         return cart;
     }
     /**
+     * returns the cart of the searched user
+     * @param users arraylist of users to search within
+     * @param name email of the customer to search for
+     * @return returns an ArrayList of products representing the searched customers cart
+     * @throws throws Exception when search user is a seller or when nothing is found
+     */
+    public static ArrayList<Product> getCart(String name , ArrayList<User> users) throws Exception {
+        User searchedUser = User.isEmailRegistered(name , users);
+        if (searchedUser == null || (searchedUser instanceof Seller)) {
+            throw new Exception("invalid customer");
+        }
+        Customer castedUser = (Customer) searchedUser;
+        return castedUser.getCart();
+    }
+    /**
      * Allows the customer to make a purchase without having them having to use the cart
      *
      *
@@ -84,7 +99,10 @@ public class Customer extends User {
      * @param products the arraylist of products the program will get the products from
      *
      */
-    public void addToCart(Store store, String name, int quantity, ArrayList<Product> products) {
+    public void addToCart(Store store, String name, int quantity, ArrayList<Product> products) throws Exception {
+        if (quantity <= 0 ) {
+            throw new Exception();
+        }
         for (Product product : products) {
             if (store.equals(product.getStore()) && name.equals(product.getProductName())) {
                 if (quantity <= product.getStock()) {
@@ -109,11 +127,8 @@ public class Customer extends User {
      */
 
     public void removeFromCart(Store store, String name) {
-        for (int i = 0; i < cart.size(); i++) {
-            if (cart.get(i).getProductName().equals(name) && cart.get(i).getStore() == store) {
-                cart.remove(i);
-                //don't add return once found the product because addToCart method adds multiple identical products if quantity > 1. 
-            }
+        while(Product.checkProduct(name, this.cart) != null) {
+            cart.remove(Product.checkProduct(name, this.cart));
         }
     }
 
@@ -313,7 +328,7 @@ public class Customer extends User {
 
     //Extracts transaction history as a file 
     public File extractTransactionHistory() throws Exception {
-        File f = new File("transactionHistory.txt");
+        File f = new File(this.getName() + "transactionHistory.txt");
         PrintWriter pw = new PrintWriter(f);
         f.createNewFile();
         for (int i = 0; i < this.transactionHistory.size(); i++) {

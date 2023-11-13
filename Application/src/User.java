@@ -246,7 +246,8 @@ public class User implements Serializable {
     }
 
 
-    public void deleteUser() {
+    public void deleteUser(ArrayList<User> users) {
+        users.remove(this);
         this.name = null;
         this.password = null;
         this.salt = null;
