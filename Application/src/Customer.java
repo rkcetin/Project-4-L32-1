@@ -90,6 +90,7 @@ public class Customer extends User {
                 if (quantity <= product.getStock()) {
                     for (int j = 0; j < quantity; j++) {
                         cart.add(product);
+                        product.getStore().setProductsInCart(product.getStore().getProductsInCart() + quantity);
                     }
                 } else {
                     System.out.println("You cannot add more than there is stock for!");
@@ -108,12 +109,14 @@ public class Customer extends User {
      *
      */
 
-    public void removeFromCart(Store store, String name) {
-        for (int i = 0; i < cart.size(); i++) {
-            if (cart.get(i).getProductName().equals(name) && cart.get(i).getStore() == store) {
-                cart.remove(i);
-                //don't add return once found the product because addToCart method adds multiple identical products if quantity > 1. 
+    public void removeFromCart(Store store, String name, int quantity) {
+        for (int i = cart.size() - 1; i <= 0; i++) {
+            for (int j = 0; j < quantity; j++) {
+                if (cart.get(i).getProductName().equals(name) && cart.get(i).getStore() == store) {
+                    cart.remove(i);
+                }
             }
+            //don't add return once found the product because addToCart method adds multiple identical products if quantity > 1.
         }
     }
 
@@ -154,8 +157,8 @@ public class Customer extends User {
             int choice = scan.nextInt();
             scan.nextLine();
             if (choice == 1) {
-                for (Product value : cart) {
-                    if (value.getStock() < 1) {
+                for (int i = 0; i < cart.size(); i++) {
+                    if (cart.get(i).getStock() < this.getProductOccurrences().get(i)) {
                         throw new IllegalArgumentException("Stock exceeded!");
                     }
                 }

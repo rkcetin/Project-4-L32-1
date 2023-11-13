@@ -343,23 +343,33 @@ public class Main {
                 }
                 case 4 -> {//view cart needs to show how many items of that item are in the cart
                     if (customer.getCart() != null) {
-                        System.out.println("If you want to purchase the cart, enter 0. If you want to remove the product from the cart, enter the product index. Otherwise, enter -1 to exit");
+                        System.out.println("If you want to purchase the cart, enter 0. If you want to remove a product from the cart, enter the product index. Otherwise, enter -1 to exit");
                         ArrayList<Product> newList = new ArrayList<>();
-                        for (Product product : customer.getCart()) {
-                            if (!newList.contains(product)) {
-                                newList.add(product);
+                        ArrayList<Integer> occurrences = new ArrayList<>();
+                        for (int i = 0; i < customer.getCart().size(); i++) {
+                            if (!newList.contains(customer.getCart().get(i))) {
+                                newList.add(customer.getCart().get(i));
+                                occurrences.add(customer.getProductOccurrences().get(i));
                             }
                         }
                         for (int i = 1; i <= newList.size(); i++) {
-                            System.out.println(String.format("%d - %s", i, newList.get(i - 1).toString2()));
+                            System.out.println(String.format("%d - %s x%d", i, newList.get(i - 1).toString2(), customer.getProductOccurrences().get(i)));
                         }
                         int index = Integer.parseInt(scanner.nextLine());
                         if (index < -1 || index > newList.size()) {
                             System.out.println("Invalid index!");
                         } else if (index == -1) {
-
+                            break;
                         } else if (index == 0) {
                             customer.purchaseCart(scanner);
+                        } else if (index <= customer.getCart().size()) {
+                            System.out.println("How many of that item do you want to remove?");
+                            int quantity = scanner.nextInt();
+                            scanner.nextLine();
+                            customer.removeFromCart(newList.get(index - 1).getStore(), newList.get(index - 1).getProductName(), quantity);
+                            int originalValue = customer.getProductOccurrences().get(index - 1);
+                            int decrementedValue = originalValue - quantity;
+                            customer.getProductOccurrences().set(index - 1, decrementedValue);
                         }
                     } else {
                         System.out.println("Cart is empty!");

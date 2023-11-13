@@ -18,7 +18,7 @@ public class MainTest {
         Assert.assertEquals("hello", outputStream.toString());
     }
     @Test
-    public void invalidInputTestForLoginSequence() {
+    public void invalidInputTestForLoginSequence() throws Exception {
 
         TestRunner.setUp();
         String invalidInputSequence = String.format("%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n",

@@ -31,6 +31,7 @@ public class Seller extends User {
         stores = new ArrayList<>();
     }
 
+
     //creates a new store with the given store name
     /**
      * creates a store and adds it to the provided list of stores in addition

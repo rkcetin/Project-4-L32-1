@@ -23,6 +23,7 @@ public class Store implements Serializable {
     private Seller seller;
     private double sales;
     private int soldProduct;
+    private int productsInCart;
 
     public Store(String storeName, ArrayList<Product> products , Seller seller) {
         if (storeName == null || products == null || seller == null) {
@@ -48,6 +49,15 @@ public class Store implements Serializable {
         this.seller = seller;
 
     }
+
+    public int getProductsInCart() {
+        return productsInCart;
+    }
+
+    public void setProductsInCart(int productsInCart) {
+        this.productsInCart = productsInCart;
+    }
+
     /**
      * searches provided list for a store with the provided storename and returns the object if it is found
      * @param storeName storeName to look for
