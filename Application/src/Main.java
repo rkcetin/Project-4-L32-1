@@ -160,7 +160,7 @@ public class Main {
             boolean sellerMain = true;
 
             do {
-                System.out.println("1. View Stores\n2. Create Store\n3. Delete Store\n4. Import products\n5. Edit account\n6. Delete Account\n7. View Statistics\n8. Edit stores\n9. Exit marketplace");
+                System.out.println("1. View Stores\n2. Create Store\n3. Import products\n4. Edit account\n5. Delete Account\n6. View Statistics\n7. Edit stores\n8. Exit marketplace");
                 int choice;
                 while (true) {
                     try {
@@ -188,63 +188,87 @@ public class Main {
                             seller.createStore(storeName, stores);
                             System.out.println("Store created, would you like to add products right now? Choose between 1 or 2");
                             boolean cont2 = true;
-                            do {
-                                System.out.println("1 - Add Product\n2 - Exit");
-                                choice = Integer.parseInt(scanner.nextLine());
-                                switch (choice) {
-                                    case 1 -> {
-                                        System.out.println("Enter product name.");
-                                        String name = scanner.nextLine();
-                                        System.out.println("Enter description for the product.");
-                                        String desc = scanner.nextLine();
+                            try {
+                                do {
+                                    System.out.println("1 - Add Product\n2 - Exit");
+                                    String choiceInput = scanner.nextLine();
 
-                                        int stock;
-                                        while (true) {
-                                            try {
-                                                System.out.print("Enter stock: ");
-                                                stock = Integer.parseInt(scanner.nextLine());
-                                                break;
-                                            } catch (NumberFormatException e) {
-                                                System.out.println("Invalid input! Please enter a valid integer for stock.");
-                                            }
-                                        }
+                                    if (choiceInput.isEmpty() || !choiceInput.matches("[12]")) {
+                                        System.out.println("Invalid input! Please enter 1 or 2.");
+                                        continue;  // Prompt the user again
+                                    }
 
-                                        double price;
-                                        while (true) {
-                                            try {
-                                                System.out.print("Enter price: ");
-                                                price = Double.parseDouble(scanner.nextLine());
-                                                break;
-                                            } catch (NumberFormatException e) {
-                                                System.out.println("Invalid input! Please enter a valid number for price.");
-                                            }
-                                        }
+                                    choice = Integer.parseInt(choiceInput);
 
-                                        seller.getStore(storeName).addProduct(name, desc, stock, price, products);
-                                        System.out.println("Would you like to continue adding product?\n1. Yes\n2. No, return to the main menu.");
-                                        int con;
-                                        while (true) {
-                                            try {
-                                                System.out.print("Enter your choice (1 or 2): ");
-                                                con = Integer.parseInt(scanner.nextLine());
-                                                if (con == 1 || con == 2) {
+                                    switch (choice) {
+                                        case 1 -> {
+                                            System.out.println("Enter product name.");
+                                            String name = scanner.nextLine();
+                                            System.out.println("Enter description for the product.");
+                                            String desc = scanner.nextLine();
+
+                                            int stock;
+                                            while (true) {
+                                                try {
+                                                    System.out.print("Enter stock: ");
+                                                    String stockInput = scanner.nextLine();
+                                                    if (stockInput.isEmpty()) {
+                                                        throw new NumberFormatException();
+                                                    }
+                                                    stock = Integer.parseInt(stockInput);
                                                     break;
-                                                } else {
-                                                    System.out.println("Invalid input! Please enter 1 or 2.");
+                                                } catch (NumberFormatException e) {
+                                                    System.out.println("Invalid input! Please enter a valid integer for stock.");
                                                 }
-                                            } catch (NumberFormatException e) {
-                                                System.out.println("Invalid input! Please enter a number.");
+                                            }
+
+                                            double price;
+                                            while (true) {
+                                                try {
+                                                    System.out.print("Enter price: ");
+                                                    String priceInput = scanner.nextLine();
+                                                    if (priceInput.isEmpty()) {
+                                                        throw new NumberFormatException();
+                                                    }
+                                                    price = Double.parseDouble(priceInput);
+                                                    break;
+                                                } catch (NumberFormatException e) {
+                                                    System.out.println("Invalid input! Please enter a valid number for price.");
+                                                }
+                                            }
+
+                                            seller.getStore(storeName).addProduct(name, desc, stock, price, products);
+                                            System.out.println("Would you like to continue adding product?\n1. Yes\n2. No, return to the main menu.");
+                                            int con;
+                                            while (true) {
+                                                try {
+                                                    System.out.print("Enter your choice (1 or 2): ");
+                                                    String conInput = scanner.nextLine();
+                                                    if (conInput.isEmpty()) {
+                                                        throw new NumberFormatException();
+                                                    }
+                                                    con = Integer.parseInt(conInput);
+                                                    if (con == 1 || con == 2) {
+                                                        break;
+                                                    } else {
+                                                        System.out.println("Invalid input! Please enter 1 or 2.");
+                                                    }
+                                                } catch (NumberFormatException e) {
+                                                    System.out.println("Invalid input! Please enter a number.");
+                                                }
+                                            }
+                                            if (con != 1) {
+                                                cont2 = false;
                                             }
                                         }
-                                        if (con != 1) {
+                                        case 2 -> {
                                             cont2 = false;
                                         }
                                     }
-                                    case 2 -> {
-                                        cont2 = false;
-                                    }
-                                }
-                            } while (cont2);
+                                } while (cont2);
+                            } catch (NumberFormatException nfe) {
+                                System.out.println("Invalid input! Please pick either 1 or 2.");
+                            }
 
                             int contChoice;
                             while (true) {
@@ -268,23 +292,11 @@ public class Main {
                         } while (cont);
                     }
                     case 3 -> {
-                        System.out.println("Enter name of the store that you'd like to be deleted");
-                        while (true) {
-                            try {
-                                String deleteStore = scanner.nextLine();
-                                seller.removeStore(deleteStore, stores);
-                                break;
-                            } catch (IllegalArgumentException iae) {
-                                System.out.println(iae.getMessage() + " try again.");
-                            }
-                        }
-                    }
-                    case 4 -> {
                         System.out.println("Type the filepath of the .csv file");
                         String csvImportPath = scanner.nextLine();
                         seller.importProducts(csvImportPath, products);
                     }
-                    case 5 -> {
+                    case 4 -> {
                         try {
                             System.out.println("Enter new e-mail");
                             String newEmail = scanner.nextLine();
@@ -299,13 +311,13 @@ public class Main {
                             System.out.println("Error: " + e.getMessage() + ", please try again.");
                         }
                     }
-                    case 6 -> {
+                    case 5 -> {
                         seller.deleteUser(users);
                         System.out.println("Account deleted successfully");
                         Storage.storeData(users, stores, products);
                         return;
                     }
-                    case 7 -> {
+                    case 6 -> {
                         String b = seller.displayUnsortedStatistics().toString();
                         System.out.println("1. View unsorted statistics\n2. View statistics sorted by sales\n3. View statistics sorted by number of purchases made from each store\n4. View who has purchased from your stores.\n5. View transaction history");
                         int a;
@@ -378,7 +390,7 @@ public class Main {
                             }
                         }
                     }
-                    case 8 -> {
+                    case 7 -> {
                         System.out.println("Enter name of the store whose products you would like to edit.");
                         String editStore = scanner.nextLine();
                         Store currentStore = null;
@@ -388,6 +400,10 @@ public class Main {
                                 currentStore = seller.getStores().get(i);
                                 break;
                             }
+                        }
+                        if (currentStore == null) {
+                            System.out.println("Error! No store of such name.");
+                            break;
                         }
                         ArrayList<Product> productsToString = currentStore.getProducts();
                         System.out.println(currentStore.getProductsString(productsToString));
@@ -424,10 +440,11 @@ public class Main {
                         if (choice2 == 1) {
                             currentStore.editProduct(productsToString.get(index - 1).getProductName(), scanner);
                         } else if (choice2 == 2) {
-                            currentStore.removeProduct(productsToString.get(index - 1).getProductName(), productsToString);
+                            currentStore.removeProduct(productsToString.get(index - 1).getProductName(), products);
+                            System.out.println("Product has been removed.");
                         }
                     }
-                    case 9 -> {
+                    case 8 -> {
                         Storage.storeData(users, stores, products);
                         return;
                     }

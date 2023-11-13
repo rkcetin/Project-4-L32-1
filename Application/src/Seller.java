@@ -65,10 +65,28 @@ public class Seller extends User {
      * @param storeName the target store name
      * @param stores large bank of stores to remove from
      */
-    public void removeStore(String storeName , ArrayList<Store> stores) {
-        Store.removeStore(storeName, this.stores);
-        Store.removeStore(storeName, stores);
+    public void removeStore(String storeName, ArrayList<Store> stores, ArrayList<Product> allProducts) {
+        Iterator<Store> storeIterator = stores.iterator();
+
+        while (storeIterator.hasNext()) {
+            Store store = storeIterator.next();
+            if (storeName.equals(store.getStoreName())) {
+                // Remove all products inside the store
+                Iterator<Product> productIterator = store.getProducts().iterator();
+                while (productIterator.hasNext()) {
+                    Product product = productIterator.next();
+                    allProducts.remove(product);  // Remove the product from the large list
+                    productIterator.remove();      // Remove the product from the store's list
+                }
+
+                // Remove the store
+                storeIterator.remove();
+                this.stores.remove(store);
+            }
+        }
     }
+
+
 
     //returns an arraylist of stores
     /**
