@@ -157,7 +157,7 @@ public class Main {
                         if (choice < 1 || choice > 9) {
                             System.out.println("Invalid input! Please choose a number from 1-9.");
                         } else {
-                            break; // Break the loop if the input is valid
+                            break;
                         }
                     } catch (NumberFormatException e) {
                         System.out.println("Invalid input! Please enter a number.");
@@ -191,7 +191,7 @@ public class Main {
                                             try {
                                                 System.out.print("Enter stock: ");
                                                 stock = Integer.parseInt(scanner.nextLine());
-                                                break; // Break the loop if the input is valid
+                                                break;
                                             } catch (NumberFormatException e) {
                                                 System.out.println("Invalid input! Please enter a valid integer for stock.");
                                             }
@@ -202,7 +202,7 @@ public class Main {
                                             try {
                                                 System.out.print("Enter price: ");
                                                 price = Double.parseDouble(scanner.nextLine());
-                                                break; // Break the loop if the input is valid
+                                                break;
                                             } catch (NumberFormatException e) {
                                                 System.out.println("Invalid input! Please enter a valid number for price.");
                                             }
@@ -216,7 +216,7 @@ public class Main {
                                                 System.out.print("Enter your choice (1 or 2): ");
                                                 con = Integer.parseInt(scanner.nextLine());
                                                 if (con == 1 || con == 2) {
-                                                    break; // Break the loop if the input is valid
+                                                    break;
                                                 } else {
                                                     System.out.println("Invalid input! Please enter 1 or 2.");
                                                 }
@@ -237,11 +237,11 @@ public class Main {
                             int contChoice;
                             while (true) {
                                 try {
-                                    System.out.print("Would you like to keep adding stores?\n1. Yes\n2. No, return to the main menu: ");
-                                    System.out.print("Enter your choice (1 or 2):");
+                                    System.out.println("Would you like to keep adding stores?\n1. Yes\n2. No, return to the main menu ");
+                                    System.out.print("Enter your choice (1 or 2): ");
                                     contChoice = Integer.parseInt(scanner.nextLine());
                                     if (contChoice == 1 || contChoice == 2) {
-                                        break; // Break the loop if the input is valid
+                                        break;
                                     } else {
                                         System.out.println("Invalid input! Please enter 1 or 2.");
                                     }
@@ -274,7 +274,10 @@ public class Main {
                         seller.setPassword(newPassword);
                     }
                     case 6 -> {
-                        seller.deleteUser();
+                        seller.deleteUser(users);
+                        System.out.println("Account deleted successfully");
+                        Storage.storeData(users, stores, products);
+                        return;
                     }
                     case 7 -> {
                         String b = seller.displayUnsortedStatistics().toString();
@@ -288,7 +291,7 @@ public class Main {
                                 if (a < 1 || a > 5) {
                                     System.out.println("Invalid input! Please enter a number between 1 and 5.");
                                 } else {
-                                    break; // Break the loop if the input is valid
+                                    break;
                                 }
                             } catch (NumberFormatException e) {
                                 System.out.println("Invalid input! Please enter a number.");
@@ -305,7 +308,7 @@ public class Main {
                                     if (c != 1 && c != 2) {
                                         System.out.println("Invalid input! Please enter 1 or 2.");
                                     } else {
-                                        break; // Break the loop if the input is valid
+                                        break;
                                     }
                                 } catch (NumberFormatException e) {
                                     System.out.println("Invalid input! Please enter a number.");
@@ -325,7 +328,7 @@ public class Main {
                                     if (c != 1 && c != 2) {
                                         System.out.println("Invalid input! Please enter 1 or 2.");
                                     } else {
-                                        break; // Break the loop if the input is valid
+                                        break;
                                     }
                                 } catch (NumberFormatException e) {
                                     System.out.println("Invalid input! Please enter a number.");
@@ -371,7 +374,7 @@ public class Main {
                                 if (index < 1 || index > productsToString.size()) {
                                     System.out.println("Invalid input! Please enter a number between 1 and " + productsToString.size() + ".");
                                 } else {
-                                    break; // Break the loop if the input is valid
+                                    break;
                                 }
                             } catch (NumberFormatException e) {
                                 System.out.println("Invalid input! Please enter a number.");
@@ -386,7 +389,7 @@ public class Main {
                                 if (choice2 != 1 && choice2 != 2) {
                                     System.out.println("Invalid input! Please enter 1 or 2.");
                                 } else {
-                                    break; // Break the loop if the input is valid
+                                    break;
                                 }
                             } catch (NumberFormatException e) {
                                 System.out.println("Invalid input! Please enter a number.");
@@ -413,7 +416,7 @@ public class Main {
                         if (cont != 1) {
                             sellerMain = false;
                         }
-                        break; // Break the loop if the input is valid
+                        break;
                     } catch (NumberFormatException e) {
                         System.out.println("Invalid input! Please enter a number.");
                     }
@@ -518,7 +521,10 @@ public class Main {
                         customer.setPassword(newPassword);
                     }
                     case 3 -> {
-                        customer.deleteUser();
+                        customer.deleteUser(users);
+                        System.out.println("Account deleted successfully");
+                        Storage.storeData(users, stores, products);
+                        return;
                     }
                     case 4 -> {
                         if (customer.getCart() != null) {
