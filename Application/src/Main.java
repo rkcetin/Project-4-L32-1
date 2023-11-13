@@ -266,12 +266,19 @@ public class Main {
                         seller.importProducts(csvImportPath, products);
                     }
                     case 5 -> {
-                        System.out.println("Enter new e-mail");
-                        String newEmail = scanner.nextLine();
-                        System.out.println("Enter new password");
-                        String newPassword = scanner.nextLine();
-                        seller.setName(newEmail, users);
-                        seller.setPassword(newPassword);
+                        try {
+                            System.out.println("Enter new e-mail");
+                            String newEmail = scanner.nextLine();
+                            User.isEmailRegistered(newEmail, users);
+                            User.isValidEmail(newEmail);
+
+                            System.out.println("Enter new password");
+                            String newPassword = scanner.nextLine();
+                            seller.setName(newEmail, users);
+                            seller.setPassword(newPassword);
+                        } catch (Exception e) {
+                            System.out.println("Error: " + e.getMessage() + ", please try again.");
+                        }
                     }
                     case 6 -> {
                         seller.deleteUser(users);
@@ -513,12 +520,19 @@ public class Main {
                         } while (mainCont);
                     }
                     case 2 -> {
-                        System.out.println("Enter new e-mail");
-                        String newEmail = scanner.nextLine();
-                        System.out.println("Enter new password");
-                        String newPassword = scanner.nextLine();
-                        customer.setName(newEmail, users);
-                        customer.setPassword(newPassword);
+                        try {
+                            System.out.println("Enter new e-mail");
+                            String newEmail = scanner.nextLine();
+                            User.isEmailRegistered(newEmail, users);
+                            User.isValidEmail(newEmail);
+
+                            System.out.println("Enter new password");
+                            String newPassword = scanner.nextLine();
+                            customer.setName(newEmail, users);
+                            customer.setPassword(newPassword);
+                        } catch (Exception e) {
+                            System.out.println("Error: " + e.getMessage() + ", please try again.");
+                        }
                     }
                     case 3 -> {
                         customer.deleteUser(users);
