@@ -314,4 +314,23 @@ public class Seller extends User {
 
         return result;
     }
+
+    public ArrayList<String> viewTransactionHistory(ArrayList<String> inputStoreNames) throws IOException {
+        ArrayList<String> filteredLines = new ArrayList<>();
+
+        try (BufferedReader br = new BufferedReader(new FileReader("statistics.txt"))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length == 4) {
+                    String storeName = parts[0].trim();
+                    if (inputStoreNames.contains(storeName)) {
+                        filteredLines.add(line);
+                    }
+                }
+            }
+        }
+
+        return filteredLines;
+    }
 }

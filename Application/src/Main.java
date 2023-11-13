@@ -215,7 +215,7 @@ public class Main {
                 }
                 case 7 -> {
                     String b = seller.displayUnsortedStatistics().toString();
-                    System.out.println("1. View unsorted statistics\n2. View statistics sorted by sales\n3. View statistics sorted by number of purchases made from each store\n4. View who has purchased from your stores.");
+                    System.out.println("1. View unsorted statistics\n2. View statistics sorted by sales\n3. View statistics sorted by number of purchases made from each store\n4. View who has purchased from your stores.\n5. View transaction history");
                     int a = scanner.nextInt();
                     int c = -1;
                     scanner.nextLine();
@@ -244,6 +244,11 @@ public class Main {
                         for (int i = 0; i < seller.getStoreNames().size(); i++) {
                             String storeName = seller.getStoreNames().get(i);
                             System.out.println("Users who purchased from " + storeName + ": " + result.get(i));
+                        }
+                    } else if (a == 5) {
+                        ArrayList<String> result = seller.viewTransactionHistory(seller.getStoreNames());
+                        for (String line : result) {
+                            System.out.println(line);
                         }
                     }
                 }
