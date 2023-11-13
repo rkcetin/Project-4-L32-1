@@ -82,7 +82,7 @@ public class Store implements Serializable {
     public static void removeStore(String storeName, ArrayList<Store> stores) throws IllegalArgumentException {
         Store storeToRemove = checkStore(storeName, stores);
         if (storeToRemove == null) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Store does not exist.");
         }
         stores.remove(storeToRemove);
 
