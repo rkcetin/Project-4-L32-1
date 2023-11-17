@@ -178,37 +178,33 @@ public class User implements Serializable {
      * returns the object for a user if they are logged in
 
      */
-    public static User login(String email, String password, ArrayList<User> users) throws Exception {
+    public synchronized static User login(String email, String password, ArrayList<User> users) throws Exception {
         User currentUser = null;
-        if (User.isValidEmail(email)) {
+
             // Check if the email is registered
-            currentUser = User.isEmailRegistered(email , users);
-            if (currentUser != null) {
-                // Retrieve the stored hashed password and salt for the user
-                String[] userData = currentUser.toString().split(",");
+        currentUser = User.isEmailRegistered(email , users);
+        if (currentUser != null) {
+            // Retrieve the stored hashed password and salt for the user
+            String[] userData = currentUser.toString().split(",");
 
-                if (userData != null) {
-                    String storedHashedPassword = userData[1];
-                    String salt = userData[2];
 
-                    // Hash the provided password with the stored salt
-                    String hashedPassword = hashPassword(password, salt);
+            String storedHashedPassword = userData[1];
+            String salt = userData[2];
 
-                    // Compare the computed hash with the stored hash
-                    if (storedHashedPassword.equals(hashedPassword)) {
-                        return currentUser;
-                    } else {
-                        throw new Exception("Login failed");
-                    }
-                } else {
-                    throw new Exception("Missing data?");
-                }
+            // Hash the provided password with the stored salt
+            String hashedPassword = hashPassword(password, salt);
+
+            // Compare the computed hash with the stored hash
+            if (storedHashedPassword.equals(hashedPassword)) {
+                return currentUser;
             } else {
-                throw new Exception("Email not registered");
+                throw new Exception("Login failed");
             }
+
         } else {
-            throw new Exception("Incorrect Email Format");
+            throw new Exception("Email not registered");
         }
+
     }
     /**
      * signs the user up with the email and password and role. if the information is correct
@@ -222,28 +218,26 @@ public class User implements Serializable {
      *
 
      */
-    public static User signup(String email, String password , int role, ArrayList<User> users) throws Exception {
+    public synchronized static User signup(String email, String password , int role, ArrayList<User> users) throws Exception {
         // Check if the email is valid
-        if (User.isValidEmail(email)) {
-            // Check if the email is not already registered
-            User checkUser = User.isEmailRegistered(email, users);
-            if (null == checkUser) {
-                // Generate a random salt
-                String salt = generateSalt(16);   ///// 16??????
 
-                // Hash the password with the salt
-                String hashedPassword = hashPassword(password, salt);
+        // Check if the email is not already registered
+        User checkUser = User.isEmailRegistered(email, users);
+        if (null == checkUser) {
+            // Generate a random salt
+            String salt = generateSalt(16);   ///// 16??????
 
-                User endUser = User.saveUserToDatabase(email, hashedPassword, salt, role, users);
+            // Hash the password with the salt
+            String hashedPassword = hashPassword(password, salt);
 
-                return endUser;
-                // Store the email, hashed password, and salt in a file
-            } else {
-                throw new IllegalArgumentException("Email already registered!");
-            }
+            User endUser = User.saveUserToDatabase(email, hashedPassword, salt, role, users);
+
+            return endUser;
+            // Store the email, hashed password, and salt in a file
         } else {
-            throw new IllegalArgumentException("Invalid e-mail format!");
+            throw new IllegalArgumentException("Email already registered!");
         }
+
     }
 
 
