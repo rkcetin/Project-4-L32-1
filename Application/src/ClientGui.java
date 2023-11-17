@@ -42,6 +42,8 @@ public class ClientGui extends JComponent implements Runnable {
         output = new ObjectOutputStream(socket.getOutputStream());
         input = new ObjectInputStream(socket.getInputStream());
 
+
+
         SwingUtilities.invokeLater(new ClientGui());
 
         output.close();
