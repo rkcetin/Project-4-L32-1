@@ -69,7 +69,7 @@ public class Customer extends User {
      * @throws IOException from use of print writer and files
      * @throws IllegalArgumentException when quantity purchased exceed item stock
      */
-    public void singlePurchase(Store store, String name, int quantity, ArrayList<Product> products)
+    public synchronized void singlePurchase(Store store, String name, int quantity, ArrayList<Product> products)
             throws IOException, IllegalArgumentException {
         PrintWriter pw = new PrintWriter(new FileWriter("statistics.txt", true));
         for (Product product : products) {
@@ -222,7 +222,9 @@ public class Customer extends User {
     public void setCart(ArrayList<Product> cart) {
         this.cart = cart;
     }
-
+    public ArrayList<String> getTransactionHistoryList() {
+        return transactionHistory;
+    }
     public String getTransactionHistory() {
         String history = "";
         for (String s : transactionHistory) {

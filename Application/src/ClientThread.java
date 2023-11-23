@@ -9,6 +9,10 @@ public class ClientThread extends Thread {
     final ArrayList<Store> stores;
     final ArrayList<Product> products;
 
+    boolean isSeller;
+    User currentUser;
+
+
     public ClientThread(ArrayList<User> users , ArrayList<Store> stores , ArrayList<Product> products, Socket socket) throws Exception
     {
 
@@ -19,55 +23,279 @@ public class ClientThread extends Thread {
         this.stores = stores;
         this.products = products;
 
+
     }
     public void run() {
+
+
         try {
-            boolean registration = inputStream.readBoolean();
-            System.out.println("here1");
-            User currentUser = null;
-            if (registration) {
-                String[] registrationInfo = (String[]) inputStream.readObject();
-                try {
-                    System.out.println("here");
-                    currentUser = User.signup(
-                            registrationInfo[0],
-                            registrationInfo[1],
-                            Integer.parseInt(registrationInfo[2]),
-                            users
-                    );
-                    Thread.sleep(10000);
-                    System.out.println("reach4");
-                    outputStream.writeBoolean(true);
-                    outputStream.flush();
-                } catch (Exception e) {
-                    System.out.println("reach5");
-                    outputStream.writeBoolean(false);
-                    outputStream.flush();
+            boolean registration = true;
+            //first menu
+            while(true) {
+                int menuPoint = inputStream.readInt();
+
+
+
+                // first menu
+                if (menuPoint == 0) {
+                    registration = inputStream.readBoolean();
                 }
-            } else {
-                String[] logInfo = (String[]) inputStream.readObject();
-                try {
-                    currentUser = User.login(
-                            logInfo[0],
-                            logInfo[1],
-                            users
-                    );
-                    outputStream.writeBoolean(true);
-                } catch (Exception e) {
-                    outputStream.writeBoolean(false);
+
+                if (menuPoint == 1) {
+                    if (registration) {
+                        String[] registrationInfo = (String[]) inputStream.readObject();
+                        try {
+                            System.out.println("here");
+                            currentUser = User.signup(
+                                    registrationInfo[0],
+                                    registrationInfo[1],
+                                    Integer.parseInt(registrationInfo[2]),
+                                    users
+                            );
+                            Thread.sleep(10000);
+                            System.out.println("reach4");
+                            outputStream.writeBoolean(true);
+                            outputStream.flush();
+                            break;
+                        } catch (Exception e) {
+                            System.out.println("reach5");
+                            outputStream.writeBoolean(false);
+                            outputStream.flush();
+                        }
+                    } else {
+                        String[] logInfo = (String[]) inputStream.readObject();
+                        try {
+                            currentUser = User.login(
+                                    logInfo[0],
+                                    logInfo[1],
+                                    users
+                            );
+                            outputStream.writeBoolean(true);
+                            break;
+                        } catch (Exception e) {
+                            outputStream.writeBoolean(false);
+                        }
+
+                    }
+                    Storage.storeData(users, stores, products);
+
                 }
 
             }
 
+            if (currentUser instanceof Customer ) {
+                Customer currentCustomer = (Customer) currentUser;
+                loop : while(true) {
+                    int menuChoice = inputStream.readInt();
+                    switch (menuChoice) {
+                        case 1: { // view products
+                            outputStream.writeObject(
+                                products // sorting should happen client side + listing generation shoudl also happene clientside
+                            );
+                            outputStream.flush();
+                            break;
+                        }
+                        case 2: { //edit account
+                            try{
+                                String newEmail = (String) inputStream.readObject();
+                                String newPassword = (String) inputStream.readObject();
+                                User.isEmailRegistered(newEmail , users);
+                                currentCustomer.setName(newEmail , users);
+                                currentCustomer.setPassword(newPassword);
+                                outputStream.writeBoolean(true);
+                                outputStream.flush();
+                            } catch (Exception e) {
+                                outputStream.writeBoolean(false);
+                                outputStream.flush();
+                            }
+                            break;
+                        }
+                        case 3: {  // delete user
+                            currentCustomer.deleteUser(users);
+                            Storage.storeData(users, stores, products);
+                            break loop;
+                        }
+                        case 400: { // view cart
+                            outputStream.writeObject(
+                                    currentCustomer.getCart()
+                            );
+                            outputStream.flush();
+                            break;
+                        }
+                        case 401 : { // add item to cart
+                            String[] cartActionInfo = (String[]) inputStream.readObject();
+                            try {
+                                Product targetProduct = Product.checkProduct(cartActionInfo[0] , products);  // what if they delete while purchasing
+                                int quantity = Integer.parseInt(cartActionInfo[1]); // 1 should be quantity index
+                                currentCustomer.addToCart(
+                                    targetProduct.getStore(),
+                                    targetProduct.getProductName(),
+                                    quantity,
+                                    products
+                                );
+                                outputStream.writeBoolean(true);
+                            } catch (Exception e) {
+                                outputStream.writeBoolean(false);
+                            }
+                            break;
+                        }
+                        case 402 : { // purchase cart
+
+                        }
+                        case 403 : { // purchase item
+                            String[] purchaseInfo = (String[]) inputStream.readObject();
+                            try {
+                                Product targetProduct = Product.checkProduct(purchaseInfo[0] , products);
+                                int quantity = Integer.parseInt(purchaseInfo[1]);
+                                currentCustomer.singlePurchase(
+                                        targetProduct.getStore(),
+                                        targetProduct.getProductName(),
+                                        quantity,
+                                        products
+                                );
+                                outputStream.writeBoolean(true);
+                            } catch (Exception e ) {
+                                outputStream.writeBoolean(false);
+                            }
+                            break;
+                        }
+                        case 501 : { //view dashboard by bought
+                            outputStream.writeObject(
+                                    currentCustomer.dashboardbyBought()
+                            );
+                            outputStream.flush();
+                            break;
+                        }
+                        case 502 : { //view dashboard by sold
+                            outputStream.writeObject(
+                                    currentCustomer.dashboardBySold(stores)
+                            );
+                            outputStream.flush();
+                            break;
+                        }
+                        case 6: { // extract transaction history local machine has to handle other part
+                            outputStream.writeObject(currentCustomer.getTransactionHistoryList());
+                            outputStream.flush();
+                            break;
+                        }
+                        case 701: { //view statistics stores purchased from
+                            outputStream.writeObject(
+                                    currentCustomer.getPurchaseCounts()
+                            );
+                            outputStream.flush();
+                            break;
+                        }
+                        case 702: { // total purhcases from stores
+                            outputStream.writeObject(
+                                    currentCustomer.countStoreOccurrences()
+                            );
+                            outputStream.flush();
+                            break;
+                        }
+                        case 9: { // exit marketplace
+                            Storage.storeData(users , stores, products);
+                            break loop;
+                        }
+
+                    }
+                }
+                Storage.storeData(users, stores, products);
+            }
+            if (currentUser instanceof Seller) {
+                Seller currentSeller = (Seller) currentUser;
+                loop : while (true) {
+                    int processSelection = inputStream.readInt();
+                    switch (processSelection) {
+                        case 1: { //view stores
+                            outputStream.writeObject(currentSeller.getStores());
+                            outputStream.flush();
+                            break;
+                        }
+                        case 200 : { // create store
+                            String storeName = (String) inputStream.readObject();
+                            try {
+                                currentSeller.createStore(storeName , stores); // synchronize maybe
+                                outputStream.writeBoolean(true);
+                            } catch (Exception e) {
+                                outputStream.writeBoolean(false);
+                            }
+                            break;
+                        }
+                        case 201 : { // add product to store
+                            String[] addProductInfo = (String[]) inputStream.readObject();
+                            // [0] is store name
+                            // [1] product name
+                            // [2] description
+                            // [3] stock
+                            // [4] price
+                            Store targetStore = Store.checkStore(
+                                    addProductInfo[0],
+                                    stores
+                            );
+                            try {
+                                targetStore.addProduct(
+                                        addProductInfo[1],
+                                        addProductInfo[2],
+                                        Integer.parseInt(addProductInfo[3]),
+                                        Double.parseDouble(addProductInfo[4]),
+                                        products
+                                );
+                                outputStream.writeBoolean(true);
+                                outputStream.flush();
+                            } catch (Exception e) {
+                                outputStream.writeBoolean(false);
+                                outputStream.flush();
+                            }
+                            break;
+
+
+                        }
+                        case 300 : { //edit account
+                            try {
+                                String newEmail = (String) inputStream.readObject();
+                                String newPassword = (String) inputStream.readObject();
+                                User.isEmailRegistered(newEmail , users);
+                                currentSeller.setName(newEmail , users);
+                                currentSeller.setPassword(newPassword);
+                                outputStream.writeBoolean(true);
+
+                            } catch (Exception e) {
+                                outputStream.writeBoolean(false);
+                            }
+                            break;
+                        }
+                        case 301 : { // unsorted statistics
+                            outputStream.writeObject(
+                                    currentSeller.displayUnsortedStatistics() // rest needs to happen clientside
+                            );
+                        }
+
+                        case 4 : { // delete user
+                            currentSeller.deleteUser(users);
+                            Storage.storeData(users , stores , products);
+                            break loop;
+                        }
+                        case 5 : {  //exit marketplace
+                            break loop;
+                        }
+
+
+                    }
+                    Storage.storeData(users, stores, products);
+                }
+            }
 
 
             socket.close();
             inputStream.close();
             outputStream.close();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
 
     }
+
+
 
 }

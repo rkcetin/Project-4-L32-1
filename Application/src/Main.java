@@ -347,7 +347,8 @@ public class Main {
                         if (a == 1) {
                             System.out.println(b);
                         } else if (a == 2) {
-                            System.out.println("1. Sort sales from highest to lowest\n" +
+                            System.out.println(
+                                    "1. Sort sales from highest to lowest\n" +
                                     "2. Sort sales from lowest to highest");
                             while (true) {
                                 try {
@@ -483,11 +484,11 @@ public class Main {
 
     public static void generateCustomerMenu(Customer customer) throws Exception {
         do {
-            System.out.println("What would you like to do? Choose numbers 1-8.");
+            System.out.println("What would you like to do? Choose numbers 1-8.");  /// changed to ui
             boolean customerMain = true;
 
             do {
-                System.out.println("1. View Products \n2. Edit Account\n3. Delete Account\n4. View Cart\n" +
+                System.out.println("1. View Products \n2. Edit Account\n3. Delete Account\n4. View Cart\n" +   // changed to ui
                         "5. View Dashboard\n6. Extract Transaction History\n7. View statistics\n8. Exit marketplace");
                 int choice;
                 while (true) {

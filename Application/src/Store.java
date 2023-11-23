@@ -57,7 +57,7 @@ public class Store implements Serializable {
      *
      */
     //helper function for determining to determine if a store exists within a list of stores; returns null if it doesn't
-    public static Store checkStore(String storeName, ArrayList<Store> stores) {
+    public synchronized static Store checkStore(String storeName, ArrayList<Store> stores) {
         if (stores == null || storeName == null) {
             throw new NullPointerException();
         }
