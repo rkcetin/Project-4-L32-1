@@ -121,13 +121,13 @@ public class Customer extends User {
      * removes an item from users cart
      *
      *
-     * @param store relates to the store the customer of the product the customer to their cart
+
      * @param name name of the product the customer is purchasing
      *
      *
      */
 
-    public void removeFromCart(Store store, String name) {
+    public void removeFromCart( String name) {
         while (Product.checkProduct(name, this.cart) != null) {
             cart.remove(Product.checkProduct(name, this.cart));
         }
@@ -152,6 +152,10 @@ public class Customer extends User {
             productOccurrencesList.add(productCountMap.get(product));
         }
         return productOccurrencesList;
+    }
+    public void purchaseCartServer() throws IOException, IllegalArgumentException {
+        PrintWriter pw = new PrintWriter(new FileWriter("statistics.txt", true));
+
     }
     /**
      * purchases cart and adds the information to statistics.txt

@@ -84,6 +84,29 @@ public class ClientThread extends Thread {
             }
 
             if (currentUser instanceof Customer ) {
+                /*
+                Customer Checklist
+                  need to check for synchrnicity all of this
+
+                view stores | not done
+
+                view products  | done
+                edit account | done
+                delete account | done
+                view cart | done
+                add item to cart | not done need to handle synchronicity
+                remover from cart | not done
+                purchase cart | not done
+                single purchase | done check for synchronicity
+                dashboard by bought | done
+                dashboard by sold | done
+                get trasnaction histiroy | serverside done
+                view stores purchase dfrom | done\
+                total purchases | done
+                 */
+
+
+
                 Customer currentCustomer = (Customer) currentUser;
                 loop : while(true) {
                     int menuChoice = inputStream.readInt();
@@ -158,6 +181,12 @@ public class ClientThread extends Thread {
                                 outputStream.writeBoolean(false);
                             }
                             break;
+                        }
+                        case 404  : { //remove from cart
+                            String itemName = (String) inputStream.readObject();
+                            currentCustomer.removeFromCart(itemName);
+                            outputStream.writeBoolean(true);
+
                         }
                         case 501 : { //view dashboard by bought
                             outputStream.writeObject(
