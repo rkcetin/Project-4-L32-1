@@ -122,6 +122,7 @@ public class ClientThread extends Thread {
                             outputStream.writeObject(
                                 stores
                             );
+                            outputStream.flush();
                             break;
                         }
 
@@ -167,6 +168,7 @@ public class ClientThread extends Thread {
                             } catch (Exception e) {
                                 outputStream.writeBoolean(false);
                             }
+                            outputStream.flush();
                             break;
                         }
                         case 402 : { // purchase cart
@@ -187,12 +189,14 @@ public class ClientThread extends Thread {
                             } catch (Exception e ) {
                                 outputStream.writeBoolean(false);
                             }
+                            outputStream.flush();
                             break;
                         }
                         case 404  : { //remove from cart
                             String itemName = (String) inputStream.readObject();
                             currentCustomer.removeFromCart(itemName);
                             outputStream.writeBoolean(true);
+                            outputStream.flush();
                             break;
                         }
                         case 501 : { //view dashboard by bought
