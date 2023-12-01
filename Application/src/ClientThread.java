@@ -88,14 +88,14 @@ public class ClientThread extends Thread {
                 Customer Checklist
                   need to check for synchrnicity all of this
 
-                view stores | not done
+                view stores | done
 
                 view products  | done
                 edit account | done
                 delete account | done
                 view cart | done
                 add item to cart | not done need to handle synchronicity
-                remover from cart | not done
+                remover from cart | done
                 purchase cart | not done
                 single purchase | done check for synchronicity
                 dashboard by bought | done
@@ -111,13 +111,20 @@ public class ClientThread extends Thread {
                 loop : while(true) {
                     int menuChoice = inputStream.readInt();
                     switch (menuChoice) {
-                        case 1: { // view products
+                        case 100: { // view products
                             outputStream.writeObject(
                                 products // sorting should happen client side + listing generation shoudl also happene clientside
                             );
                             outputStream.flush();
                             break;
                         }
+                        case 101 : { //view stores
+                            outputStream.writeObject(
+                                stores
+                            );
+                            break;
+                        }
+
                         case 2: { //edit account
                             try{
                                 String newEmail = (String) inputStream.readObject();
@@ -186,7 +193,7 @@ public class ClientThread extends Thread {
                             String itemName = (String) inputStream.readObject();
                             currentCustomer.removeFromCart(itemName);
                             outputStream.writeBoolean(true);
-
+                            break;
                         }
                         case 501 : { //view dashboard by bought
                             outputStream.writeObject(
