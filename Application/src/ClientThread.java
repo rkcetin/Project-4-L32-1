@@ -389,8 +389,10 @@ public class ClientThread extends Thread {
                             outputStream.writeObject(sellerStore);
                             outputStream.flush();
                         }
-
-
+                        case 9: { // exit marketplace
+                            Storage.storeData(users , stores, products);
+                            break loop;
+                        }
 
                     }
                     Storage.storeData(users, stores, products);

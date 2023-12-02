@@ -12,8 +12,17 @@ public class ClientGui extends JComponent implements Runnable {
 
     JButton loginButton;
     JButton signupButton;
-    JButton viewProductsButton;
+
+    //seller buttons
     JButton viewStoresButton;
+    JButton returnToMenuButtonS;
+    JButton exitS;
+
+    //customer buttons
+    JButton viewProductsButton;
+    JButton returnToMenuButtonC;
+    JButton exitC;
+
     JPanel cardPanel;
     CardLayout cardLayout;
 
@@ -107,6 +116,44 @@ public class ClientGui extends JComponent implements Runnable {
                     ex.printStackTrace();
                 }
             }
+
+            //seller logic
+            if (e.getSource() == viewStoresButton) {
+
+            }
+            if (e.getSource() == returnToMenuButtonS) {
+                cardLayout.show(cardPanel, "seller");
+            }
+            if (e.getSource() == exitS) {
+                try {
+                    output.writeInt(9);
+                    output.close();
+                    input.close();
+                    socket.close();
+                    System.exit(0);
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+
+            //customer logic
+            if (e.getSource() == viewProductsButton) {
+
+            }
+            if (e.getSource() == returnToMenuButtonC) {
+                cardLayout.show(cardPanel, "customer");
+            }
+            if (e.getSource() == exitC) {
+                try {
+                    output.writeInt(9);
+                    output.close();
+                    input.close();
+                    socket.close();
+                    System.exit(0);
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
         }
     };
 
@@ -127,15 +174,13 @@ public class ClientGui extends JComponent implements Runnable {
     public void run() {
         JFrame frame = new JFrame("MarketPlace");
 
-        loginButton = new JButton("Login");
-        signupButton = new JButton("Signup");
-        viewProductsButton = new JButton("View Products");
-        viewStoresButton = new JButton("View Stores");
-
         cardLayout = new CardLayout();
         cardPanel = new JPanel(cardLayout);
 
+        //login panel
         JPanel loginPanel = new JPanel(new GridLayout(3, 1, 0, 10));
+        loginButton = new JButton("Login");
+        signupButton = new JButton("Signup");
 
         JLabel titleLabel = new JLabel("Welcome to the Marketplace!");
         titleLabel.setFont(new Font("Arial", Font.BOLD, 30));
@@ -147,18 +192,41 @@ public class ClientGui extends JComponent implements Runnable {
         signupButton.setFont(new Font("Arial", Font.BOLD, 18));
         loginPanel.add(signupButton);
 
-        JPanel customerPanel = new JPanel();
-        customerPanel.add(viewProductsButton);
+        loginButton.addActionListener(actionListener);
+        signupButton.addActionListener(actionListener);
 
+        //seller panel
         JPanel sellerPanel = new JPanel();
+        viewStoresButton = new JButton("View Stores");
+        returnToMenuButtonS = new JButton("Return to menu");
+        exitS = new JButton("Exit Application");
+
         sellerPanel.add(viewStoresButton);
+        sellerPanel.add(returnToMenuButtonS);
+        sellerPanel.add(exitS);
+
+        viewStoresButton.addActionListener(actionListener);
+        returnToMenuButtonS.addActionListener(actionListener);
+        exitS.addActionListener(actionListener);
+
+        //customer panel
+        JPanel customerPanel = new JPanel();
+        viewProductsButton = new JButton("View Products");
+        returnToMenuButtonC = new JButton("Return to menu");
+        exitC = new JButton("Exit Application");
+
+        customerPanel.add(viewProductsButton);
+        customerPanel.add(returnToMenuButtonC);
+        customerPanel.add(exitC);
+
+        viewProductsButton.addActionListener(actionListener);
+        returnToMenuButtonC.addActionListener(actionListener);
+        exitC.addActionListener(actionListener);
+
 
         cardPanel.add(loginPanel, "login");
         cardPanel.add(customerPanel, "customer");
         cardPanel.add(sellerPanel, "seller");
-
-        loginButton.addActionListener(actionListener);
-        signupButton.addActionListener(actionListener);
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().add(cardPanel);
