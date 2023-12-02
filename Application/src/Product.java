@@ -219,6 +219,8 @@ public class Product implements Serializable {
         return filteredProduct.get(0);
     }
 
+
+
     //search method
     /**
      * searches a list of products for a string returns matching products

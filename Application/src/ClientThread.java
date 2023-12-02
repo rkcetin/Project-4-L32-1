@@ -9,6 +9,11 @@ public class ClientThread extends Thread {
     final ArrayList<Store> stores;
     final ArrayList<Product> products;
 
+    static Object userSync;
+    static Object storeSync;
+    static Object productsSync;
+
+
     boolean isSeller;
     User currentUser;
 
@@ -71,9 +76,11 @@ public class ClientThread extends Thread {
                                     users
                             );
                             outputStream.writeBoolean(true);
+                            outputStream.flush();
                             break;
                         } catch (Exception e) {
                             outputStream.writeBoolean(false);
+                            outputStream.flush();
                         }
 
                     }
@@ -241,6 +248,27 @@ public class ClientThread extends Thread {
                 }
                 Storage.storeData(users, stores, products);
             }
+
+            /*
+            view customer cart | done
+            view owned stores | done
+            create store | done
+            add prduct to store | done
+            edit product  | not done
+            delete product  | not done
+            bulk add products | not done
+            get products for export | done
+            sales by store | not done
+
+
+
+            edit account | done
+            unsorted statistics | done
+            delete user | done
+            exit marketplace | done
+
+
+             */
             if (currentUser instanceof Seller) {
                 Seller currentSeller = (Seller) currentUser;
                 loop : while (true) {
@@ -302,6 +330,7 @@ public class ClientThread extends Thread {
                             } catch (Exception e) {
                                 outputStream.writeBoolean(false);
                             }
+                            outputStream.flush();
                             break;
                         }
                         case 301 : { // unsorted statistics
@@ -318,6 +347,29 @@ public class ClientThread extends Thread {
                         case 5 : {  //exit marketplace
                             break loop;
                         }
+                        case 600 : { // view customer cart
+                            String targetUser = (String) inputStream.readObject();
+                            Customer targetCustomer =   (Customer) User.isEmailRegistered(targetUser ,users);
+                            outputStream.writeObject(targetCustomer.getCart());
+                            outputStream.flush();
+                        }
+                        case 601 : { // get customers for cart thing
+                            outputStream.writeObject(
+                                    Customer.getCustomers(users)
+                            );
+                            outputStream.flush();
+                        }
+                        case 700 : { //get all stores for the export of all products
+                            outputStream.writeObject(currentSeller.getStores());
+                            outputStream.flush();
+                        }
+                        case 701 : { //get store for the product export
+                            String targetStore = (String) inputStream.readObject();
+                            Store sellerStore = currentSeller.getStore(targetStore);
+                            outputStream.writeObject(sellerStore);
+                            outputStream.flush();
+                        }
+
 
 
                     }

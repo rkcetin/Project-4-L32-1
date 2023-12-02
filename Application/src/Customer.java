@@ -117,6 +117,12 @@ public class Customer extends User {
             }
         }
     }
+    public static ArrayList<User> getCustomers(ArrayList<User> users) {
+        return users
+                .stream()
+                .filter(user -> user instanceof Customer)
+                .collect(Collectors.toCollection(ArrayList::new));
+    }
     /**
      * removes an item from users cart
      *
