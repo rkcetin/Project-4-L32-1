@@ -256,7 +256,7 @@ public class ClientThread extends Thread {
             add prduct to store | done
             edit product  | not done
             delete product  | not done
-            bulk add products | not done
+            bulk add products | done
             get products for export | done
             sales by store | not done
 
@@ -316,6 +316,18 @@ public class ClientThread extends Thread {
                             }
                             break;
 
+
+                        }
+                        case 202 : { // bulk add products
+                            ArrayList<Object[]> csvInput =  (ArrayList<Object[]>) inputStream.readObject();
+                            try {
+                                currentSeller.serverSideImport(csvInput, products);
+                                outputStream.writeBoolean(true);
+                            } catch (Exception e) {
+                                outputStream.writeBoolean(false);
+                            }
+                            outputStream.flush();
+                            break;
 
                         }
                         case 300 : { //edit account
