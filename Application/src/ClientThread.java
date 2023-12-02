@@ -254,7 +254,7 @@ public class ClientThread extends Thread {
             view owned stores | done
             create store | done
             add prduct to store | done
-            edit product  | not done
+            edit product  | done
             delete product  | not done
             bulk add products | done
             get products for export | done
@@ -330,6 +330,57 @@ public class ClientThread extends Thread {
                             break;
 
                         }
+                        case 203 : { //edit product
+                            /*
+                            0 name
+                            1 description
+                            2 stock
+                            3 price
+                            4 oldname
+
+                            check for empty/ null < 0 should bed one client side
+                            send null and -1 if they dont want to change something
+                            ex
+                            ["newname" , null , -1  , 10 , "oldname" ]
+                             */
+                            Object[] changeInput = (Object[]) inputStream.readObject();
+                            synchronized (productsSync) {
+                                if (User.isEmailRegistered((String) changeInput[0], users) != null) {
+                                    outputStream.writeBoolean(false);
+                                } else {
+                                    Product workingProduct = Product.checkProduct(
+                                            (String) changeInput[4],
+                                            products
+                                    );
+                                    if ( changeInput[0] != null) {
+                                      workingProduct.setProductName(
+                                              (String) changeInput[0],
+                                              products
+                                      );
+                                    }
+                                    if( changeInput[1] != null) {
+                                        workingProduct.setProductDescription(
+                                                (String) changeInput[1]
+                                        );
+                                    }
+                                    if( changeInput[2] != null) {
+                                        workingProduct.setStock(
+                                                (Integer) changeInput[2]
+                                        );
+                                    }
+                                    if( changeInput[3] != null) {
+                                        workingProduct.setPrice(
+                                                (Double) changeInput[3]
+                                        );
+                                    }
+                                    outputStream.writeBoolean(true);
+
+                                }
+                                outputStream.flush();
+                                break;
+                            }
+
+                        }
                         case 300 : { //edit account
                             try {
                                 String newEmail = (String) inputStream.readObject();
@@ -381,6 +432,7 @@ public class ClientThread extends Thread {
                             outputStream.writeObject(sellerStore);
                             outputStream.flush();
                         }
+
 
 
 
