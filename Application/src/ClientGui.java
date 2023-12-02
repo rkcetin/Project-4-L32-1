@@ -45,7 +45,14 @@ public class ClientGui extends JComponent implements Runnable {
 
                 try {
                     if (input.readBoolean()) {
-                        cardLayout.show(cardPanel, "customer");
+                        System.out.println("a");
+                        int choice = input.readInt();
+                        if (choice == 1) {
+                            System.out.println("b");
+                            cardLayout.show(cardPanel, "seller");
+                        } else if (choice == 2) {
+                            cardLayout.show(cardPanel, "customer");
+                        }
                     } else {
                         JOptionPane.showMessageDialog(null, "Incorrect password or E-mail not registered.",
                                 "Login Failed", JOptionPane.ERROR_MESSAGE);
@@ -54,6 +61,7 @@ public class ClientGui extends JComponent implements Runnable {
                     ex.printStackTrace();
                 }
             }
+
             if (e.getSource() == signupButton) {
                 try {
                     output.writeInt(0);
@@ -86,7 +94,11 @@ public class ClientGui extends JComponent implements Runnable {
 
                 try {
                     if (input.readBoolean()) {
-                        cardLayout.show(cardPanel, "seller");
+                        if (userInfo[2].equals("1")) {
+                            cardLayout.show(cardPanel, "seller");
+                        } else {
+                            cardLayout.show(cardPanel, "customer");
+                        }
                     } else {
                         JOptionPane.showMessageDialog(null, "Invalid e-mail format or e-mail already registered",
                                 "Sign Up Failed", JOptionPane.ERROR_MESSAGE);
@@ -103,7 +115,13 @@ public class ClientGui extends JComponent implements Runnable {
         output = new ObjectOutputStream(socket.getOutputStream());
         input = new ObjectInputStream(socket.getInputStream());
 
-        SwingUtilities.invokeLater(new ClientGui());
+        SwingUtilities.invokeLater(() -> {
+            try {
+                new ClientGui().run();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     public void run() {
