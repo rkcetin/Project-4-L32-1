@@ -141,7 +141,7 @@ public class ClientThread extends Thread {
                             break;
                         }
 
-                        case 2: { //edit account
+                        case 200: { //edit account
                             try{
                                 String newEmail = (String) inputStream.readObject();
                                 String newPassword = (String) inputStream.readObject();
@@ -156,7 +156,7 @@ public class ClientThread extends Thread {
                             }
                             break;
                         }
-                        case 3: {  // delete user
+                        case 300: {  // delete user
                             currentCustomer.deleteUser(users);
                             Storage.storeData(users, stores, products);
                             break loop;
@@ -228,7 +228,7 @@ public class ClientThread extends Thread {
                             outputStream.flush();
                             break;
                         }
-                        case 6: { // extract transaction history local machine has to handle other part
+                        case 600: { // extract transaction history local machine has to handle other part
                             outputStream.writeObject(currentCustomer.getTransactionHistoryList());
                             outputStream.flush();
                             break;
@@ -247,7 +247,10 @@ public class ClientThread extends Thread {
                             outputStream.flush();
                             break;
                         }
-                        case 9: { // exit marketplace
+                        case 800 : {
+                            continue loop;
+                        }
+                        case 900 : { // exit marketplace
                             Storage.storeData(users , stores, products);
                             break loop;
                         }
@@ -282,10 +285,10 @@ public class ClientThread extends Thread {
                 loop : while (true) {
                     int processSelection = inputStream.readInt();
                     switch (processSelection) {
-                        case 1: { //view stores
+                        case 100: { //view stores
                             outputStream.writeObject(currentSeller.getStores());
                             outputStream.flush();
-                            break;
+                            continue;
                         }
                         case 200 : { // create store
                             String storeName = (String) inputStream.readObject();
@@ -295,7 +298,7 @@ public class ClientThread extends Thread {
                             } catch (Exception e) {
                                 outputStream.writeBoolean(false);
                             }
-                            break;
+                            continue loop;
                         }
                         case 201 : { // add product to store
                             String[] addProductInfo = (String[]) inputStream.readObject();
@@ -410,12 +413,12 @@ public class ClientThread extends Thread {
                             );
                         }
 
-                        case 4 : { // delete user
+                        case 400 : { // delete user
                             currentSeller.deleteUser(users);
                             Storage.storeData(users , stores , products);
                             break loop;
                         }
-                        case 5 : {  //exit marketplace
+                        case 500 : {  //exit marketplace
                             break loop;
                         }
                         case 600 : { // view customer cart
@@ -440,7 +443,10 @@ public class ClientThread extends Thread {
                             outputStream.writeObject(sellerStore);
                             outputStream.flush();
                         }
-                        case 9: { // exit marketplace
+                        case 800 : {
+                            continue loop;
+                        }
+                        case 900 : { // exit marketplace
                             Storage.storeData(users , stores, products);
                             break loop;
                         }

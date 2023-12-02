@@ -3,6 +3,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.net.*;
 import java.io.*;
+import java.util.ArrayList;
 
 public class ClientGui extends JComponent implements Runnable {
 
@@ -15,6 +16,8 @@ public class ClientGui extends JComponent implements Runnable {
 
     //seller buttons
     JButton viewStoresButton;
+    JButton createStoresButton;
+    JButton addProductButton;
     JButton returnToMenuButtonS;
     JButton exitS;
 
@@ -119,14 +122,45 @@ public class ClientGui extends JComponent implements Runnable {
 
             //seller logic
             if (e.getSource() == viewStoresButton) {
-
+                try {
+                    output.writeInt(100);
+                    output.flush();
+                    ArrayList<Store> storeList = (ArrayList<Store>) input.readObject();
+                    String stores = "";
+                    for (int i = 0; i < storeList.size(); i++) {
+                        stores += storeList.get(i).toString() + "\n";
+                    }
+                    JOptionPane.showMessageDialog(null, stores, "Create Store", JOptionPane.PLAIN_MESSAGE);
+                } catch (Exception ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+            if (e.getSource() == createStoresButton) {
+                String storeName = JOptionPane.showInputDialog(null, "Enter the name of the store.", "Create Store",
+                        JOptionPane.QUESTION_MESSAGE);
+                try {
+                    output.writeInt(200);
+                    output.flush();
+                    output.writeObject(storeName);
+                    output.flush();
+                    output.writeInt(800);
+                    JOptionPane.showMessageDialog(null, "Store created successfully!",
+                            "Create Store", JOptionPane.PLAIN_MESSAGE);
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
             if (e.getSource() == returnToMenuButtonS) {
                 cardLayout.show(cardPanel, "seller");
+                try {
+                    output.writeInt(800);
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
             if (e.getSource() == exitS) {
                 try {
-                    output.writeInt(9);
+                    output.writeInt(900);
                     output.close();
                     input.close();
                     socket.close();
@@ -138,10 +172,27 @@ public class ClientGui extends JComponent implements Runnable {
 
             //customer logic
             if (e.getSource() == viewProductsButton) {
-
+                try {
+                    output.writeInt(100);
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+                try {
+                    ArrayList<Product> productsList = (ArrayList<Product>) input.readObject();
+                    for (int i = 0; i < productsList.size(); i++) {
+                        System.out.println(productsList.get(i));
+                    }
+                } catch (Exception ex) {
+                    throw new RuntimeException(ex);
+                }
             }
             if (e.getSource() == returnToMenuButtonC) {
                 cardLayout.show(cardPanel, "customer");
+                try {
+                    output.writeInt(8);
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
             if (e.getSource() == exitC) {
                 try {
@@ -177,7 +228,7 @@ public class ClientGui extends JComponent implements Runnable {
         cardLayout = new CardLayout();
         cardPanel = new JPanel(cardLayout);
 
-        //login panel
+        //login main panel
         JPanel loginPanel = new JPanel(new GridLayout(3, 1, 0, 10));
         loginButton = new JButton("Login");
         signupButton = new JButton("Signup");
@@ -198,18 +249,24 @@ public class ClientGui extends JComponent implements Runnable {
         //seller panel
         JPanel sellerPanel = new JPanel();
         viewStoresButton = new JButton("View Stores");
+        createStoresButton = new JButton("Create Store");
+        addProductButton = new JButton("Add Product");
         returnToMenuButtonS = new JButton("Return to menu");
         exitS = new JButton("Exit Application");
 
         sellerPanel.add(viewStoresButton);
+        sellerPanel.add(createStoresButton);
+        sellerPanel.add(addProductButton);
         sellerPanel.add(returnToMenuButtonS);
         sellerPanel.add(exitS);
 
         viewStoresButton.addActionListener(actionListener);
         returnToMenuButtonS.addActionListener(actionListener);
+        createStoresButton.addActionListener(actionListener);
+        addProductButton.addActionListener(actionListener);
         exitS.addActionListener(actionListener);
 
-        //customer panel
+        //customer main panel
         JPanel customerPanel = new JPanel();
         viewProductsButton = new JButton("View Products");
         returnToMenuButtonC = new JButton("Return to menu");
@@ -227,6 +284,8 @@ public class ClientGui extends JComponent implements Runnable {
         cardPanel.add(loginPanel, "login");
         cardPanel.add(customerPanel, "customer");
         cardPanel.add(sellerPanel, "seller");
+
+
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().add(cardPanel);
