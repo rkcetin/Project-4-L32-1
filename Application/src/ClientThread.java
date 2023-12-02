@@ -77,6 +77,14 @@ public class ClientThread extends Thread {
                             );
                             outputStream.writeBoolean(true);
                             outputStream.flush();
+                            if (currentUser instanceof Seller) {
+                                System.out.println("a");
+                                outputStream.writeInt(1);
+                            } else {
+                                System.out.println("b");
+                                outputStream.writeInt(2);
+                            }
+                            outputStream.flush();
                             break;
                         } catch (Exception e) {
                             outputStream.writeBoolean(false);
