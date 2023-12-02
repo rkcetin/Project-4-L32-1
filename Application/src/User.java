@@ -218,7 +218,7 @@ public class User implements Serializable {
      *
 
      */
-    public synchronized static User signup(String email, String password , int role, ArrayList<User> users) throws Exception {
+    public synchronized static User signup(String email, String password, int role, ArrayList<User> users) throws Exception {
         // Check if the email is valid
 
         // Check if the email is not already registered

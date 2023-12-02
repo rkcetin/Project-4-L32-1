@@ -1,73 +1,151 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.awt.event.*;
 import java.net.*;
+import java.io.*;
+
 public class ClientGui extends JComponent implements Runnable {
-    JTextField usernameField;
-    JTextField passwordField;
-    JButton loginButton;
-    JButton signupButton;
-    JButton startBackButton;
-    JComboBox roleDropdown;
-    JButton enterButton;
-    static JPanel panel;
-    static MenuState state;
+
     static Socket socket;
     static ObjectOutputStream output;
     static ObjectInputStream input;
+
+    JButton loginButton;
+    JButton signupButton;
+    JButton viewProductsButton;
+    JButton viewStoresButton;
+    JPanel cardPanel;
+    CardLayout cardLayout;
+
     ActionListener actionListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
             if (e.getSource() == loginButton) {
-                state = MenuState.Login;
-                panel.removeAll();
-                panel.repaint();
+                try {
+                    output.writeInt(0);
+                    output.flush();
+                    output.writeBoolean(false);
+                    output.flush();
+                    output.writeInt(1);
+                    output.flush();
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+                String[] userInfo = new String[2];
+                userInfo[0] = JOptionPane.showInputDialog(null, "Enter your e-mail:", "Login",
+                        JOptionPane.QUESTION_MESSAGE);
+                userInfo[1] = JOptionPane.showInputDialog(null, "Enter your password:", "Login",
+                        JOptionPane.QUESTION_MESSAGE);
+                try {
+                    output.writeObject(userInfo);
+                    output.flush();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
 
+                try {
+                    if (input.readBoolean()) {
+                        cardLayout.show(cardPanel, "customer");
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Incorrect password or E-mail not registered.",
+                                "Login Failed", JOptionPane.ERROR_MESSAGE);
+                    }
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
             }
             if (e.getSource() == signupButton) {
-                state = MenuState.Signup;
-                panel.removeAll();
-                panel.repaint();
+                try {
+                    output.writeInt(0);
+                    output.flush();
+                    output.writeBoolean(true);
+                    output.flush();
+                    output.writeInt(1);
+                    output.flush();
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+                String[] userInfo = new String[3];
+                userInfo[0] = JOptionPane.showInputDialog(null, "Enter your sign-up e-mail:", "Sign Up",
+                        JOptionPane.QUESTION_MESSAGE);
+                userInfo[1] = JOptionPane.showInputDialog(null, "Enter your sign-up password:", "Sign Up",
+                        JOptionPane.QUESTION_MESSAGE);
+                String[] roles = {"Seller", "Customer"};
+                String choice = (String) JOptionPane.showInputDialog(null, "Select role", "Sign Up",
+                        JOptionPane.PLAIN_MESSAGE, null, roles, roles[0]);
+                userInfo[2] = "1";
+                if (choice.equals("Customer")) {
+                    userInfo[2] = "2";
+                }
+                try {
+                    output.writeObject(userInfo);
+                    output.flush();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+
+                try {
+                    if (input.readBoolean()) {
+                        cardLayout.show(cardPanel, "seller");
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Invalid e-mail format or e-mail already registered",
+                                "Sign Up Failed", JOptionPane.ERROR_MESSAGE);
+                    }
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
             }
-
-
         }
     };
+
     public static void main(String[] args) throws Exception {
-        state = MenuState.Initial;
         socket = new Socket("localhost" , 9000);
         output = new ObjectOutputStream(socket.getOutputStream());
         input = new ObjectInputStream(socket.getInputStream());
 
-
-
         SwingUtilities.invokeLater(new ClientGui());
-
-        output.close();
-        input.close();
-        socket.close();
     }
+
     public void run() {
         JFrame frame = new JFrame("MarketPlace");
-        Container content = frame.getContentPane();
-        content.setLayout(new BorderLayout());
+
         loginButton = new JButton("Login");
         signupButton = new JButton("Signup");
-        loginButton.addActionListener(actionListener);
-        loginButton.addActionListener(actionListener);
+        viewProductsButton = new JButton("View Products");
+        viewStoresButton = new JButton("View Stores");
 
-        panel = new JPanel();
-        panel.add(loginButton);
-        panel.add(signupButton);
+        cardLayout = new CardLayout();
+        cardPanel = new JPanel(cardLayout);
 
-        content.add(panel, BorderLayout.CENTER);
+        JPanel loginPanel = new JPanel(new GridLayout(3, 1, 0, 10));
+
+        JLabel titleLabel = new JLabel("Welcome to the Marketplace!");
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 30));
+        titleLabel.setHorizontalAlignment(JLabel.CENTER);
+        loginPanel.add(titleLabel);
+
+        loginButton.setFont(new Font("Arial", Font.BOLD, 18));
+        loginPanel.add(loginButton);
+        signupButton.setFont(new Font("Arial", Font.BOLD, 18));
+        loginPanel.add(signupButton);
+
+        JPanel customerPanel = new JPanel();
+        customerPanel.add(viewProductsButton);
+
+        JPanel sellerPanel = new JPanel();
+        sellerPanel.add(viewStoresButton);
+
+        cardPanel.add(loginPanel, "login");
+        cardPanel.add(customerPanel, "customer");
+        cardPanel.add(sellerPanel, "seller");
+
+        loginButton.addActionListener(actionListener);
+        signupButton.addActionListener(actionListener);
+
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.getContentPane().add(cardPanel);
         frame.setSize(600, 400);
         frame.setLocationRelativeTo(null);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
-
     }
 }

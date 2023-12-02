@@ -1,6 +1,7 @@
 import java.io.*;
 import java.net.*;
 import java.util.*;
+
 public class ClientThread extends Thread {
     final ObjectInputStream inputStream;
     final ObjectOutputStream outputStream;
@@ -57,7 +58,6 @@ public class ClientThread extends Thread {
                                     Integer.parseInt(registrationInfo[2]),
                                     users
                             );
-                            Thread.sleep(10000);
                             System.out.println("reach4");
                             outputStream.writeBoolean(true);
                             outputStream.flush();
@@ -93,7 +93,7 @@ public class ClientThread extends Thread {
             if (currentUser instanceof Customer ) {
                 /*
                 Customer Checklist
-                  need to check for synchrnicity all of this
+                  need to check for synchronicity all of this
 
                 view stores | done
 
