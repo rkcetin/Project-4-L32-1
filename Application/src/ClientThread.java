@@ -301,9 +301,9 @@ public class ClientThread extends Thread {
                             String storeName = (String) inputStream.readObject();
                             try {
 
-                                synchronized (storeSync) {
+                                //
                                     currentSeller.createStore(storeName, stores);
-                                }// synchronize maybe
+                                //}// synchronize maybe
 
                                 outputStream.writeBoolean(true);
                                 outputStream.flush();
@@ -322,8 +322,8 @@ public class ClientThread extends Thread {
                             // [4] price
 
                             try {
-                                synchronized (storeSync) {
-                                    synchronized (productsSync) {
+                                //synchronized (storeSync) {
+                                    //synchronized (productsSync) {
                                         Store targetStore = Store.checkStore(
                                                 addProductInfo[0],
                                                 stores
@@ -335,8 +335,8 @@ public class ClientThread extends Thread {
                                                 Double.parseDouble(addProductInfo[4]),
                                                 products
                                         );
-                                    }
-                                }
+                                    //}
+                                //}
                                 outputStream.writeBoolean(true);
                                 outputStream.flush();
                             } catch (Exception e) {
@@ -436,7 +436,6 @@ public class ClientThread extends Thread {
                         }
                         case 300 : { //edit account
                             try {
-
                                 String newEmail = (String) inputStream.readObject();
                                 String newPassword = (String) inputStream.readObject();
                                 synchronized (userSync) {

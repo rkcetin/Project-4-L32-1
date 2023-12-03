@@ -18,6 +18,8 @@ public class ClientGui extends JComponent implements Runnable {
     JButton viewStoresButton;
     JButton createStoresButton;
     JButton addProductButton;
+    JButton editAccountButtonS;
+    JButton deleteAccountButtonS;
     JButton returnToMenuButtonS;
     JButton exitS;
 
@@ -149,14 +151,12 @@ public class ClientGui extends JComponent implements Runnable {
                     if (input.readBoolean()) {
                         JOptionPane.showMessageDialog(null, "Store created successfully!",
                                 "Create Store", JOptionPane.PLAIN_MESSAGE);
-                        output.writeInt(800);
-                        output.flush();
                     } else {
                         JOptionPane.showMessageDialog(null, "Store creation failed, store already exists.",
                                 "Create Store", JOptionPane.PLAIN_MESSAGE);
-                        output.writeInt(800);
-                        output.flush();
                     }
+                    output.writeInt(800);
+                    output.flush();
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -223,6 +223,36 @@ public class ClientGui extends JComponent implements Runnable {
                     ex.printStackTrace();
                 }
             }
+            if (e.getSource() == editAccountButtonS) {
+                try {
+                    output.writeInt(300);
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+                try {
+                    String newEmail = JOptionPane.showInputDialog(null, "Enter your new e-mail.", "Edit Account",
+                            JOptionPane.QUESTION_MESSAGE);
+                    output.writeObject(newEmail);
+                    output.flush();
+                    String newPass = JOptionPane.showInputDialog(null, "Enter your new password.", "Edit Account",
+                            JOptionPane.QUESTION_MESSAGE);
+                    output.writeObject(newPass);
+                    output.flush();
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+                try {
+                    if (input.readBoolean()) {
+                        JOptionPane.showMessageDialog(null, "Account edited successfully!",
+                                "Edit Account", JOptionPane.PLAIN_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Account editing failed, invalid e-mail format!",
+                                "Error", JOptionPane.PLAIN_MESSAGE);
+                    }
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
             if (e.getSource() == returnToMenuButtonS) {
                 cardLayout.show(cardPanel, "seller");
                 try {
@@ -245,18 +275,53 @@ public class ClientGui extends JComponent implements Runnable {
 
             //customer logic
             if (e.getSource() == viewProductsButton) {
+                String list = "";
+                ArrayList<Product> productsList = null;
                 try {
                     output.writeInt(100);
-                } catch (IOException ex) {
+                    output.flush();
+                    productsList = (ArrayList<Product>) input.readObject();
+                } catch (IOException | ClassNotFoundException ex) {
                     throw new RuntimeException(ex);
                 }
-                try {
-                    ArrayList<Product> productsList = (ArrayList<Product>) input.readObject();
-                    for (int i = 0; i < productsList.size(); i++) {
-                        System.out.println(productsList.get(i));
+
+                String[] choices = {"Sort by price", "Sort by stock"};
+                String[] order = {"Sort from highest to lowest", "Sort from lowest to highest"};
+                String choice = (String) JOptionPane.showInputDialog(null, "Select role", "Sign Up",
+                        JOptionPane.PLAIN_MESSAGE, null, choices, choices[0]);
+
+                if (choice.equals("Sort by price")) {
+                    String sort = (String) JOptionPane.showInputDialog(null, "Sort by price", "View products",
+                            JOptionPane.PLAIN_MESSAGE, null, order, order[0]);
+                    if (sort.equals("Sort from lowest to highest")) {
+                        Product.sortPrice(true, productsList);
+                        for (int i = 0; i < productsList.size(); i++) {
+                            list += productsList.get(i);
+                        }
+                        JOptionPane.showMessageDialog(null, list, "Stock from highest to lowest", JOptionPane.PLAIN_MESSAGE);
+                    } else {
+                        Product.sortPrice(false, productsList);
+                        for (int i = 0; i < productsList.size(); i++) {
+                            list += productsList.get(i);
+                        }
+                        JOptionPane.showMessageDialog(null, list, "Stock from lowest to highest", JOptionPane.PLAIN_MESSAGE);
                     }
-                } catch (Exception ex) {
-                    throw new RuntimeException(ex);
+                } else if (choice.equals("Sort by stock")) {
+                    String sort = (String) JOptionPane.showInputDialog(null, "Sort by stock", "View products",
+                            JOptionPane.PLAIN_MESSAGE, null, order, order[0]);
+                    if (sort.equals("Sort from lowest to highest")) {
+                        Product.sortStock(true, productsList);
+                        for (int i = 0; i < productsList.size(); i++) {
+                            list += productsList.get(i);
+                        }
+                        JOptionPane.showMessageDialog(null, list, "Stock from highest to lowest", JOptionPane.PLAIN_MESSAGE);
+                    } else {
+                        Product.sortStock(false, productsList);
+                        for (int i = 0; i < productsList.size(); i++) {
+                            list += productsList.get(i);
+                        }
+                        JOptionPane.showMessageDialog(null, list, "Stock from lowest to highest", JOptionPane.PLAIN_MESSAGE);
+                    }
                 }
             }
             if (e.getSource() == returnToMenuButtonC) {
@@ -324,18 +389,23 @@ public class ClientGui extends JComponent implements Runnable {
         viewStoresButton = new JButton("View Stores");
         createStoresButton = new JButton("Create Store");
         addProductButton = new JButton("Add Product");
+        editAccountButtonS = new JButton("Edit Account");
+        deleteAccountButtonS = new JButton("Delete Account");
         returnToMenuButtonS = new JButton("Return to menu");
         exitS = new JButton("Exit Application");
 
         sellerPanel.add(viewStoresButton);
         sellerPanel.add(createStoresButton);
         sellerPanel.add(addProductButton);
+        sellerPanel.add(editAccountButtonS);
         sellerPanel.add(returnToMenuButtonS);
         sellerPanel.add(exitS);
 
         viewStoresButton.addActionListener(actionListener);
         returnToMenuButtonS.addActionListener(actionListener);
         createStoresButton.addActionListener(actionListener);
+        editAccountButtonS.addActionListener(actionListener);
+        deleteAccountButtonS.addActionListener(actionListener);
         addProductButton.addActionListener(actionListener);
         exitS.addActionListener(actionListener);
 

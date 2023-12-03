@@ -66,9 +66,9 @@ public class User implements Serializable {
 
      */
     public void setPassword(String password) {
-        this.password = password;
+        this.password = password + this.salt;
     }
-    
+
 
     //returns the information of the user in a formatted string
     /**
@@ -181,7 +181,7 @@ public class User implements Serializable {
     public synchronized static User login(String email, String password, ArrayList<User> users) throws Exception {
         User currentUser = null;
 
-            // Check if the email is registered
+        // Check if the email is registered
         currentUser = User.isEmailRegistered(email , users);
         if (currentUser != null) {
             // Retrieve the stored hashed password and salt for the user
