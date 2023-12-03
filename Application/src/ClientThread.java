@@ -286,14 +286,14 @@ public class ClientThread extends Thread {
                     int processSelection = inputStream.readInt();
                     switch (processSelection) {
                         case 100: { //view stores
-                            outputStream.writeObject(currentSeller.getStores());
+                            outputStream.writeObject(currentSeller.getStoresString(currentSeller.getStores()));
                             outputStream.flush();
                             continue;
                         }
                         case 200 : { // create store
                             String storeName = (String) inputStream.readObject();
                             try {
-                                currentSeller.createStore(storeName , stores); // synchronize maybe
+                                currentSeller.createStore(storeName, stores); // synchronize maybe
                                 outputStream.writeBoolean(true);
                             } catch (Exception e) {
                                 outputStream.writeBoolean(false);
@@ -325,7 +325,8 @@ public class ClientThread extends Thread {
                                 outputStream.writeBoolean(false);
                                 outputStream.flush();
                             }
-                            break;
+                            Storage.storeData(users, stores, products);
+                            continue;
 
 
                         }

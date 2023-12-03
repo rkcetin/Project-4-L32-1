@@ -125,29 +125,102 @@ public class ClientGui extends JComponent implements Runnable {
                 try {
                     output.writeInt(100);
                     output.flush();
-                    ArrayList<Store> storeList = (ArrayList<Store>) input.readObject();
-                    String stores = "";
-                    for (int i = 0; i < storeList.size(); i++) {
-                        stores += storeList.get(i).toString() + "\n";
-                    }
-                    JOptionPane.showMessageDialog(null, stores, "Create Store", JOptionPane.PLAIN_MESSAGE);
+                    String storeList = (String) input.readObject();
+
+                    JOptionPane.showMessageDialog(null, storeList, "Store List", JOptionPane.PLAIN_MESSAGE);
                 } catch (Exception ex) {
                     throw new RuntimeException(ex);
                 }
             }
             if (e.getSource() == createStoresButton) {
-                String storeName = JOptionPane.showInputDialog(null, "Enter the name of the store.", "Create Store",
-                        JOptionPane.QUESTION_MESSAGE);
                 try {
                     output.writeInt(200);
                     output.flush();
+                    String storeName = JOptionPane.showInputDialog(null, "Enter the name of the store.", "Create Store",
+                            JOptionPane.QUESTION_MESSAGE);
                     output.writeObject(storeName);
                     output.flush();
-                    output.writeInt(800);
-                    JOptionPane.showMessageDialog(null, "Store created successfully!",
-                            "Create Store", JOptionPane.PLAIN_MESSAGE);
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
+                }
+
+                try {
+                    System.out.println("a");
+                    if (input.readBoolean()) {
+                        JOptionPane.showMessageDialog(null, "Store created successfully!",
+                                "Create Store", JOptionPane.PLAIN_MESSAGE);
+                        output.writeInt(800);
+                        output.flush();
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Store creation failed, store already exists.",
+                                "Create Store", JOptionPane.PLAIN_MESSAGE);
+                        output.writeInt(800);
+                        output.flush();
+                    }
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+            if (e.getSource() == addProductButton) {
+                try {
+                    output.writeInt(201);
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+                boolean temp = true;
+                String[] productInfo = new String[5];
+                productInfo[0] = JOptionPane.showInputDialog(null, "Enter the name of the store you want to add your product to", "Add Products",
+                        JOptionPane.QUESTION_MESSAGE);
+                productInfo[1] = JOptionPane.showInputDialog(null, "Enter the name of the product.", "Add Products",
+                        JOptionPane.QUESTION_MESSAGE);
+                productInfo[2] = JOptionPane.showInputDialog(null, "Enter a description of the product.", "Add Products",
+                        JOptionPane.QUESTION_MESSAGE);
+                while (temp) {
+                    try {
+                        int a = Integer.parseInt(JOptionPane.showInputDialog(null, "Enter the product stock.", "Add Products",
+                                JOptionPane.QUESTION_MESSAGE));
+                        productInfo[3] = String.valueOf(a);
+                        temp = false;
+                    } catch (NumberFormatException nfe) {
+                        JOptionPane.showMessageDialog(null, "Invalid input! Stock must be an Integer.",
+                                "Invalid Input", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+                temp = true;
+                while (temp) {
+                    try {
+                        double b = Double.parseDouble(JOptionPane.showInputDialog(null, "Enter the price of the product", "Add Products",
+                                JOptionPane.QUESTION_MESSAGE));
+                        productInfo[4] = String.valueOf(String.format("%.2f", b));
+                        temp = false;
+                    } catch (NumberFormatException nfe) {
+                        JOptionPane.showMessageDialog(null, "Invalid input! Price must be a number",
+                                "Invalid Input", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+                try {
+                    output.writeObject(productInfo);
+                    output.flush();
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+
+                try {
+                    boolean a = input.readBoolean();
+                    System.out.println(a);
+                    if (a) {
+                        JOptionPane.showMessageDialog(null, "Product successfully added!",
+                                "Add Product", JOptionPane.PLAIN_MESSAGE);
+                        output.writeInt(800);
+                        output.flush();
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Adding the product failed, store does not exist.",
+                                "Error!", JOptionPane.ERROR_MESSAGE);
+                        output.writeInt(800);
+                        output.flush();
+                    }
+                } catch (Exception ex) {
+                    ex.printStackTrace();
                 }
             }
             if (e.getSource() == returnToMenuButtonS) {
