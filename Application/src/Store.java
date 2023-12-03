@@ -108,6 +108,9 @@ public class Store implements Serializable {
         output.toArray(storeList);
         return storeList;
     }
+    public Seller getSeller() {
+        return seller;
+    }
     /**
      * gets the store name
 

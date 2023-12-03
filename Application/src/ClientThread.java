@@ -288,7 +288,7 @@ public class ClientThread extends Thread {
                         case 100: { //view stores
                             outputStream.writeObject(currentSeller.getStores());
                             outputStream.flush();
-                            continue;
+                            break;
                         }
                         case 200 : { // create store
                             String storeName = (String) inputStream.readObject();
@@ -298,7 +298,7 @@ public class ClientThread extends Thread {
                             } catch (Exception e) {
                                 outputStream.writeBoolean(false);
                             }
-                            continue loop;
+                            break;
                         }
                         case 201 : { // add product to store
                             String[] addProductInfo = (String[]) inputStream.readObject();
@@ -392,6 +392,22 @@ public class ClientThread extends Thread {
                             }
 
                         }
+                        case 204 : {  // delete product
+                            String targetProduct = (String) inputStream.readObject();
+                            Product productObj = Product.checkProduct(targetProduct , products);
+                            try {
+                                if (productObj.getStore().getSeller() == currentSeller) {
+                                    productObj.getStore().removeProduct(targetProduct , products);
+                                    outputStream.writeBoolean(true);
+                                } else {
+                                    throw new Exception();
+                                }
+                            } catch (Exception e) {
+                                outputStream.writeBoolean(false);
+                            }
+                            outputStream.flush();
+                            break;
+                        }
                         case 300 : { //edit account
                             try {
                                 String newEmail = (String) inputStream.readObject();
@@ -411,6 +427,7 @@ public class ClientThread extends Thread {
                             outputStream.writeObject(
                                     currentSeller.displayUnsortedStatistics() // rest needs to happen clientside
                             );
+                            break;
                         }
 
                         case 400 : { // delete user
@@ -426,25 +443,26 @@ public class ClientThread extends Thread {
                             Customer targetCustomer =   (Customer) User.isEmailRegistered(targetUser ,users);
                             outputStream.writeObject(targetCustomer.getCart());
                             outputStream.flush();
+                            break;
                         }
                         case 601 : { // get customers for cart thing
                             outputStream.writeObject(
                                     Customer.getCustomers(users)
                             );
                             outputStream.flush();
+                            break;
                         }
                         case 700 : { //get all stores for the export of all products
                             outputStream.writeObject(currentSeller.getStores());
                             outputStream.flush();
+                            break;
                         }
                         case 701 : { //get store for the product export
                             String targetStore = (String) inputStream.readObject();
                             Store sellerStore = currentSeller.getStore(targetStore);
                             outputStream.writeObject(sellerStore);
                             outputStream.flush();
-                        }
-                        case 800 : {
-                            continue loop;
+                            break;
                         }
                         case 900 : { // exit marketplace
                             Storage.storeData(users , stores, products);
