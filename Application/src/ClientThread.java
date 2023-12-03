@@ -198,7 +198,7 @@ public class ClientThread extends Thread {
                             String[] purchaseInfo = (String[]) inputStream.readObject();
                             try {
                                 int quantity = Integer.parseInt(purchaseInfo[1]);
-                                synchronized (productsSync) {
+                                //synchronized (productsSync) {
                                     Product targetProduct = Product.checkProduct(purchaseInfo[0], products);
                                     currentCustomer.singlePurchase(
                                             targetProduct.getStore(),
@@ -206,9 +206,10 @@ public class ClientThread extends Thread {
                                             quantity,
                                             products
                                     );
-                                }
+                                //}
+                                Storage.storeData(users, stores, products);
                                 outputStream.writeBoolean(true);
-                            } catch (Exception e ) {
+                            } catch (Exception ex) {
                                 outputStream.writeBoolean(false);
                             }
                             outputStream.flush();
@@ -263,6 +264,7 @@ public class ClientThread extends Thread {
                         }
 
                     }
+                    Storage.storeData(users, stores, products);
                 }
                 Storage.storeData(users, stores, products);
             }

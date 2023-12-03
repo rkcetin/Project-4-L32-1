@@ -276,6 +276,8 @@ public class ClientGui extends JComponent implements Runnable {
             //customer logic
             if (e.getSource() == viewProductsButton) {
                 String list = "";
+                boolean temp = true;
+                int index = -1;
                 ArrayList<Product> productsList = null;
                 try {
                     output.writeInt(100);
@@ -292,36 +294,116 @@ public class ClientGui extends JComponent implements Runnable {
 
                 if (choice.equals("Sort by price")) {
                     String sort = (String) JOptionPane.showInputDialog(null, "Sort by price", "View products",
-                            JOptionPane.PLAIN_MESSAGE, null, order, order[0]);
+                            JOptionPane.PLAIN_MESSAGE, null, order, order[1]);
                     if (sort.equals("Sort from lowest to highest")) {
                         Product.sortPrice(true, productsList);
-                        for (int i = 0; i < productsList.size(); i++) {
-                            list += productsList.get(i);
+                        for (int i = 1; i <= productsList.size(); i++) {
+                            list += i + ". " + productsList.get(i - 1);
                         }
-                        JOptionPane.showMessageDialog(null, list, "Stock from highest to lowest", JOptionPane.PLAIN_MESSAGE);
+                        while (temp) {
+                            try {
+                                index = Integer.parseInt(JOptionPane.showInputDialog(null, list + "\nEnter the index of the product you want to know " +
+                                        "more about:", "Price from lowest to highest", JOptionPane.QUESTION_MESSAGE));
+                                temp = false;
+                            } catch (NumberFormatException nfe) {
+                                JOptionPane.showMessageDialog(null, "Invalid input! Index must be an Integer.",
+                                        "Invalid Input", JOptionPane.ERROR_MESSAGE);
+                            }
+                        }
                     } else {
                         Product.sortPrice(false, productsList);
-                        for (int i = 0; i < productsList.size(); i++) {
-                            list += productsList.get(i);
+                        for (int i = 1; i <= productsList.size(); i++) {
+                            list += i + ". " + productsList.get(i - 1);
                         }
-                        JOptionPane.showMessageDialog(null, list, "Stock from lowest to highest", JOptionPane.PLAIN_MESSAGE);
+                        while (temp) {
+                            try {
+                                index = Integer.parseInt(JOptionPane.showInputDialog(null, list + "\nEnter the index of the product you want to know " +
+                                        "more about:", "Price from highest to lowest", JOptionPane.QUESTION_MESSAGE));
+                                temp = false;
+                            } catch (NumberFormatException nfe) {
+                                JOptionPane.showMessageDialog(null, "Invalid input! Index must be an Integer.",
+                                        "Invalid Input", JOptionPane.ERROR_MESSAGE);
+                            }
+                        }
                     }
                 } else if (choice.equals("Sort by stock")) {
                     String sort = (String) JOptionPane.showInputDialog(null, "Sort by stock", "View products",
                             JOptionPane.PLAIN_MESSAGE, null, order, order[0]);
                     if (sort.equals("Sort from lowest to highest")) {
                         Product.sortStock(true, productsList);
-                        for (int i = 0; i < productsList.size(); i++) {
-                            list += productsList.get(i);
+                        for (int i = 1; i <= productsList.size(); i++) {
+                            list += i + ". " + productsList.get(i - 1);
                         }
-                        JOptionPane.showMessageDialog(null, list, "Stock from highest to lowest", JOptionPane.PLAIN_MESSAGE);
+                        while (temp) {
+                            try {
+                                index = Integer.parseInt(JOptionPane.showInputDialog(null, list + "\nEnter the index of the product you want to know " +
+                                        "more about:", "Stock from lowest to highest", JOptionPane.QUESTION_MESSAGE));
+                                temp = false;
+                            } catch (NumberFormatException nfe) {
+                                JOptionPane.showMessageDialog(null, "Invalid input! Index must be an Integer.",
+                                        "Invalid Input", JOptionPane.ERROR_MESSAGE);
+                            }
+                        }
                     } else {
                         Product.sortStock(false, productsList);
-                        for (int i = 0; i < productsList.size(); i++) {
-                            list += productsList.get(i);
+                        for (int i = 1; i <= productsList.size(); i++) {
+                            list += i + ". " + productsList.get(i - 1);
                         }
-                        JOptionPane.showMessageDialog(null, list, "Stock from lowest to highest", JOptionPane.PLAIN_MESSAGE);
+                        while (temp) {
+                            try {
+                                index = Integer.parseInt(JOptionPane.showInputDialog(null, list + "\nEnter the index of the product you want to know " +
+                                        "more about:", "Stock from highest to lowest", JOptionPane.QUESTION_MESSAGE));
+                                temp = false;
+                            } catch (NumberFormatException nfe) {
+                                JOptionPane.showMessageDialog(null, "Invalid input! Index must be an Integer.",
+                                        "Invalid Input", JOptionPane.ERROR_MESSAGE);
+                            }
+                        }
                     }
+                }
+                String product = String.format("%d - Store: %s | Product: %s | Price: %.2f | " +
+                                "Remaining Stock: %d\n", index,
+                        productsList.get(index - 1).getStore().getStoreName(),
+                        productsList.get(index - 1).getProductName(), productsList.get(index - 1).getPrice(),
+                        productsList.get(index - 1).getStock());
+                String[] actions = {"Purchase this item individually", "Add this item to cart", "Exit"};
+                String choice2 = (String) JOptionPane.showInputDialog(null, product + "Choose action:", "Choose action",
+                        JOptionPane.PLAIN_MESSAGE, null, actions, actions[0]);
+                temp = true;
+
+                String[] toPurchase = new String[2];
+                if (choice2.equals("Purchase this item individually")) {
+                    try {
+                        output.writeInt(403);
+                        output.flush();
+                        while (temp) {
+                            try {
+                                int quantity = Integer.parseInt(JOptionPane.showInputDialog(null, "Enter the quantity you would like to purchase",
+                                        "Purchase item", JOptionPane.QUESTION_MESSAGE));
+                                toPurchase[0] = productsList.get(index - 1).getProductName();
+                                toPurchase[1] = String.valueOf(quantity);
+                                output.writeObject(toPurchase);
+                                output.flush();
+                                temp = false;
+                            } catch (NumberFormatException | IndexOutOfBoundsException ex) {
+                                JOptionPane.showMessageDialog(null, "Invalid input! Index must be a valid integer.",
+                                        "Invalid Input", JOptionPane.ERROR_MESSAGE);
+                            }
+                        }
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                }
+                try {
+                    if (input.readBoolean()) {
+                        JOptionPane.showMessageDialog(null, "Item purchased successfully!",
+                                "Purchase item", JOptionPane.PLAIN_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Item purchase failed.",
+                                "Error", JOptionPane.PLAIN_MESSAGE);
+                    }
+                } catch (IOException ex) {
+                    ex.printStackTrace();
                 }
             }
             if (e.getSource() == returnToMenuButtonC) {
