@@ -295,8 +295,10 @@ public class ClientThread extends Thread {
                             try {
                                 currentSeller.createStore(storeName, stores); // synchronize maybe
                                 outputStream.writeBoolean(true);
+                                outputStream.flush();
                             } catch (Exception e) {
                                 outputStream.writeBoolean(false);
+                                outputStream.flush();
                             }
                             continue loop;
                         }
