@@ -221,6 +221,39 @@ public class Customer extends User {
         }
         this.setTransactionHistory(transactionHistory);
     }
+
+    public void purchaseCart() throws IOException, IllegalArgumentException {
+        PrintWriter pw = new PrintWriter(new FileWriter("statistics.txt", true));
+        int count = 0;
+        try {
+            for (Product value : cart) {
+                if (value.getStock() < 1) {
+                    throw new IllegalArgumentException("Stock exceeded!");
+                }
+            }
+            for (Product product : cart) {
+                this.transactionHistory.add(product.toString2());
+                product.decrementStock();
+                count++;
+            }
+            for (int j = cart.size() - 1; j >= 0; j--) {
+                cart.get(j).getStore().incrementSales(cart.get(j).getPrice());
+                pw.println(String.format("%s,%s,%s,%.2f", cart.get(j).getStore().getStoreName(), this.getName(),
+                        cart.get(j).getProductName(), cart.get(j).getPrice()));
+                cart.remove(j);
+            }
+            pw.flush();
+            this.setTransactionHistory(transactionHistory);
+        } catch (InputMismatchException ime) {
+            System.out.println("Invalid input, try again.");
+        }
+        for (int j = cart.size() - 1; j >= 0; j--) {
+            cart.get(j).getStore().incrementSales(cart.get(j).getPrice());
+            cart.remove(j);
+        }
+        this.setTransactionHistory(transactionHistory);
+    }
+
     /**
      * updates the cart based on a new arraylist of products as cart
      *
