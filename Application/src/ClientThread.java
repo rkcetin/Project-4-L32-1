@@ -145,9 +145,12 @@ public class ClientThread extends Thread {
                             try{
                                 String newEmail = (String) inputStream.readObject();
                                 String newPassword = (String) inputStream.readObject();
-                                User.isEmailRegistered(newEmail , users);
-                                currentCustomer.setName(newEmail , users);
+                                synchronized (userSync) {
+                                    User.isEmailRegistered(newEmail, users);
+                                    currentCustomer.setName(newEmail, users);
+                                }
                                 currentCustomer.setPassword(newPassword);
+
                                 outputStream.writeBoolean(true);
                                 outputStream.flush();
                             } catch (Exception e) {
@@ -171,14 +174,16 @@ public class ClientThread extends Thread {
                         case 401 : { // add item to cart
                             String[] cartActionInfo = (String[]) inputStream.readObject();
                             try {
-                                Product targetProduct = Product.checkProduct(cartActionInfo[0] , products);  // what if they delete while purchasing
                                 int quantity = Integer.parseInt(cartActionInfo[1]); // 1 should be quantity index
-                                currentCustomer.addToCart(
-                                    targetProduct.getStore(),
-                                    targetProduct.getProductName(),
-                                    quantity,
-                                    products
-                                );
+                                synchronized (productsSync) {
+                                    Product targetProduct = Product.checkProduct(cartActionInfo[0], products);  // what if they delete while purchasing
+                                    currentCustomer.addToCart(
+                                            targetProduct.getStore(),
+                                            targetProduct.getProductName(),
+                                            quantity,
+                                            products
+                                    );
+                                }
                                 outputStream.writeBoolean(true);
                             } catch (Exception e) {
                                 outputStream.writeBoolean(false);
@@ -192,14 +197,16 @@ public class ClientThread extends Thread {
                         case 403 : { // purchase item
                             String[] purchaseInfo = (String[]) inputStream.readObject();
                             try {
-                                Product targetProduct = Product.checkProduct(purchaseInfo[0] , products);
                                 int quantity = Integer.parseInt(purchaseInfo[1]);
-                                currentCustomer.singlePurchase(
-                                        targetProduct.getStore(),
-                                        targetProduct.getProductName(),
-                                        quantity,
-                                        products
-                                );
+                                synchronized (productsSync) {
+                                    Product targetProduct = Product.checkProduct(purchaseInfo[0], products);
+                                    currentCustomer.singlePurchase(
+                                            targetProduct.getStore(),
+                                            targetProduct.getProductName(),
+                                            quantity,
+                                            products
+                                    );
+                                }
                                 outputStream.writeBoolean(true);
                             } catch (Exception e ) {
                                 outputStream.writeBoolean(false);
@@ -293,7 +300,11 @@ public class ClientThread extends Thread {
                         case 200 : { // create store
                             String storeName = (String) inputStream.readObject();
                             try {
-                                currentSeller.createStore(storeName, stores); // synchronize maybe
+
+                                synchronized (storeSync) {
+                                    currentSeller.createStore(storeName, stores);
+                                }// synchronize maybe
+
                                 outputStream.writeBoolean(true);
                                 outputStream.flush();
                             } catch (Exception e) {
@@ -309,18 +320,23 @@ public class ClientThread extends Thread {
                             // [2] description
                             // [3] stock
                             // [4] price
-                            Store targetStore = Store.checkStore(
-                                    addProductInfo[0],
-                                    stores
-                            );
+
                             try {
-                                targetStore.addProduct(
-                                        addProductInfo[1],
-                                        addProductInfo[2],
-                                        Integer.parseInt(addProductInfo[3]),
-                                        Double.parseDouble(addProductInfo[4]),
-                                        products
-                                );
+                                synchronized (storeSync) {
+                                    synchronized (productsSync) {
+                                        Store targetStore = Store.checkStore(
+                                                addProductInfo[0],
+                                                stores
+                                        );
+                                        targetStore.addProduct(
+                                                addProductInfo[1],
+                                                addProductInfo[2],
+                                                Integer.parseInt(addProductInfo[3]),
+                                                Double.parseDouble(addProductInfo[4]),
+                                                products
+                                        );
+                                    }
+                                }
                                 outputStream.writeBoolean(true);
                                 outputStream.flush();
                             } catch (Exception e) {
@@ -335,7 +351,11 @@ public class ClientThread extends Thread {
                         case 202 : { // bulk add products
                             ArrayList<Object[]> csvInput =  (ArrayList<Object[]>) inputStream.readObject();
                             try {
-                                currentSeller.serverSideImport(csvInput, products);
+                                synchronized ( productsSync){
+                                    synchronized ( storeSync) {
+                                        currentSeller.serverSideImport(csvInput, products);
+                                    }
+                                }
                                 outputStream.writeBoolean(true);
                             } catch (Exception e) {
                                 outputStream.writeBoolean(false);
@@ -366,44 +386,47 @@ public class ClientThread extends Thread {
                                             (String) changeInput[4],
                                             products
                                     );
-                                    if ( changeInput[0] != null) {
-                                      workingProduct.setProductName(
-                                              (String) changeInput[0],
-                                              products
-                                      );
+                                    if (changeInput[0] != null) {
+                                        workingProduct.setProductName(
+                                                (String) changeInput[0],
+                                                products
+                                        );
                                     }
-                                    if( changeInput[1] != null) {
+                                    if (changeInput[1] != null) {
                                         workingProduct.setProductDescription(
                                                 (String) changeInput[1]
                                         );
                                     }
-                                    if( changeInput[2] != null) {
+                                    if (changeInput[2] != null) {
                                         workingProduct.setStock(
                                                 (Integer) changeInput[2]
                                         );
                                     }
-                                    if( changeInput[3] != null) {
+                                    if (changeInput[3] != null) {
                                         workingProduct.setPrice(
                                                 (Double) changeInput[3]
                                         );
                                     }
                                     outputStream.writeBoolean(true);
-
                                 }
-                                outputStream.flush();
-                                break;
                             }
+                            outputStream.flush();
+                            break;
+
 
                         }
                         case 204 : {  // delete product
                             String targetProduct = (String) inputStream.readObject();
-                            Product productObj = Product.checkProduct(targetProduct , products);
+
                             try {
-                                if (productObj.getStore().getSeller() == currentSeller) {
-                                    productObj.getStore().removeProduct(targetProduct , products);
-                                    outputStream.writeBoolean(true);
-                                } else {
-                                    throw new Exception();
+                                synchronized (productsSync) {
+                                    Product productObj = Product.checkProduct(targetProduct, products);
+                                    if (productObj.getStore().getSeller() == currentSeller) {
+                                        productObj.getStore().removeProduct(targetProduct, products);
+                                        outputStream.writeBoolean(true);
+                                    } else {
+                                        throw new Exception();
+                                    }
                                 }
                             } catch (Exception e) {
                                 outputStream.writeBoolean(false);
@@ -413,11 +436,14 @@ public class ClientThread extends Thread {
                         }
                         case 300 : { //edit account
                             try {
+
                                 String newEmail = (String) inputStream.readObject();
                                 String newPassword = (String) inputStream.readObject();
-                                User.isEmailRegistered(newEmail , users);
-                                currentSeller.setName(newEmail , users);
-                                currentSeller.setPassword(newPassword);
+                                synchronized (userSync) {
+                                    User.isEmailRegistered(newEmail, users);
+                                    currentSeller.setName(newEmail, users);
+                                    currentSeller.setPassword(newPassword);
+                                }
                                 outputStream.writeBoolean(true);
 
                             } catch (Exception e) {
@@ -443,8 +469,10 @@ public class ClientThread extends Thread {
                         }
                         case 600 : { // view customer cart
                             String targetUser = (String) inputStream.readObject();
-                            Customer targetCustomer =   (Customer) User.isEmailRegistered(targetUser ,users);
-                            outputStream.writeObject(targetCustomer.getCart());
+                            synchronized (userSync) {
+                                Customer targetCustomer = (Customer) User.isEmailRegistered(targetUser, users);
+                                outputStream.writeObject(targetCustomer.getCart());
+                            }
                             outputStream.flush();
                             break;
                         }
