@@ -10,9 +10,9 @@ public class ClientThread extends Thread {
     final ArrayList<Store> stores;
     final ArrayList<Product> products;
 
-    static Object userSync;
-    static Object storeSync;
-    static Object productsSync;
+    final static Object userSync = new Object();
+    final static Object storeSync = new Object();
+    final static Object productsSync = new Object();
 
 
     boolean isSeller;
