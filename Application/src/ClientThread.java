@@ -293,19 +293,23 @@ public class ClientThread extends Thread {
                     int processSelection = inputStream.readInt();
                     switch (processSelection) {
                         case 100: { //view stores
-                            outputStream.writeObject(currentSeller.getStores());
+                            outputStream.writeObject(currentSeller.getStoresString(currentSeller.getStores()));
                             outputStream.flush();
                             break;
                         }
                         case 200 : { // create store
                             String storeName = (String) inputStream.readObject();
                             try {
+
                                 synchronized (storeSync) {
                                     currentSeller.createStore(storeName, stores);
                                 }// synchronize maybe
+
                                 outputStream.writeBoolean(true);
+                                outputStream.flush();
                             } catch (Exception e) {
                                 outputStream.writeBoolean(false);
+                                outputStream.flush();
                             }
                             break;
                         }
@@ -339,7 +343,8 @@ public class ClientThread extends Thread {
                                 outputStream.writeBoolean(false);
                                 outputStream.flush();
                             }
-                            break;
+                            Storage.storeData(users, stores, products);
+                            continue;
 
 
                         }
