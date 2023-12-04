@@ -173,7 +173,7 @@ public class Seller extends User {
      * @param highestToLowest a boolean determining whether statistics sorted starting high or low
      * @return returns the store object of a particular store name
      */
-    public String sortStatisticsBySales(String statisticsResult, boolean highestToLowest) {
+    public static String sortStatisticsBySales(String statisticsResult, boolean highestToLowest) {
         List<String> lines = Arrays.asList(statisticsResult.split("\n"));
         lines.sort((line1, line2) -> {
             double sales1 = Double.parseDouble(line1.split(",")[2]);
@@ -183,13 +183,14 @@ public class Seller extends User {
 
         return String.join("\n", lines);
     }
+
     /**
      * returns a sorted representation of the statistics based upon quantity of sales high or low
      * @param paramStores arraylist of stores to reference
      * @param highestToLowest a boolean determining whether statistics sorted starting high or low
      * @return returns a String of store statistics sorted based upon of quantity of sales
      */
-    public String sortByOccurrences(ArrayList<String> paramStores, boolean highestToLowest) throws IOException {
+    public static String sortByOccurrences(ArrayList<String> paramStores, boolean highestToLowest) throws IOException {
         BufferedReader bfr = new BufferedReader(new FileReader("statistics.txt"));
         Map<String, Integer> storeOccurrences = new HashMap<>();
         String a = "";
@@ -386,7 +387,7 @@ public class Seller extends User {
         return x;
     }*/
 
-    public List<String> customersOfStores(ArrayList<String> storeNames) {
+    public static List<String> customersOfStores(ArrayList<String> storeNames) {
         Map<String, Set<String>> storeToUserMap = new HashMap<>();
 
         try (BufferedReader br = new BufferedReader(new FileReader("statistics.txt"))) {
@@ -415,7 +416,7 @@ public class Seller extends User {
         return result;
     }
 
-    public ArrayList<String> viewTransactionHistory(ArrayList<String> inputStoreNames) throws IOException {
+    public static ArrayList<String> viewTransactionHistory(ArrayList<String> inputStoreNames) throws IOException {
         ArrayList<String> filteredLines = new ArrayList<>();
 
         try (BufferedReader br = new BufferedReader(new FileReader("statistics.txt"))) {

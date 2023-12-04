@@ -6,9 +6,9 @@ public class ClientThread extends Thread {
     final ObjectInputStream inputStream;
     final ObjectOutputStream outputStream;
     final Socket socket;
-    final ArrayList<User> users;
-    final ArrayList<Store> stores;
-    final ArrayList<Product> products;
+    static ArrayList<User> users;
+    static ArrayList<Store> stores;
+    static ArrayList<Product> products;
 
     final static Object userSync = new Object();
     final static Object storeSync = new Object();
@@ -25,10 +25,10 @@ public class ClientThread extends Thread {
         this.inputStream = new ObjectInputStream(socket.getInputStream());
         this.outputStream = new ObjectOutputStream(socket.getOutputStream());
         this.socket = socket;
-        this.users = users;
-        this.stores = stores;
-        this.products = products;
-
+        ClientThread.users = users;
+        ClientThread.stores = stores;
+        ClientThread.products = products;
+        System.out.println(System.identityHashCode(products));
 
     }
     public void run() {
@@ -129,10 +129,15 @@ public class ClientThread extends Thread {
                     int menuChoice = inputStream.readInt();
                     switch (menuChoice) {
                         case 100: { // view products
-                            outputStream.writeObject(
-                                products // sorting should happen client side + listing generation shoudl also happene clientside
-                            );
-                            outputStream.flush();
+                            synchronized (productsSync) {
+                                System.out.println(products);
+
+                                outputStream.writeObject(
+                                        products // sorting should happen client side + listing generation shoudl also happene clientside
+                                );
+                                outputStream.flush();
+                            }
+
                             break;
                         }
                         case 101 : { //view stores
@@ -280,6 +285,7 @@ public class ClientThread extends Thread {
                         }
 
                     }
+                    outputStream.reset();
                     Storage.storeData(users, stores, products);
                 }
                 Storage.storeData(users, stores, products);
@@ -340,8 +346,8 @@ public class ClientThread extends Thread {
                             // [4] price
 
                             try {
-                                //synchronized (storeSync) {
-                                    //synchronized (productsSync) {
+                                synchronized (storeSync) {
+                                    synchronized (productsSync) {
                                         Store targetStore = Store.checkStore(
                                                 addProductInfo[0],
                                                 stores
@@ -359,8 +365,8 @@ public class ClientThread extends Thread {
                                                 Double.parseDouble(addProductInfo[4]),
                                                 products
                                         );
-                                    //}
-                                //}
+                                    }
+                                }
                                 outputStream.writeBoolean(true);
                                 outputStream.flush();
                             } catch (Exception e) {
@@ -497,6 +503,9 @@ public class ClientThread extends Thread {
                             outputStream.writeObject(
                                     currentSeller.displayUnsortedStatistics() // rest needs to happen clientside
                             );
+                            outputStream.flush();
+                            outputStream.writeObject(currentSeller.getStoreNames());
+                            outputStream.flush();
                             break;
                         }
 
@@ -543,6 +552,7 @@ public class ClientThread extends Thread {
 
 
                     }
+                    outputStream.reset();
                     Storage.storeData(users, stores, products);
                 }
             }

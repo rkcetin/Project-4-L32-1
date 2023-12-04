@@ -4,6 +4,7 @@ import java.awt.event.*;
 import java.net.*;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ClientGui extends JComponent implements Runnable {
 
@@ -20,9 +21,10 @@ public class ClientGui extends JComponent implements Runnable {
     JButton addProductButton;
     JButton editProductButton;
     JButton editAccountButtonS;
-    JButton deleteAccountButtonS;
+    JButton viewStatisticsButtonS;
     JButton returnToMenuButtonS;
     JButton exitS;
+    JButton deleteAccountButtonS;
 
     //customer buttons
     JButton viewProductsButton;
@@ -156,7 +158,7 @@ public class ClientGui extends JComponent implements Runnable {
                                 "Create Store", JOptionPane.PLAIN_MESSAGE);
                     } else {
                         JOptionPane.showMessageDialog(null, "Store creation failed, store already exists.",
-                                "Create Store", JOptionPane.PLAIN_MESSAGE);
+                                "Create Store", JOptionPane.ERROR_MESSAGE);
                     }
                     output.writeInt(800);
                     output.flush();
@@ -300,7 +302,7 @@ public class ClientGui extends JComponent implements Runnable {
                                         "Edit Account", JOptionPane.PLAIN_MESSAGE);
                             } else {
                                 JOptionPane.showMessageDialog(null, "Editing product failed.",
-                                        "Error", JOptionPane.PLAIN_MESSAGE);
+                                        "Error", JOptionPane.ERROR_MESSAGE);
                             }
                             System.out.println("g");
                         } else if (choice.equals("Exit")) {
@@ -337,13 +339,95 @@ public class ClientGui extends JComponent implements Runnable {
                 try {
                     if (input.readBoolean()) {
                         JOptionPane.showMessageDialog(null, "Account edited successfully!",
-                                "Edit Account", JOptionPane.PLAIN_MESSAGE);
+                                "Edit Account", JOptionPane.ERROR_MESSAGE);
                     } else {
                         JOptionPane.showMessageDialog(null, "Account editing failed, invalid e-mail format!",
-                                "Error", JOptionPane.PLAIN_MESSAGE);
+                                "Error", JOptionPane.ERROR_MESSAGE);
                     }
                 } catch (IOException ex) {
                     ex.printStackTrace();
+                }
+            }
+            if (e.getSource() == viewStatisticsButtonS) {
+                String unsortedStats;
+                ArrayList<String> storeParam;
+                try {
+                    output.writeInt(301);
+                    output.flush();
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+                try {
+                    unsortedStats = (String) input.readObject();
+                    storeParam = (ArrayList<String>) input.readObject();
+                } catch (IOException | ClassNotFoundException ex) {
+                    throw new RuntimeException(ex);
+                }
+                String[] choices = {"View unsorted statistics", "View statistics sorted by sales",
+                        "View statistics sorted by number of purchases made from each store",
+                        "View who has purchased from your stores", "View transaction history"};
+                String choice = (String) JOptionPane.showInputDialog(null, "Choose action:", "View Statistics",
+                        JOptionPane.PLAIN_MESSAGE, null, choices, choices[0]);
+                switch (choice) {
+                    case "View unsorted statistics" ->
+                            JOptionPane.showMessageDialog(null, "Unsorted Statistics:\n" + unsortedStats,
+                                    "Edit Account", JOptionPane.PLAIN_MESSAGE);
+                    case "View statistics sorted by sales" -> {
+                        String[] highLow = {"Sort sales from highest to lowest", "Sort sales from lowest to highest"};
+                        String direction = (String) JOptionPane.showInputDialog(null, "Choose action:", "Sort by sales",
+                                JOptionPane.PLAIN_MESSAGE, null, highLow, highLow[0]);
+                        if (direction.equals("Sort sales from highest to lowest")) {
+                            JOptionPane.showMessageDialog(null, Seller.sortStatisticsBySales(unsortedStats, true),
+                                    "Sorted by Sales", JOptionPane.PLAIN_MESSAGE);
+                        } else {
+                            JOptionPane.showMessageDialog(null, Seller.sortStatisticsBySales(unsortedStats, false),
+                                    "Sorted by Sales", JOptionPane.PLAIN_MESSAGE);
+                        }
+                    }
+                    case "View statistics sorted by number of purchases made from each store" -> {
+                        String[] highLow = {"Sort from highest to lowest", "Sort from lowest to highest"};
+                        String direction2 = (String) JOptionPane.showInputDialog(null, "Choose action:", "Sort by sales",
+                                JOptionPane.PLAIN_MESSAGE, null, highLow, highLow[0]);
+                        if (direction2.equals("Sort sales from highest to lowest")) {
+                            try {
+                                JOptionPane.showMessageDialog(null, Seller.sortByOccurrences(storeParam, true),
+                                        "Sorted by number of purchases", JOptionPane.PLAIN_MESSAGE);
+                            } catch (IOException ex) {
+                                throw new RuntimeException(ex);
+                            }
+                        } else {
+                            try {
+                                JOptionPane.showMessageDialog(null, Seller.sortByOccurrences(storeParam, false),
+                                        "Sorted by number of purchases", JOptionPane.PLAIN_MESSAGE);
+                            } catch (IOException ex) {
+                                throw new RuntimeException(ex);
+                            }
+                        }
+                    }
+                    case "View who has purchased from your stores" -> {
+                        List<String> result = Seller.customersOfStores(storeParam);
+                        String users = "";
+                        for (int i = 0; i < storeParam.size(); i++) {
+                            String storeName = storeParam.get(i);
+                            users += "Users who purchased from " + storeName + ": " + result.get(i) + "\n";
+                            JOptionPane.showMessageDialog(null, users, "Users who have purchased from your stores",
+                                    JOptionPane.PLAIN_MESSAGE);
+                        }
+                    }
+                    case "View transaction history" -> {
+                        ArrayList<String> result = null;
+                        String history = "";
+                        try {
+                            result = Seller.viewTransactionHistory(storeParam);
+                        } catch (IOException ex) {
+                            throw new RuntimeException(ex);
+                        }
+                        for (int i = 0; i < result.size(); i++) {
+                            history += result.get(i) + "\n";
+                        }
+                        JOptionPane.showMessageDialog(null, "Your transaction history:\n" + history,
+                                "View transaction history", JOptionPane.PLAIN_MESSAGE);
+                    }
                 }
             }
             if (e.getSource() == returnToMenuButtonS) {
@@ -394,6 +478,7 @@ public class ClientGui extends JComponent implements Runnable {
                     output.writeInt(100);
                     output.flush();
                     productsList = (ArrayList<Product>) input.readObject();
+                    System.out.println(productsList);
                     for (Product product : productsList) {
                         System.out.println(product.getStock());
                     }
@@ -550,7 +635,7 @@ public class ClientGui extends JComponent implements Runnable {
                                 "Purchase item", JOptionPane.PLAIN_MESSAGE);
                     } else {
                         JOptionPane.showMessageDialog(null, "Item purchase failed.",
-                                "Error", JOptionPane.PLAIN_MESSAGE);
+                                "Error", JOptionPane.ERROR_MESSAGE);
                     }
                 } catch (IOException ex) {
                     ex.printStackTrace();
@@ -593,7 +678,7 @@ public class ClientGui extends JComponent implements Runnable {
                                     "Purchase cart", JOptionPane.PLAIN_MESSAGE);
                         } else {
                             JOptionPane.showMessageDialog(null, "Cart could not be purchased!",
-                                    "Error", JOptionPane.PLAIN_MESSAGE);
+                                    "Error", JOptionPane.ERROR_MESSAGE);
                         }
                     } catch (IOException ex) {
                         throw new RuntimeException(ex);
@@ -687,6 +772,7 @@ public class ClientGui extends JComponent implements Runnable {
         addProductButton = new JButton("Add Product");
         editProductButton = new JButton("Edit Product");
         editAccountButtonS = new JButton("Edit Account");
+        viewStatisticsButtonS = new JButton("View Statistics");
         deleteAccountButtonS = new JButton("Delete Account");
         returnToMenuButtonS = new JButton("Return to menu");
         exitS = new JButton("Exit Application");
@@ -696,6 +782,7 @@ public class ClientGui extends JComponent implements Runnable {
         sellerPanel.add(addProductButton);
         sellerPanel.add(editProductButton);
         sellerPanel.add(editAccountButtonS);
+        sellerPanel.add(viewStatisticsButtonS);
         sellerPanel.add(returnToMenuButtonS);
         sellerPanel.add(exitS);
         sellerPanel.add(deleteAccountButtonS);
@@ -705,6 +792,7 @@ public class ClientGui extends JComponent implements Runnable {
         addProductButton.addActionListener(actionListener);
         editProductButton.addActionListener(actionListener);
         editAccountButtonS.addActionListener(actionListener);
+        viewStatisticsButtonS.addActionListener(actionListener);
         returnToMenuButtonS.addActionListener(actionListener);
         exitS.addActionListener(actionListener);
         deleteAccountButtonS.addActionListener(actionListener);
