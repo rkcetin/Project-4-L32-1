@@ -383,6 +383,18 @@ public class ClientThread extends Thread {
 
                         }
                         case 203 : { //edit product
+                            ArrayList<Product> sellerProducts = new ArrayList<>();
+                            for (int i = 0; i < currentSeller.getStores().size(); i++) {
+                                for (int j = 0; j < products.size(); j++) {
+                                    if (products.get(j).getStore().equals(currentSeller.getStores().get(i))) {
+                                        sellerProducts.add(products.get(j));
+                                        System.out.println(products.get(i).toString());
+                                    }
+                                }
+                            }
+                            outputStream.writeObject(sellerProducts);
+                            outputStream.flush();
+
                             /*
                             0 name
                             1 description
@@ -395,40 +407,45 @@ public class ClientThread extends Thread {
                             ex
                             ["newname" , null , -1  , 10 , "oldname" ]
                              */
-                            Object[] changeInput = (Object[]) inputStream.readObject();
-                            synchronized (productsSync) {
-                                if (User.isEmailRegistered((String) changeInput[0], users) != null) {
-                                    outputStream.writeBoolean(false);
-                                } else {
-                                    Product workingProduct = Product.checkProduct(
-                                            (String) changeInput[4],
-                                            products
-                                    );
-                                    if (changeInput[0] != null) {
-                                        workingProduct.setProductName(
-                                                (String) changeInput[0],
-                                                products
-                                        );
-                                    }
-                                    if (changeInput[1] != null) {
-                                        workingProduct.setProductDescription(
-                                                (String) changeInput[1]
-                                        );
-                                    }
-                                    if (changeInput[2] != null) {
-                                        workingProduct.setStock(
-                                                (Integer) changeInput[2]
-                                        );
-                                    }
-                                    if (changeInput[3] != null) {
-                                        workingProduct.setPrice(
-                                                (Double) changeInput[3]
-                                        );
-                                    }
-                                    outputStream.writeBoolean(true);
-                                }
+                            if (inputStream.readInt() == -1) {
+                                break;
                             }
-                            outputStream.flush();
+                            String[] changeInput = (String[]) inputStream.readObject();
+                            Product workingProduct = null;
+                            try {
+                                synchronized (productsSync) {
+                                    if (Product.checkProduct(changeInput[4], products) != null) {
+                                        workingProduct = Product.checkProduct(changeInput[4], products);
+                                        if (!changeInput[0].equals("null")) {
+                                            workingProduct.setProductName(
+                                                    changeInput[0],
+                                                    products
+                                            );
+                                        }
+                                        if (!changeInput[1].equals("null")) {
+                                            workingProduct.setProductDescription(
+                                                    changeInput[1]
+                                            );
+                                        }
+                                        if (!changeInput[2].equals("-1")) {
+                                            workingProduct.setStock(
+                                                    Integer.parseInt(changeInput[2])
+                                            );
+                                        }
+                                        if (!changeInput[3].equals("-1")) {
+                                            workingProduct.setPrice(
+                                                    Double.parseDouble(changeInput[3])
+                                            );
+                                        }
+                                        outputStream.writeBoolean(true);
+                                        outputStream.flush();
+                                    }
+                                }
+                            } catch (Exception ex) {
+                                System.out.println("error caught");
+                                outputStream.writeBoolean(false);
+                                outputStream.flush();
+                            }
                             break;
 
 
