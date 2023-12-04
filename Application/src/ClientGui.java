@@ -28,6 +28,7 @@ public class ClientGui extends JComponent implements Runnable {
     JButton viewProductsButton;
     JButton viewCartButton;
     JButton returnToMenuButtonC;
+    JButton deleteAccountButtonC;
     JButton exitC;
 
     JPanel cardPanel;
@@ -365,6 +366,23 @@ public class ClientGui extends JComponent implements Runnable {
                     throw new RuntimeException(ex);
                 }
             }
+            if (e.getSource() == deleteAccountButtonS) {
+                int deleteAccount = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete your account?", "Delete Account",
+                        JOptionPane.YES_NO_OPTION);
+                if (deleteAccount == JOptionPane.YES_OPTION) {
+                    try {
+                        output.writeInt(400);
+                        output.close();
+                        input.close();
+                        socket.close();
+                        System.exit(0);
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                } else {
+                    return;
+                }
+            }
 
             //customer logic
             if (e.getSource() == viewProductsButton) {
@@ -603,7 +621,25 @@ public class ClientGui extends JComponent implements Runnable {
                     throw new RuntimeException(ex);
                 }
             }
+            if (e.getSource() == deleteAccountButtonC) {
+                int deleteAccount = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete your account?", "Delete Account",
+                        JOptionPane.YES_NO_OPTION);
+                if (deleteAccount == JOptionPane.YES_OPTION) {
+                    try {
+                        output.writeInt(300);
+                        output.close();
+                        input.close();
+                        socket.close();
+                        System.exit(0);
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                } else {
+                    return;
+                }
+            }
         }
+
     };
 
     public static void main(String[] args) throws Exception {
@@ -662,15 +698,17 @@ public class ClientGui extends JComponent implements Runnable {
         sellerPanel.add(editAccountButtonS);
         sellerPanel.add(returnToMenuButtonS);
         sellerPanel.add(exitS);
+        sellerPanel.add(deleteAccountButtonS);
 
         viewStoresButton.addActionListener(actionListener);
-        returnToMenuButtonS.addActionListener(actionListener);
         createStoresButton.addActionListener(actionListener);
-        editAccountButtonS.addActionListener(actionListener);
-        deleteAccountButtonS.addActionListener(actionListener);
         addProductButton.addActionListener(actionListener);
-        exitS.addActionListener(actionListener);
         editProductButton.addActionListener(actionListener);
+        editAccountButtonS.addActionListener(actionListener);
+        returnToMenuButtonS.addActionListener(actionListener);
+        exitS.addActionListener(actionListener);
+        deleteAccountButtonS.addActionListener(actionListener);
+
 
         //customer main panel
         JPanel customerPanel = new JPanel();
@@ -678,16 +716,19 @@ public class ClientGui extends JComponent implements Runnable {
         viewCartButton = new JButton("View Cart");
         returnToMenuButtonC = new JButton("Return to menu");
         exitC = new JButton("Exit Application");
+        deleteAccountButtonC = new JButton("Delete Account");
 
         customerPanel.add(viewProductsButton);
         customerPanel.add(viewCartButton);
         customerPanel.add(returnToMenuButtonC);
         customerPanel.add(exitC);
+        customerPanel.add(deleteAccountButtonC);
 
         viewProductsButton.addActionListener(actionListener);
         viewCartButton.addActionListener(actionListener);
         returnToMenuButtonC.addActionListener(actionListener);
         exitC.addActionListener(actionListener);
+        deleteAccountButtonC.addActionListener(actionListener);
 
 
         cardPanel.add(loginPanel, "login");
@@ -710,8 +751,8 @@ public class ClientGui extends JComponent implements Runnable {
 203 - completed BUT bugged
 204 - NOT completed
 300 - completed BUT bugged
-301 - not used?
-400 - NOT completed
+301 - NOT completed
+400 - completed
 500 - completed
 601 - NOT completed
 700 - NOT completed
@@ -722,7 +763,7 @@ public class ClientGui extends JComponent implements Runnable {
 /*customer cases
 100 - completed BUT bugged
 200 - completed BUT bugged
-300 - NOT completed
+300 - completed
 400 - completed BUT bugged
 401 - completed
 402 - completed
