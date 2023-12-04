@@ -16,6 +16,7 @@ public class TestingWesting {
         System.out.println("reach3");
         System.out.println(input.readBoolean());
 
+
     }
 
 }
