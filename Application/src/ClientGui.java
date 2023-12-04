@@ -394,6 +394,7 @@ public class ClientGui extends JComponent implements Runnable {
                     output.writeInt(100);
                     output.flush();
                     productsList = (ArrayList<Product>) input.readObject();
+                    System.out.println(productsList);
                     for (Product product : productsList) {
                         System.out.println(product.getStock());
                     }
