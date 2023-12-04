@@ -5,6 +5,7 @@ import java.net.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class ClientGui extends JComponent implements Runnable {
 
@@ -29,6 +30,8 @@ public class ClientGui extends JComponent implements Runnable {
     //customer buttons
     JButton viewProductsButton;
     JButton viewCartButton;
+    JButton viewTransactionsButton;
+    JButton viewStatisticsButtonC;
     JButton returnToMenuButtonC;
     JButton deleteAccountButtonC;
     JButton exitC;
@@ -662,7 +665,7 @@ public class ClientGui extends JComponent implements Runnable {
                 String choice = (String) JOptionPane.showInputDialog(null, cartList + "\nChoose action:", "Choose action",
                         JOptionPane.PLAIN_MESSAGE, null, actions, actions[1]);
                 if (choice.equals("Purchase all items in this cart")) {
-                    double cost = 0;
+                    double cost = 0.0;
                     try {
                         output.writeInt(402);
                         output.flush();
@@ -693,6 +696,79 @@ public class ClientGui extends JComponent implements Runnable {
                     output.writeInt(800);
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
+                }
+            }
+            if (e.getSource() == viewTransactionsButton) {
+                String transactionHist;
+                try {
+                    output.writeInt(600);
+                    output.flush();
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+                String[] actions = {"View transaction history", "Extract transaction history"};
+                String choice = (String) JOptionPane.showInputDialog(null,"Choose action:", "Choose action",
+                        JOptionPane.PLAIN_MESSAGE, null, actions, actions[0]);
+                try {
+                    transactionHist = (String) input.readObject();
+                } catch (IOException | ClassNotFoundException ex) {
+                    throw new RuntimeException(ex);
+                }
+                if (choice.equals("View transaction history")) {
+                    JOptionPane.showMessageDialog(null, "Your transaction history:\n" + transactionHist,
+                            "Transaction History", JOptionPane.PLAIN_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Extracting transaction history....",
+                            "Transaction History", JOptionPane.PLAIN_MESSAGE);
+                    //need code that actually extracts the history
+                }
+            }
+            if (e.getSource() == viewStatisticsButtonC) {
+                String[] actions = {"View what stores you have purchased from", "View total purchases from stores"};
+                String choice = (String) JOptionPane.showInputDialog(null, "Choose action:", "Choose action",
+                        JOptionPane.PLAIN_MESSAGE, null, actions, actions[0]);
+                if (choice.equals("View what stores you have purchased from")) {
+                    Map<String, Integer> purchaseCounts;
+                    try {
+                        output.writeInt(701);
+                        output.flush();
+                        purchaseCounts = (Map<String, Integer>) input.readObject();
+                    } catch (IOException | ClassNotFoundException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    String[] highLow = {"Sort from highest to lowest", "Sort from lowest to highest"};
+                    String direction = (String) JOptionPane.showInputDialog(null, "Choose action:", "Sort by sales",
+                            JOptionPane.PLAIN_MESSAGE, null, highLow, highLow[0]);
+                    if (direction.equals("Sort from highest to lowest")) {
+                        String sorted = Customer.sortPurchaseCounts(purchaseCounts, true);
+                        JOptionPane.showMessageDialog(null, sorted,
+                                "Purchase Statistics", JOptionPane.PLAIN_MESSAGE);
+                    } else {
+                        String sorted = Customer.sortPurchaseCounts(purchaseCounts, false);
+                        JOptionPane.showMessageDialog(null, sorted,
+                                "Purchase Statistics", JOptionPane.PLAIN_MESSAGE);
+                    }
+                } else {
+                    Map<String, Integer> storeCounts;
+                    try {
+                        output.writeInt(702);
+                        output.flush();
+                        storeCounts = (Map<String, Integer>) input.readObject();
+                    } catch (IOException | ClassNotFoundException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    String[] highLow = {"Sort from highest to lowest", "Sort from lowest to highest"};
+                    String direction = (String) JOptionPane.showInputDialog(null, "Choose action:", "Sort by sales",
+                            JOptionPane.PLAIN_MESSAGE, null, highLow, highLow[0]);
+                    if (direction.equals("Sort from highest to lowest")) {
+                        String sorted = Customer.sortPurchaseCounts(storeCounts, true);
+                        JOptionPane.showMessageDialog(null, sorted,
+                                "Purchase Statistics", JOptionPane.PLAIN_MESSAGE);
+                    } else {
+                        String sorted = Customer.sortPurchaseCounts(storeCounts, false);
+                        JOptionPane.showMessageDialog(null, sorted,
+                                "Store Statistics", JOptionPane.PLAIN_MESSAGE);
+                    }
                 }
             }
             if (e.getSource() == exitC) {
@@ -802,18 +878,24 @@ public class ClientGui extends JComponent implements Runnable {
         JPanel customerPanel = new JPanel();
         viewProductsButton = new JButton("View Products");
         viewCartButton = new JButton("View Cart");
+        viewTransactionsButton = new JButton("View/Extract Transaction History");
+        viewStatisticsButtonC = new JButton("View statistics");
         returnToMenuButtonC = new JButton("Return to menu");
         exitC = new JButton("Exit Application");
         deleteAccountButtonC = new JButton("Delete Account");
 
         customerPanel.add(viewProductsButton);
         customerPanel.add(viewCartButton);
+        customerPanel.add(viewTransactionsButton);
+        customerPanel.add(viewStatisticsButtonC);
         customerPanel.add(returnToMenuButtonC);
         customerPanel.add(exitC);
         customerPanel.add(deleteAccountButtonC);
 
         viewProductsButton.addActionListener(actionListener);
         viewCartButton.addActionListener(actionListener);
+        viewTransactionsButton.addActionListener(actionListener);
+        viewStatisticsButtonC.addActionListener(actionListener);
         returnToMenuButtonC.addActionListener(actionListener);
         exitC.addActionListener(actionListener);
         deleteAccountButtonC.addActionListener(actionListener);
@@ -836,10 +918,10 @@ public class ClientGui extends JComponent implements Runnable {
 200 - completed
 201 - completed
 202 - NOT completed
-203 - completed BUT bugged
+203 - completed
 204 - NOT completed
-300 - completed BUT bugged
-301 - NOT completed
+300 - completed
+301 - completed
 400 - completed
 500 - completed
 601 - NOT completed
@@ -859,8 +941,8 @@ public class ClientGui extends JComponent implements Runnable {
 404 - NOT completed
 501 - NOT completed
 600 - NOT completed
-701 - NOT completed
-702 - NOT completed
+701 - completed
+702 - completed
 800 - completed
 900 - completed
  */

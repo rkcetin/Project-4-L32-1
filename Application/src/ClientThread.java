@@ -204,6 +204,9 @@ public class ClientThread extends Thread {
                             break;
                         }
                         case 402 : { // purchase cart
+                            double cost = currentCustomer.calculatePrice();
+                            outputStream.writeDouble(cost);
+                            outputStream.flush();
                             synchronized (productsSync) {
                                 try {
                                     currentCustomer.purchaseCart();
@@ -258,7 +261,8 @@ public class ClientThread extends Thread {
                             break;
                         }
                         case 600: { // extract transaction history local machine has to handle other part
-                            outputStream.writeObject(currentCustomer.getTransactionHistoryList());
+                            outputStream.writeObject(currentCustomer.getTransactionHistory());
+                            //outputStream.writeObject(currentCustomer.getTransactionHistoryList());
                             outputStream.flush();
                             break;
                         }

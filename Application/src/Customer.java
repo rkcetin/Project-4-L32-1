@@ -404,7 +404,7 @@ public class Customer extends User {
         return purchaseCounts;
     }
 
-    public String sortPurchaseCounts(Map<String, Integer> purchaseCounts, boolean highestToLowest) {
+    public static String sortPurchaseCounts(Map<String, Integer> purchaseCounts, boolean highestToLowest) {
         return purchaseCounts.entrySet()
                 .stream()
                 .sorted((entry1, entry2) -> highestToLowest ?
@@ -428,7 +428,7 @@ public class Customer extends User {
         return storeCounts;
     }
 
-    public String sortStoreCounts(Map<String, Integer> storeCounts, boolean highestToLowest) {
+    public static String sortStoreCounts(Map<String, Integer> storeCounts, boolean highestToLowest) {
         return storeCounts.entrySet().stream()
                 .sorted((entry1, entry2) -> highestToLowest ?
                         Integer.compare(entry2.getValue(), entry1.getValue()) :
