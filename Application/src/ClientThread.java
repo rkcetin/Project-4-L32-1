@@ -264,7 +264,7 @@ public class ClientThread extends Thread {
                             outputStream.flush();
                             break;
                         }
-                        case 702: { // total purhcases from stores
+                        case 702: { // total purchases from stores
                             outputStream.writeObject(
                                     currentCustomer.countStoreOccurrences()
                             );
@@ -346,6 +346,12 @@ public class ClientThread extends Thread {
                                                 addProductInfo[0],
                                                 stores
                                         );
+                                System.out.println(addProductInfo[0]);
+                                System.out.println(addProductInfo[1]);
+                                System.out.println(addProductInfo[2]);
+                                System.out.println(addProductInfo[3]);
+                                System.out.println(addProductInfo[4]);
+
                                         targetStore.addProduct(
                                                 addProductInfo[1],
                                                 addProductInfo[2],
@@ -358,13 +364,12 @@ public class ClientThread extends Thread {
                                 outputStream.writeBoolean(true);
                                 outputStream.flush();
                             } catch (Exception e) {
+                                e.printStackTrace();
                                 outputStream.writeBoolean(false);
                                 outputStream.flush();
                             }
                             Storage.storeData(users, stores, products);
-                            continue;
-
-
+                            break;
                         }
                         case 202 : { // bulk add products
                             ArrayList<Object[]> csvInput =  (ArrayList<Object[]>) inputStream.readObject();
@@ -439,6 +444,8 @@ public class ClientThread extends Thread {
                                         }
                                         outputStream.writeBoolean(true);
                                         outputStream.flush();
+                                    } else {
+                                        throw new NullPointerException();
                                     }
                                 }
                             } catch (Exception ex) {

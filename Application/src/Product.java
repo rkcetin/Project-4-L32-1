@@ -214,8 +214,7 @@ public class Product implements Serializable {
                 .filter(product -> product.getProductName().equalsIgnoreCase(productName))
                 .collect(Collectors.toCollection(ArrayList::new)));
         if (filteredProduct.isEmpty()) {
-            throw new NullPointerException();
-            //return null;
+            return null;
         }
         return filteredProduct.get(0);
     }
