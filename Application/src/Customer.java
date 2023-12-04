@@ -71,7 +71,7 @@ public class Customer extends User {
      */
     public synchronized void singlePurchase(Store store, String name, int quantity, ArrayList<Product> products)
             throws IOException, IllegalArgumentException {
-        PrintWriter pw = new PrintWriter(new FileWriter("statistics.txt", true));
+        PrintWriter pw = new     PrintWriter(new FileWriter("statistics.txt", true));
         for (Product product : products) {
             if (store.equals(product.getStore()) && name.equals(product.getProductName())) {
                 System.out.printf("Purchasing %d of these items for %.2f....Purchased\n",

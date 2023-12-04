@@ -160,7 +160,9 @@ public class ClientThread extends Thread {
                             break;
                         }
                         case 300: {  // delete user
-                            currentCustomer.deleteUser(users);
+                            synchronized (userSync) {
+                                currentCustomer.deleteUser(users);
+                            }
                             Storage.storeData(users, stores, products);
                             break loop;
                         }
@@ -183,16 +185,28 @@ public class ClientThread extends Thread {
                                             quantity,
                                             products
                                     );
+                                    System.out.println(targetProduct.getStock());
                                 }
+
                                 outputStream.writeBoolean(true);
                             } catch (Exception e) {
                                 outputStream.writeBoolean(false);
                             }
                             outputStream.flush();
+
                             break;
                         }
                         case 402 : { // purchase cart
-
+                            synchronized (productsSync) {
+                                try {
+                                    currentCustomer.purchaseCart();
+                                    outputStream.writeBoolean(true);
+                                } catch (Exception e) {
+                                    outputStream.writeBoolean(false);
+                                }
+                            }
+                            outputStream.flush();
+                            break;
                         }
                         case 403 : { // purchase item
                             String[] purchaseInfo = (String[]) inputStream.readObject();
