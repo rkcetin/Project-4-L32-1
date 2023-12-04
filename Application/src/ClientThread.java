@@ -52,12 +52,14 @@ public class ClientThread extends Thread {
                         String[] registrationInfo = (String[]) inputStream.readObject();
                         try {
                             System.out.println("here");
-                            currentUser = User.signup(
-                                    registrationInfo[0],
-                                    registrationInfo[1],
-                                    Integer.parseInt(registrationInfo[2]),
-                                    users
-                            );
+                            synchronized (userSync) {
+                                currentUser = User.signup(
+                                        registrationInfo[0],
+                                        registrationInfo[1],
+                                        Integer.parseInt(registrationInfo[2]),
+                                        users
+                                );
+                            }
                             System.out.println("reach4");
                             outputStream.writeBoolean(true);
                             outputStream.flush();
