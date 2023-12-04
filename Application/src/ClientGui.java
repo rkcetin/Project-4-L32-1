@@ -931,10 +931,10 @@ public class ClientGui extends JComponent implements Runnable {
  */
 
 /*customer cases
-100 - completed BUT bugged
-200 - completed BUT bugged
+100 - completed
+200 - completed
 300 - completed
-400 - completed BUT bugged
+400 - completed
 401 - completed
 402 - completed
 403 - completed
