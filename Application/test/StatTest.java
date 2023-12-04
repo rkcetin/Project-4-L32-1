@@ -118,7 +118,7 @@ public class StatTest {
     }
 
     public static String sortByOccurrence(ArrayList<String> stores, boolean highestToLowest) throws IOException {
-        BufferedReader bfr = new BufferedReader(new FileReader("statistics.txt"));
+        BufferedReader bfr = new BufferedReader(new FileReader("statTests.txt"));
         Map<String, Integer> storeOccurrences = new HashMap<>();
         String a = "";
         String line;

@@ -78,10 +78,8 @@ public class ClientThread extends Thread {
                             outputStream.writeBoolean(true);
                             outputStream.flush();
                             if (currentUser instanceof Seller) {
-                                System.out.println("a");
                                 outputStream.writeInt(1);
                             } else {
-                                System.out.println("b");
                                 outputStream.writeInt(2);
                             }
                             outputStream.flush();
@@ -126,10 +124,16 @@ public class ClientThread extends Thread {
                 loop : while(true) {
                     int menuChoice = inputStream.readInt();
                     switch (menuChoice) {
-                        case 100: { // view products
+                        case 100    : { // view products
+                            for (int i = 0; i < products.size(); i++) {
+                                System.out.println(products.get(i).getStock());
+                            }
                             outputStream.writeObject(
                                 products // sorting should happen client side + listing generation shoudl also happene clientside
                             );
+                            for (int i = 0; i < products.size(); i++) {
+                                System.out.println(products.get(i).toString());
+                            }
                             outputStream.flush();
                             break;
                         }
@@ -175,7 +179,7 @@ public class ClientThread extends Thread {
                             String[] cartActionInfo = (String[]) inputStream.readObject();
                             try {
                                 int quantity = Integer.parseInt(cartActionInfo[1]); // 1 should be quantity index
-                                synchronized (productsSync) {
+                                //synchronized (productsSync) {
                                     Product targetProduct = Product.checkProduct(cartActionInfo[0], products);  // what if they delete while purchasing
                                     currentCustomer.addToCart(
                                             targetProduct.getStore(),
@@ -183,7 +187,7 @@ public class ClientThread extends Thread {
                                             quantity,
                                             products
                                     );
-                                }
+                                //}
                                 outputStream.writeBoolean(true);
                             } catch (Exception e) {
                                 outputStream.writeBoolean(false);
@@ -192,7 +196,15 @@ public class ClientThread extends Thread {
                             break;
                         }
                         case 402 : { // purchase cart
-
+                            try {
+                                outputStream.writeDouble(currentCustomer.calculatePrice());
+                                outputStream.flush();
+                                currentCustomer.purchaseCart();
+                                outputStream.writeBoolean(true);
+                            } catch (Exception ex) {
+                                outputStream.writeBoolean(false);
+                            }
+                            break;
                         }
                         case 403 : { // purchase item
                             String[] purchaseInfo = (String[]) inputStream.readObject();
@@ -215,7 +227,7 @@ public class ClientThread extends Thread {
                             outputStream.flush();
                             break;
                         }
-                        case 404  : { //remove from cart
+                        case 404 : { //remove from cart
                             String itemName = (String) inputStream.readObject();
                             currentCustomer.removeFromCart(itemName);
                             outputStream.writeBoolean(true);
@@ -256,7 +268,7 @@ public class ClientThread extends Thread {
                             break;
                         }
                         case 800 : {
-                            continue loop;
+                            break;
                         }
                         case 900 : { // exit marketplace
                             Storage.storeData(users , stores, products);
@@ -324,8 +336,8 @@ public class ClientThread extends Thread {
                             // [4] price
 
                             try {
-                                //synchronized (storeSync) {
-                                    //synchronized (productsSync) {
+                                synchronized (storeSync) {
+                                    synchronized (productsSync) {
                                         Store targetStore = Store.checkStore(
                                                 addProductInfo[0],
                                                 stores
@@ -337,8 +349,8 @@ public class ClientThread extends Thread {
                                                 Double.parseDouble(addProductInfo[4]),
                                                 products
                                         );
-                                    //}
-                                //}
+                                    }
+                                }
                                 outputStream.writeBoolean(true);
                                 outputStream.flush();
                             } catch (Exception e) {
@@ -353,8 +365,8 @@ public class ClientThread extends Thread {
                         case 202 : { // bulk add products
                             ArrayList<Object[]> csvInput =  (ArrayList<Object[]>) inputStream.readObject();
                             try {
-                                synchronized ( productsSync){
-                                    synchronized ( storeSync) {
+                                synchronized (productsSync){
+                                    synchronized (storeSync) {
                                         currentSeller.serverSideImport(csvInput, products);
                                     }
                                 }
@@ -367,6 +379,18 @@ public class ClientThread extends Thread {
 
                         }
                         case 203 : { //edit product
+                            ArrayList<Product> sellerProducts = new ArrayList<>();
+                            for (int i = 0; i < currentSeller.getStores().size(); i++) {
+                                for (int j = 0; j < products.size(); j++) {
+                                    if (products.get(j).getStore().equals(currentSeller.getStores().get(i))) {
+                                        sellerProducts.add(products.get(j));
+                                        System.out.println(products.get(i).toString());
+                                    }
+                                }
+                            }
+                            outputStream.writeObject(sellerProducts);
+                            outputStream.flush();
+
                             /*
                             0 name
                             1 description
@@ -379,40 +403,45 @@ public class ClientThread extends Thread {
                             ex
                             ["newname" , null , -1  , 10 , "oldname" ]
                              */
-                            Object[] changeInput = (Object[]) inputStream.readObject();
-                            synchronized (productsSync) {
-                                if (User.isEmailRegistered((String) changeInput[0], users) != null) {
-                                    outputStream.writeBoolean(false);
-                                } else {
-                                    Product workingProduct = Product.checkProduct(
-                                            (String) changeInput[4],
-                                            products
-                                    );
-                                    if (changeInput[0] != null) {
-                                        workingProduct.setProductName(
-                                                (String) changeInput[0],
-                                                products
-                                        );
-                                    }
-                                    if (changeInput[1] != null) {
-                                        workingProduct.setProductDescription(
-                                                (String) changeInput[1]
-                                        );
-                                    }
-                                    if (changeInput[2] != null) {
-                                        workingProduct.setStock(
-                                                (Integer) changeInput[2]
-                                        );
-                                    }
-                                    if (changeInput[3] != null) {
-                                        workingProduct.setPrice(
-                                                (Double) changeInput[3]
-                                        );
-                                    }
-                                    outputStream.writeBoolean(true);
-                                }
+                            if (inputStream.readInt() == -1) {
+                                break;
                             }
-                            outputStream.flush();
+                            String[] changeInput = (String[]) inputStream.readObject();
+                            Product workingProduct = null;
+                            try {
+                                //synchronized (productsSync) {
+                                    if (Product.checkProduct(changeInput[4], products) != null) {
+                                        workingProduct = Product.checkProduct(changeInput[4], products);
+                                        if (!changeInput[0].equals("null")) {
+                                            workingProduct.setProductName(
+                                                    changeInput[0],
+                                                    products
+                                            );
+                                        }
+                                        if (!changeInput[1].equals("null")) {
+                                            workingProduct.setProductDescription(
+                                                    changeInput[1]
+                                            );
+                                        }
+                                        if (!changeInput[2].equals("-1")) {
+                                            workingProduct.setStock(
+                                                    Integer.parseInt(changeInput[2])
+                                            );
+                                        }
+                                        if (!changeInput[3].equals("-1")) {
+                                            workingProduct.setPrice(
+                                                    Double.parseDouble(changeInput[3])
+                                            );
+                                        }
+                                        outputStream.writeBoolean(true);
+                                        outputStream.flush();
+                                    }
+                                //}
+                            } catch (Exception ex) {
+                                System.out.println("error caught");
+                                outputStream.writeBoolean(false);
+                                outputStream.flush();
+                            }
                             break;
 
 
@@ -507,7 +536,6 @@ public class ClientThread extends Thread {
                 }
             }
 
-
             socket.close();
             inputStream.close();
             outputStream.close();
@@ -517,7 +545,4 @@ public class ClientThread extends Thread {
         }
 
     }
-
-
-
 }

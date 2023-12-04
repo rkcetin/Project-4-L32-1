@@ -82,11 +82,13 @@ public class Customer extends User {
                 for (int j = 0; j < quantity; j++) {
                     pw.println(String.format("%s,%s,%s,%.2f", product.getStore().getStoreName(), this.getName(),
                             product.getProductName(), product.getPrice()));
+                    pw.flush();
                     product.decrementStock();
                 }
                 return;
             }
         }
+        pw.close();
     }
 
     //has quantity parameter
