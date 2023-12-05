@@ -58,7 +58,7 @@ public class User implements Serializable {
         if (!User.isValidEmail(paramName) || User.isEmailRegistered(paramName, users) != null) {
             throw new Exception("invalid email");
         }
-        this.name = name;
+        this.name = paramName;
     }
     /**
      * updates the password
