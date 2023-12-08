@@ -252,14 +252,14 @@ public class ClientThread extends Thread {
                             }
                             break;
                         }
-                        case 501 : { //view dashboard by bought
+                        case 501 : { //view dashboard by bought, think another method does this already
                             outputStream.writeUnshared(
                                     currentCustomer.dashboardbyBought()
                             );
                             outputStream.flush();
                             break;
                         }
-                        case 502 : { //view dashboard by sold
+                        case 502 : { //view dashboard by sold, think another method does this already
                             outputStream.writeUnshared(
                                     currentCustomer.dashboardBySold(stores)
                             );
@@ -337,7 +337,7 @@ public class ClientThread extends Thread {
 
                                 synchronized (storeSync) {
                                     currentSeller.createStore(storeName, stores);
-                                }// synchronize maybe
+                                }
 
                                 outputStream.writeBoolean(true);
                                 outputStream.flush();
@@ -388,6 +388,8 @@ public class ClientThread extends Thread {
                             break;
                         }
                         case 202 : { // bulk add products
+                            outputStream.writeObject(currentSeller.getStores());
+                            outputStream.flush();
                             ArrayList<Object[]> csvInput =  (ArrayList<Object[]>) inputStream.readObject();
                             try {
                                 synchronized (productsSync) {
@@ -428,68 +430,69 @@ public class ClientThread extends Thread {
                             ex
                             ["newname" , null , -1  , 10 , "oldname" ]
                              */
-                            if (inputStream.readInt() == -1) {
+                            double received = inputStream.readDouble();
+                            if (received == 203.1) {
+                                String[] changeInput = (String[]) inputStream.readObject();
+                                Product workingProduct = null;
+                                try {
+                                    synchronized (productsSync) {
+                                        if (Product.checkProduct(changeInput[4], products) != null) {
+                                            workingProduct = Product.checkProduct(changeInput[4], products);
+                                            if (!changeInput[0].equals("null")) {
+                                                workingProduct.setProductName(
+                                                        changeInput[0],
+                                                        products
+                                                );
+                                            }
+                                            if (!changeInput[1].equals("null")) {
+                                                workingProduct.setProductDescription(
+                                                        changeInput[1]
+                                                );
+                                            }
+                                            if (!changeInput[2].equals("-1")) {
+                                                workingProduct.setStock(
+                                                        Integer.parseInt(changeInput[2])
+                                                );
+                                            }
+                                            if (!changeInput[3].equals("-1")) {
+                                                workingProduct.setPrice(
+                                                        Double.parseDouble(changeInput[3])
+                                                );
+                                            }
+                                            outputStream.writeBoolean(true);
+                                            outputStream.flush();
+                                        } else {
+                                            throw new NullPointerException();
+                                        }
+                                    }
+                                } catch (Exception ex) {
+                                    System.out.println("error caught");
+                                    outputStream.writeBoolean(false);
+                                    outputStream.flush();
+                                }
+                            } else if (received == 203.2) {
+                                String targetProduct = (String) inputStream.readObject();
+
+                                try {
+                                    synchronized (productsSync) {
+                                        Product productObj = Product.checkProduct(targetProduct, products);
+                                        if (productObj.getStore().getSeller() == currentSeller) {
+                                            productObj.getStore().removeProduct(targetProduct, products);
+                                            outputStream.writeBoolean(true);
+                                        } else {
+                                            throw new Exception();
+                                        }
+                                    }
+                                } catch (Exception e) {
+                                    outputStream.writeBoolean(false);
+                                }
+                                outputStream.flush();
+                            } else if (received == -1.0) {
                                 break;
                             }
-                            String[] changeInput = (String[]) inputStream.readObject();
-                            Product workingProduct = null;
-                            try {
-                                synchronized (productsSync) {
-                                    if (Product.checkProduct(changeInput[4], products) != null) {
-                                        workingProduct = Product.checkProduct(changeInput[4], products);
-                                        if (!changeInput[0].equals("null")) {
-                                            workingProduct.setProductName(
-                                                    changeInput[0],
-                                                    products
-                                            );
-                                        }
-                                        if (!changeInput[1].equals("null")) {
-                                            workingProduct.setProductDescription(
-                                                    changeInput[1]
-                                            );
-                                        }
-                                        if (!changeInput[2].equals("-1")) {
-                                            workingProduct.setStock(
-                                                    Integer.parseInt(changeInput[2])
-                                            );
-                                        }
-                                        if (!changeInput[3].equals("-1")) {
-                                            workingProduct.setPrice(
-                                                    Double.parseDouble(changeInput[3])
-                                            );
-                                        }
-                                        outputStream.writeBoolean(true);
-                                        outputStream.flush();
-                                    } else {
-                                        throw new NullPointerException();
-                                    }
-                                }
-                            } catch (Exception ex) {
-                                System.out.println("error caught");
-                                outputStream.writeBoolean(false);
-                                outputStream.flush();
-                            }
                             break;
-
-
                         }
                         case 204 : {  // delete product
-                            String targetProduct = (String) inputStream.readObject();
-
-                            try {
-                                synchronized (productsSync) {
-                                    Product productObj = Product.checkProduct(targetProduct, products);
-                                    if (productObj.getStore().getSeller() == currentSeller) {
-                                        productObj.getStore().removeProduct(targetProduct, products);
-                                        outputStream.writeBoolean(true);
-                                    } else {
-                                        throw new Exception();
-                                    }
-                                }
-                            } catch (Exception e) {
-                                outputStream.writeBoolean(false);
-                            }
-                            outputStream.flush();
                             break;
                         }
                         case 300 : { //edit account
@@ -531,9 +534,16 @@ public class ClientThread extends Thread {
                             String targetUser = (String) inputStream.readObject();
                             synchronized (userSync) {
                                 Customer targetCustomer = (Customer) User.isEmailRegistered(targetUser, users);
-                                outputStream.writeUnshared(targetCustomer.getCart());
+                                if (targetCustomer.getCart() != null) {
+                                    outputStream.writeBoolean(true);
+                                    outputStream.flush();
+                                    outputStream.writeUnshared(targetCustomer.getCart());
+                                    outputStream.flush();
+                                } else {
+                                    outputStream.writeBoolean(false);
+                                    outputStream.flush();
+                                }
                             }
-                            outputStream.flush();
                             break;
                         }
                         case 601 : { // get customers for cart thing
@@ -544,15 +554,28 @@ public class ClientThread extends Thread {
                             break;
                         }
                         case 700 : { //get all stores for the export of all products
-                            outputStream.writeUnshared(currentSeller.getStores());
+                            if (currentSeller.getStores() != null) {
+                                outputStream.writeUnshared(currentSeller.getStores());
+                                outputStream.writeBoolean(true);
+                            } else {
+                                outputStream.writeBoolean(false);
+                            }
                             outputStream.flush();
                             break;
                         }
                         case 701 : { //get store for the product export
                             String targetStore = (String) inputStream.readObject();
                             synchronized (storeSync) {
-                                Store sellerStore = currentSeller.getStore(targetStore);
-                                outputStream.writeUnshared(sellerStore);
+                                if (Store.checkStore(targetStore, stores) == null) {
+                                    outputStream.writeBoolean(false);
+                                    outputStream.flush();
+                                } else {
+                                    Store sellerStore = currentSeller.getStore(targetStore);
+                                    outputStream.writeBoolean(true);
+                                    outputStream.flush();
+                                    outputStream.writeUnshared(sellerStore);
+                                }
+
                             }
 
                             outputStream.flush();

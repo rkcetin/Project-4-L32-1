@@ -439,4 +439,31 @@ public class Customer extends User {
                 .map(entry -> entry.getKey() + ": " + entry.getValue() + " purchases")
                 .collect(Collectors.joining("\n"));
     }
+
+    public static void analyzeStorePurchases(String filePath) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            Map<String, Integer> storeCountMap = new HashMap<>();
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length >= 1) {
+                    String storeName = parts[0].trim();
+
+                    // Update the count for the store name in the map
+                    storeCountMap.put(storeName, storeCountMap.getOrDefault(storeName, 0) + 1);
+                }
+            }
+
+            // Print the results
+            for (Map.Entry<String, Integer> entry : storeCountMap.entrySet()) {
+                String storeName = entry.getKey();
+                int count = entry.getValue();
+                System.out.println(count + " total purchases from " + storeName);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

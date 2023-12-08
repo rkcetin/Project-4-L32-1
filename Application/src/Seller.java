@@ -226,7 +226,7 @@ public class Seller extends User {
      * @param filename filename to export to
      * @throws Exception when invalid filename
      */
-    public void exportProducts(Store store, String filename) throws Exception {
+    public static void exportProducts(Store store, String filename) throws Exception {
         if (filename.isEmpty()) {
             throw new Exception("Invalid file name");
         }
@@ -251,8 +251,8 @@ public class Seller extends User {
             throw new Exception("Problem reading file");
         }
     }
-    public ArrayList<Object[]> importServerProducts(String filepath, ArrayList<Product> products) throws Exception  {
-        if (filepath == null || products == null) {
+    public static ArrayList<Object[]> importServerProducts(String filepath, ArrayList<Store> storesParam) throws Exception  {
+        if (filepath == null) {
             throw new NullPointerException();
         }
         if (!filepath.contains(".csv")) {
@@ -272,7 +272,7 @@ public class Seller extends User {
             if (workingList[NAME_INDEX].isEmpty() || workingList[DESCRIPTION_INDEX].isEmpty()) {
                 throw new Exception("file problem missing product name");
             }
-            if (Store.checkStore(workingList[STORE_INDEX], this.getStores()) == null) {
+            if (Store.checkStore(workingList[STORE_INDEX], storesParam) == null) {
                 // will throw exception if not in seller store list
                 throw new Exception("file problem invalid store");
             }
