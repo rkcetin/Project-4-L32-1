@@ -13,11 +13,8 @@ public class ClientThread extends Thread {
     final static Object userSync = new Object();
     final static Object storeSync = new Object();
     final static Object productsSync = new Object();
-    final static Object outputSync = new Object();
 
-    boolean isSeller;
     User currentUser;
-
 
     public ClientThread(ArrayList<User> users , ArrayList<Store> stores , ArrayList<Product> products, Socket socket) throws Exception
     {
@@ -596,7 +593,6 @@ public class ClientThread extends Thread {
                     Storage.storeData(users, stores, products);
                 }
             }
-
 
             socket.close();
             inputStream.close();
