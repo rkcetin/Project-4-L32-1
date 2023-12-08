@@ -87,6 +87,9 @@ public class User implements Serializable {
 
      */
     public static boolean isValidEmail(String email) {
+        if (email.isEmpty()) {
+            return false;
+        }
         return email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
     }
     // Generate a random salt for password hashing
@@ -220,6 +223,9 @@ public class User implements Serializable {
      */
     public synchronized static User signup(String email, String password, int role, ArrayList<User> users) throws Exception {
         // Check if the email is valid
+        if (!isValidEmail(email)) {
+            throw new IllegalArgumentException("Invalid email format!");
+        }
 
         // Check if the email is not already registered
         User checkUser = User.isEmailRegistered(email, users);
