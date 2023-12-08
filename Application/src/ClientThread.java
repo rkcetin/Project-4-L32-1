@@ -390,6 +390,9 @@ public class ClientThread extends Thread {
                         case 202 : { // bulk add products
                             outputStream.writeObject(currentSeller.getStores());
                             outputStream.flush();
+                            if (inputStream.readInt() == -1) {
+                                break;
+                            }
                             ArrayList<Object[]> csvInput =  (ArrayList<Object[]>) inputStream.readObject();
                             try {
                                 synchronized (productsSync) {
@@ -398,10 +401,11 @@ public class ClientThread extends Thread {
                                     }
                                 }
                                 outputStream.writeBoolean(true);
+                                outputStream.flush();
                             } catch (Exception e) {
                                 outputStream.writeBoolean(false);
+                                outputStream.flush();
                             }
-                            outputStream.flush();
                             break;
 
                         }
@@ -555,8 +559,9 @@ public class ClientThread extends Thread {
                         }
                         case 700 : { //get all stores for the export of all products
                             if (currentSeller.getStores() != null) {
-                                outputStream.writeUnshared(currentSeller.getStores());
                                 outputStream.writeBoolean(true);
+                                outputStream.flush();
+                                outputStream.writeUnshared(currentSeller.getStores());
                             } else {
                                 outputStream.writeBoolean(false);
                             }
@@ -575,7 +580,6 @@ public class ClientThread extends Thread {
                                     outputStream.flush();
                                     outputStream.writeUnshared(sellerStore);
                                 }
-
                             }
 
                             outputStream.flush();

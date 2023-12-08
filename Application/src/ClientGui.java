@@ -260,12 +260,18 @@ public class ClientGui extends JComponent implements Runnable {
                             JOptionPane.showMessageDialog(null, "Store created successfully!",
                                     "Create Store", JOptionPane.PLAIN_MESSAGE);
                         } else {
-                            throw new Exception();
+                            JOptionPane.showMessageDialog(null, "Import failed. Incorrect filepath or incorrect " +
+                                    ".csv format", "Error", JOptionPane.ERROR_MESSAGE);
                         }
                     } catch (Exception ex) {
-                        JOptionPane.showMessageDialog(null, "Import failed. Incorrect filepath or incorrect " +
+                        JOptionPane.showMessageDialog(null, "Import failed2. Incorrect filepath or incorrect " +
                                 ".csv format", "Error", JOptionPane.ERROR_MESSAGE);
-                        return;
+                        try {
+                            output.writeInt(-1);
+                            output.flush();
+                        } catch (IOException exc) {
+                            throw new RuntimeException(exc);
+                        }
                     }
                 }
             }
