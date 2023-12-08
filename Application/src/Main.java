@@ -767,7 +767,7 @@ public class Main {
                         } else if (x == 1) {
                             System.out.println(customer.getTransactionHistory());
                         } else {
-                            customer.extractTransactionHistory();
+                            //customer.extractTransactionHistory();
                         }
                     }
                     case 7 -> {

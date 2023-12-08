@@ -18,6 +18,7 @@ public class Customer extends User {
     private ArrayList<Product> cart = new ArrayList<>();
     private ArrayList<String> transactionHistory = new ArrayList<>();
     private ArrayList<Product> transactionHistoryProducts = new ArrayList<>();
+    private static int fileCount = 1;
     private int boughtProduct;
     public static void main(String[] args) {
     }
@@ -135,7 +136,10 @@ public class Customer extends User {
      *
      */
 
-    public void removeFromCart( String name) {
+    public void removeFromCart(String name) throws NullPointerException {
+        if (Product.checkProduct(name, this.cart) == null) {
+            throw new NullPointerException();
+        }
         while (Product.checkProduct(name, this.cart) != null) {
             cart.remove(Product.checkProduct(name, this.cart));
         }
@@ -375,13 +379,12 @@ public class Customer extends User {
     }*/
 
     //Extracts transaction history as a file 
-    public File extractTransactionHistory() throws Exception {
-        File f = new File(this.getName() + "transactionHistory.txt");
+    public static File extractTransactionHistory(String history) throws Exception {
+        File f = new File("transactionHistory" + fileCount + ".txt");
         PrintWriter pw = new PrintWriter(f);
         f.createNewFile();
-        for (int i = 0; i < this.transactionHistory.size(); i++) {
-            pw.println(this.transactionHistory.get(i));
-        }
+        fileCount++;
+        pw.println(history);
         pw.flush();
         System.out.println("Extracted to -transactionHistory.txt-");
         return f;

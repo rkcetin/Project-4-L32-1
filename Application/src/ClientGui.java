@@ -32,6 +32,7 @@ public class ClientGui extends JComponent implements Runnable {
     JButton viewCartButton;
     JButton viewTransactionsButton;
     JButton viewStatisticsButtonC;
+    JButton viewStoreStatisticsButtonC;
     JButton returnToMenuButtonC;
     JButton deleteAccountButtonC;
     JButton exitC;
@@ -661,7 +662,7 @@ public class ClientGui extends JComponent implements Runnable {
                  VALUE DOES NOT UPDATE IMMEDIATELY NEEDS FIX
                 */
                 JOptionPane.showMessageDialog(null, cartList.toString(), "View Cart", JOptionPane.PLAIN_MESSAGE);
-                String[] actions = {"Purchase all items in this cart", "Exit"};
+                String[] actions = {"Purchase all items in this cart", "Remove item from cart", "Exit"};
                 String choice = (String) JOptionPane.showInputDialog(null, cartList + "\nChoose action:", "Choose action",
                         JOptionPane.PLAIN_MESSAGE, null, actions, actions[1]);
                 if (choice.equals("Purchase all items in this cart")) {
@@ -681,6 +682,32 @@ public class ClientGui extends JComponent implements Runnable {
                                     "Purchase cart", JOptionPane.PLAIN_MESSAGE);
                         } else {
                             JOptionPane.showMessageDialog(null, "Cart could not be purchased!",
+                                    "Error", JOptionPane.ERROR_MESSAGE);
+                        }
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                } else if (choice.equals("Remove item from cart")) {
+                    try {
+                        output.writeInt(404);
+                        output.flush();
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    String prodName = JOptionPane.showInputDialog(null, "Enter the name of the product you want to remove.",
+                            "Add to cart", JOptionPane.QUESTION_MESSAGE);
+                    try {
+                        output.writeObject(prodName);
+                        output.flush();
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    try {
+                        if (input.readBoolean()) {
+                            JOptionPane.showMessageDialog(null, "Product removed successfully!",
+                                    "Purchase cart", JOptionPane.PLAIN_MESSAGE);
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Product removal failed. No product with such name.",
                                     "Error", JOptionPane.ERROR_MESSAGE);
                         }
                     } catch (IOException ex) {
@@ -718,9 +745,13 @@ public class ClientGui extends JComponent implements Runnable {
                     JOptionPane.showMessageDialog(null, "Your transaction history:\n" + transactionHist,
                             "Transaction History", JOptionPane.PLAIN_MESSAGE);
                 } else {
+                    try {
+                        Customer.extractTransactionHistory(transactionHist);
+                    } catch (Exception ex) {
+                        throw new RuntimeException(ex);
+                    }
                     JOptionPane.showMessageDialog(null, "Extracting transaction history....",
                             "Transaction History", JOptionPane.PLAIN_MESSAGE);
-                    //need code that actually extracts the history
                 }
             }
             if (e.getSource() == viewStatisticsButtonC) {
@@ -770,6 +801,11 @@ public class ClientGui extends JComponent implements Runnable {
                                 "Store Statistics", JOptionPane.PLAIN_MESSAGE);
                     }
                 }
+            }
+            if (e.getSource() == viewStoreStatisticsButtonC) {
+                String[] statChoice = {"Sort from highest to lowest", "Sort from lowest to highest"};
+                String direction = (String) JOptionPane.showInputDialog(null, "Sort stores by number of stores", "Sort by sales",
+                        JOptionPane.PLAIN_MESSAGE, null, statChoice, statChoice[0]);
             }
             if (e.getSource() == exitC) {
                 try {
@@ -880,6 +916,7 @@ public class ClientGui extends JComponent implements Runnable {
         viewCartButton = new JButton("View Cart");
         viewTransactionsButton = new JButton("View/Extract Transaction History");
         viewStatisticsButtonC = new JButton("View statistics");
+        viewStoreStatisticsButtonC = new JButton("View Store Statistics");
         returnToMenuButtonC = new JButton("Return to menu");
         exitC = new JButton("Exit Application");
         deleteAccountButtonC = new JButton("Delete Account");
@@ -888,6 +925,7 @@ public class ClientGui extends JComponent implements Runnable {
         customerPanel.add(viewCartButton);
         customerPanel.add(viewTransactionsButton);
         customerPanel.add(viewStatisticsButtonC);
+        customerPanel.add(viewStoreStatisticsButtonC);
         customerPanel.add(returnToMenuButtonC);
         customerPanel.add(exitC);
         customerPanel.add(deleteAccountButtonC);
@@ -896,6 +934,7 @@ public class ClientGui extends JComponent implements Runnable {
         viewCartButton.addActionListener(actionListener);
         viewTransactionsButton.addActionListener(actionListener);
         viewStatisticsButtonC.addActionListener(actionListener);
+        viewStoreStatisticsButtonC.addActionListener(actionListener);
         returnToMenuButtonC.addActionListener(actionListener);
         exitC.addActionListener(actionListener);
         deleteAccountButtonC.addActionListener(actionListener);
@@ -938,9 +977,9 @@ public class ClientGui extends JComponent implements Runnable {
 401 - completed
 402 - completed
 403 - completed
-404 - NOT completed
+404 - completed
 501 - NOT completed
-600 - NOT completed
+600 - completed
 701 - completed
 702 - completed
 800 - completed

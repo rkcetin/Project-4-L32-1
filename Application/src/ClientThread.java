@@ -241,9 +241,14 @@ public class ClientThread extends Thread {
                         }
                         case 404  : { //remove from cart
                             String itemName = (String) inputStream.readObject();
-                            currentCustomer.removeFromCart(itemName);
-                            outputStream.writeBoolean(true);
-                            outputStream.flush();
+                            try {
+                                currentCustomer.removeFromCart(itemName);
+                                outputStream.writeBoolean(true);
+                                outputStream.flush();
+                            } catch (Exception ex) {
+                                outputStream.writeBoolean(false);
+                                outputStream.flush();
+                            }
                             break;
                         }
                         case 501 : { //view dashboard by bought
@@ -384,8 +389,8 @@ public class ClientThread extends Thread {
                         case 202 : { // bulk add products
                             ArrayList<Object[]> csvInput =  (ArrayList<Object[]>) inputStream.readObject();
                             try {
-                                synchronized ( productsSync){
-                                    synchronized ( storeSync) {
+                                synchronized (productsSync) {
+                                    synchronized (storeSync) {
                                         currentSeller.serverSideImport(csvInput, products);
                                     }
                                 }

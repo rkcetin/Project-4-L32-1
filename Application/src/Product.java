@@ -205,7 +205,7 @@ public class Product implements Serializable {
      * @throws NullPointerException when input is null
      * @return Product if the value exists within products null if it does not
      */
-    public static Product checkProduct(String productName, ArrayList<Product> products) {
+    public static Product checkProduct(String productName, ArrayList<Product> products) throws NullPointerException {
         if (productName == null || products == null) {
             throw new NullPointerException();
         }

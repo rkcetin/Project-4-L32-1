@@ -228,7 +228,7 @@ public class Seller extends User {
      */
     public void exportProducts(Store store, String filename) throws Exception {
         if (filename.isEmpty()) {
-            throw new Exception("invalid file name");
+            throw new Exception("Invalid file name");
         }
         try {
             File f = new File(filename + ".csv");
@@ -256,7 +256,7 @@ public class Seller extends User {
             throw new NullPointerException();
         }
         if (!filepath.contains(".csv")) {
-            throw new Exception("invalid file format");
+            throw new Exception("Invalid file format");
         }
         ArrayList<Object[]> csvInputs = new ArrayList<>();
 
