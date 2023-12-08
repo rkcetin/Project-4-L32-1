@@ -13,7 +13,7 @@ public class ClientThread extends Thread {
     final static Object userSync = new Object();
     final static Object storeSync = new Object();
     final static Object productsSync = new Object();
-
+    final static Object outputSync = new Object();
 
     boolean isSeller;
     User currentUser;
@@ -63,6 +63,7 @@ public class ClientThread extends Thread {
                             System.out.println("reach4");
                             outputStream.writeBoolean(true);
                             outputStream.flush();
+
                             break;
                         } catch (Exception e) {
                             System.out.println("reach5");
@@ -130,9 +131,9 @@ public class ClientThread extends Thread {
                     switch (menuChoice) {
                         case 100: { // view products
                             synchronized (productsSync) {
-                                System.out.println(products);
 
-                                outputStream.writeObject(
+
+                                outputStream.writeUnshared(
                                         products // sorting should happen client side + listing generation shoudl also happene clientside
                                 );
                                 outputStream.flush();
@@ -141,7 +142,7 @@ public class ClientThread extends Thread {
                             break;
                         }
                         case 101 : { //view stores
-                            outputStream.writeObject(
+                            outputStream.writeUnshared(
                                 stores
                             );
                             outputStream.flush();
@@ -174,7 +175,7 @@ public class ClientThread extends Thread {
                             break loop;
                         }
                         case 400: { // view cart
-                            outputStream.writeObject(
+                            outputStream.writeUnshared(
                                     currentCustomer.getCart()
                             );
                             outputStream.flush();
@@ -222,7 +223,7 @@ public class ClientThread extends Thread {
                             String[] purchaseInfo = (String[]) inputStream.readObject();
                             try {
                                 int quantity = Integer.parseInt(purchaseInfo[1]);
-                                //synchronized (productsSync) {
+                                synchronized (productsSync) {
                                     Product targetProduct = Product.checkProduct(purchaseInfo[0], products);
                                     currentCustomer.singlePurchase(
                                             targetProduct.getStore(),
@@ -230,7 +231,7 @@ public class ClientThread extends Thread {
                                             quantity,
                                             products
                                     );
-                                //}
+                                }
                                 Storage.storeData(users, stores, products);
                                 outputStream.writeBoolean(true);
                             } catch (Exception ex) {
@@ -252,34 +253,34 @@ public class ClientThread extends Thread {
                             break;
                         }
                         case 501 : { //view dashboard by bought
-                            outputStream.writeObject(
+                            outputStream.writeUnshared(
                                     currentCustomer.dashboardbyBought()
                             );
                             outputStream.flush();
                             break;
                         }
                         case 502 : { //view dashboard by sold
-                            outputStream.writeObject(
+                            outputStream.writeUnshared(
                                     currentCustomer.dashboardBySold(stores)
                             );
                             outputStream.flush();
                             break;
                         }
                         case 600: { // extract transaction history local machine has to handle other part
-                            outputStream.writeObject(currentCustomer.getTransactionHistory());
-                            //outputStream.writeObject(currentCustomer.getTransactionHistoryList());
+                            outputStream.writeUnshared(currentCustomer.getTransactionHistory());
+                            //outputStream.writeUnshared(currentCustomer.getTransactionHistoryList());
                             outputStream.flush();
                             break;
                         }
                         case 701: { //view statistics stores purchased from
-                            outputStream.writeObject(
+                            outputStream.writeUnshared(
                                     currentCustomer.getPurchaseCounts()
                             );
                             outputStream.flush();
                             break;
                         }
                         case 702: { // total purchases from stores
-                            outputStream.writeObject(
+                            outputStream.writeUnshared(
                                     currentCustomer.countStoreOccurrences()
                             );
                             outputStream.flush();
@@ -326,7 +327,7 @@ public class ClientThread extends Thread {
                     int processSelection = inputStream.readInt();
                     switch (processSelection) {
                         case 100: { //view stores
-                            outputStream.writeObject(currentSeller.getStoresString(currentSeller.getStores()));
+                            outputStream.writeUnshared(currentSeller.getStoresString(currentSeller.getStores()));
                             outputStream.flush();
                             break;
                         }
@@ -334,9 +335,9 @@ public class ClientThread extends Thread {
                             String storeName = (String) inputStream.readObject();
                             try {
 
-                                //
+                                synchronized (storeSync) {
                                     currentSeller.createStore(storeName, stores);
-                                //}// synchronize maybe
+                                }// synchronize maybe
 
                                 outputStream.writeBoolean(true);
                                 outputStream.flush();
@@ -412,7 +413,7 @@ public class ClientThread extends Thread {
                                     }
                                 }
                             }
-                            outputStream.writeObject(sellerProducts);
+                            outputStream.writeUnshared(sellerProducts);
                             outputStream.flush();
 
                             /*
@@ -509,11 +510,11 @@ public class ClientThread extends Thread {
                             break;
                         }
                         case 301 : { // unsorted statistics
-                            outputStream.writeObject(
+                            outputStream.writeUnshared(
                                     currentSeller.displayUnsortedStatistics() // rest needs to happen clientside
                             );
                             outputStream.flush();
-                            outputStream.writeObject(currentSeller.getStoreNames());
+                            outputStream.writeUnshared(currentSeller.getStoreNames());
                             outputStream.flush();
                             break;
                         }
@@ -530,27 +531,30 @@ public class ClientThread extends Thread {
                             String targetUser = (String) inputStream.readObject();
                             synchronized (userSync) {
                                 Customer targetCustomer = (Customer) User.isEmailRegistered(targetUser, users);
-                                outputStream.writeObject(targetCustomer.getCart());
+                                outputStream.writeUnshared(targetCustomer.getCart());
                             }
                             outputStream.flush();
                             break;
                         }
                         case 601 : { // get customers for cart thing
-                            outputStream.writeObject(
+                            outputStream.writeUnshared(
                                     Customer.getCustomers(users)
                             );
                             outputStream.flush();
                             break;
                         }
                         case 700 : { //get all stores for the export of all products
-                            outputStream.writeObject(currentSeller.getStores());
+                            outputStream.writeUnshared(currentSeller.getStores());
                             outputStream.flush();
                             break;
                         }
                         case 701 : { //get store for the product export
                             String targetStore = (String) inputStream.readObject();
-                            Store sellerStore = currentSeller.getStore(targetStore);
-                            outputStream.writeObject(sellerStore);
+                            synchronized (storeSync) {
+                                Store sellerStore = currentSeller.getStore(targetStore);
+                                outputStream.writeUnshared(sellerStore);
+                            }
+
                             outputStream.flush();
                             break;
                         }
@@ -561,7 +565,7 @@ public class ClientThread extends Thread {
 
 
                     }
-                    outputStream.reset();
+
                     Storage.storeData(users, stores, products);
                 }
             }
