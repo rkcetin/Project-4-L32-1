@@ -57,14 +57,14 @@ public class Product implements Serializable {
      * @throws IllegalArgumentException when productName is empty
      */
     public void setProductName(String paramProductName , ArrayList<Product> products)   {
-        if (paramProductName == null ) {
+        if (productName == null ) {
             throw new NullPointerException();
         }
-        if (paramProductName.isEmpty()) {
+        if (productName.isEmpty()) {
             throw new IllegalArgumentException();
         }
 
-        this.productName = paramProductName;
+        this.productName = productName;
     }
 
     //sets the Product description, throws null pointer exception if null
@@ -205,7 +205,7 @@ public class Product implements Serializable {
      * @throws NullPointerException when input is null
      * @return Product if the value exists within products null if it does not
      */
-    public static Product checkProduct(String productName, ArrayList<Product> products) throws NullPointerException {
+    public static Product checkProduct(String productName, ArrayList<Product> products) {
         if (productName == null || products == null) {
             throw new NullPointerException();
         }
@@ -218,8 +218,6 @@ public class Product implements Serializable {
         }
         return filteredProduct.get(0);
     }
-
-
 
     //search method
     /**
@@ -320,7 +318,7 @@ public class Product implements Serializable {
      * @return returns a string representation of the product
      */
     public String toString2() {
-        return String.format("Product<Name: %s, Description: %s, Price: %.2f, Store: %s>\n",
+        return String.format("Product<Name: %s, Description: %s, Price: %.2f, Store: %s>",
                 this.getProductName(), this.getProductDescription(), this.getPrice(), this.getStore().getStoreName());
     }
     /**
