@@ -18,6 +18,7 @@ public class Customer extends User {
     private ArrayList<Product> cart = new ArrayList<>();
     private ArrayList<String> transactionHistory = new ArrayList<>();
     private ArrayList<Product> transactionHistoryProducts = new ArrayList<>();
+    private static int fileCount = 1;
     private int boughtProduct;
     public static void main(String[] args) {
     }
@@ -69,7 +70,7 @@ public class Customer extends User {
      * @throws IOException from use of print writer and files
      * @throws IllegalArgumentException when quantity purchased exceed item stock
      */
-    public void singlePurchase(Store store, String name, int quantity, ArrayList<Product> products)
+    public synchronized void singlePurchase(Store store, String name, int quantity, ArrayList<Product> products)
             throws IOException, IllegalArgumentException {
         PrintWriter pw = new PrintWriter(new FileWriter("statistics.txt", true));
         for (Product product : products) {
@@ -82,11 +83,14 @@ public class Customer extends User {
                 for (int j = 0; j < quantity; j++) {
                     pw.println(String.format("%s,%s,%s,%.2f", product.getStore().getStoreName(), this.getName(),
                             product.getProductName(), product.getPrice()));
+                    this.transactionHistory.add(product.toString2());
+                    pw.flush();
                     product.decrementStock();
                 }
                 return;
             }
         }
+        pw.close();
     }
 
     //has quantity parameter
@@ -117,17 +121,26 @@ public class Customer extends User {
             }
         }
     }
+    public static ArrayList<User> getCustomers(ArrayList<User> users) {
+        return users
+                .stream()
+                .filter(user -> user instanceof Customer)
+                .collect(Collectors.toCollection(ArrayList::new));
+    }
     /**
      * removes an item from users cart
      *
      *
-     * @param store relates to the store the customer of the product the customer to their cart
+
      * @param name name of the product the customer is purchasing
      *
      *
      */
 
-    public void removeFromCart(Store store, String name) {
+    public void removeFromCart(String name) throws NullPointerException {
+        if (Product.checkProduct(name, this.cart) == null) {
+            throw new NullPointerException();
+        }
         while (Product.checkProduct(name, this.cart) != null) {
             cart.remove(Product.checkProduct(name, this.cart));
         }
@@ -152,6 +165,10 @@ public class Customer extends User {
             productOccurrencesList.add(productCountMap.get(product));
         }
         return productOccurrencesList;
+    }
+    public void purchaseCartServer() throws IOException, IllegalArgumentException {
+        PrintWriter pw = new PrintWriter(new FileWriter("statistics.txt", true));
+
     }
     /**
      * purchases cart and adds the information to statistics.txt
@@ -211,6 +228,39 @@ public class Customer extends User {
         }
         this.setTransactionHistory(transactionHistory);
     }
+
+    public void purchaseCart() throws IOException, IllegalArgumentException {
+        PrintWriter pw = new PrintWriter(new FileWriter("statistics.txt", true));
+        int count = 0;
+        try {
+            for (Product value : cart) {
+                if (value.getStock() < 1) {
+                    throw new IllegalArgumentException("Stock exceeded!");
+                }
+            }
+            for (Product product : cart) {
+                this.transactionHistory.add(product.toString2());
+                product.decrementStock();
+                count++;
+            }
+            for (int j = cart.size() - 1; j >= 0; j--) {
+                cart.get(j).getStore().incrementSales(cart.get(j).getPrice());
+                pw.println(String.format("%s,%s,%s,%.2f", cart.get(j).getStore().getStoreName(), this.getName(),
+                        cart.get(j).getProductName(), cart.get(j).getPrice()));
+                cart.remove(j);
+            }
+            pw.flush();
+            this.setTransactionHistory(transactionHistory);
+        } catch (InputMismatchException ime) {
+            System.out.println("Invalid input, try again.");
+        }
+        for (int j = cart.size() - 1; j >= 0; j--) {
+            cart.get(j).getStore().incrementSales(cart.get(j).getPrice());
+            cart.remove(j);
+        }
+        this.setTransactionHistory(transactionHistory);
+    }
+
     /**
      * updates the cart based on a new arraylist of products as cart
      *
@@ -222,7 +272,9 @@ public class Customer extends User {
     public void setCart(ArrayList<Product> cart) {
         this.cart = cart;
     }
-
+    public ArrayList<String> getTransactionHistoryList() {
+        return transactionHistory;
+    }
     public String getTransactionHistory() {
         String history = "";
         for (String s : transactionHistory) {
@@ -328,13 +380,12 @@ public class Customer extends User {
     }*/
 
     //Extracts transaction history as a file 
-    public File extractTransactionHistory() throws Exception {
-        File f = new File(this.getName() + "transactionHistory.txt");
+    public static File extractTransactionHistory(String history) throws Exception {
+        File f = new File("transactionHistory" + fileCount + ".txt");
         PrintWriter pw = new PrintWriter(f);
         f.createNewFile();
-        for (int i = 0; i < this.transactionHistory.size(); i++) {
-            pw.println(this.transactionHistory.get(i));
-        }
+        fileCount++;
+        pw.println(history);
         pw.flush();
         System.out.println("Extracted to -transactionHistory.txt-");
         return f;
@@ -357,7 +408,7 @@ public class Customer extends User {
         return purchaseCounts;
     }
 
-    public String sortPurchaseCounts(Map<String, Integer> purchaseCounts, boolean highestToLowest) {
+    public static String sortPurchaseCounts(Map<String, Integer> purchaseCounts, boolean highestToLowest) {
         return purchaseCounts.entrySet()
                 .stream()
                 .sorted((entry1, entry2) -> highestToLowest ?
@@ -381,12 +432,39 @@ public class Customer extends User {
         return storeCounts;
     }
 
-    public String sortStoreCounts(Map<String, Integer> storeCounts, boolean highestToLowest) {
+    public static String sortStoreCounts(Map<String, Integer> storeCounts, boolean highestToLowest) {
         return storeCounts.entrySet().stream()
                 .sorted((entry1, entry2) -> highestToLowest ?
                         Integer.compare(entry2.getValue(), entry1.getValue()) :
                         Integer.compare(entry1.getValue(), entry2.getValue()))
                 .map(entry -> entry.getKey() + ": " + entry.getValue() + " purchases")
                 .collect(Collectors.joining("\n"));
+    }
+
+    public static void analyzeStorePurchases(String filePath) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            Map<String, Integer> storeCountMap = new HashMap<>();
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length >= 1) {
+                    String storeName = parts[0].trim();
+
+                    // Update the count for the store name in the map
+                    storeCountMap.put(storeName, storeCountMap.getOrDefault(storeName, 0) + 1);
+                }
+            }
+
+            // Print the results
+            for (Map.Entry<String, Integer> entry : storeCountMap.entrySet()) {
+                String storeName = entry.getKey();
+                int count = entry.getValue();
+                System.out.println(count + " total purchases from " + storeName);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
