@@ -173,7 +173,7 @@ public class Seller extends User {
      * @param highestToLowest a boolean determining whether statistics sorted starting high or low
      * @return returns the store object of a particular store name
      */
-    public static String sortStatisticsBySales(String statisticsResult, boolean highestToLowest) {
+    public String sortStatisticsBySales(String statisticsResult, boolean highestToLowest) {
         List<String> lines = Arrays.asList(statisticsResult.split("\n"));
         lines.sort((line1, line2) -> {
             double sales1 = Double.parseDouble(line1.split(",")[2]);
@@ -183,14 +183,13 @@ public class Seller extends User {
 
         return String.join("\n", lines);
     }
-
     /**
      * returns a sorted representation of the statistics based upon quantity of sales high or low
      * @param paramStores arraylist of stores to reference
      * @param highestToLowest a boolean determining whether statistics sorted starting high or low
      * @return returns a String of store statistics sorted based upon of quantity of sales
      */
-    public static String sortByOccurrences(ArrayList<String> paramStores, boolean highestToLowest) throws IOException {
+    public String sortByOccurrences(ArrayList<String> paramStores, boolean highestToLowest) throws IOException {
         BufferedReader bfr = new BufferedReader(new FileReader("statistics.txt"));
         Map<String, Integer> storeOccurrences = new HashMap<>();
         String a = "";
@@ -226,9 +225,9 @@ public class Seller extends User {
      * @param filename filename to export to
      * @throws Exception when invalid filename
      */
-    public static void exportProducts(Store store, String filename) throws Exception {
+    public void exportProducts(Store store, String filename) throws Exception {
         if (filename.isEmpty()) {
-            throw new Exception("Invalid file name");
+            throw new Exception("invalid file name");
         }
         try {
             File f = new File(filename + ".csv");
@@ -249,53 +248,6 @@ public class Seller extends User {
 
         } catch (IOException e) {
             throw new Exception("Problem reading file");
-        }
-    }
-    public static ArrayList<Object[]> importServerProducts(String filepath, ArrayList<Store> storesParam) throws Exception  {
-        if (filepath == null) {
-            throw new NullPointerException();
-        }
-        if (!filepath.contains(".csv")) {
-            throw new Exception("Invalid file format");
-        }
-        ArrayList<Object[]> csvInputs = new ArrayList<>();
-
-        File csv = new File(filepath);
-        FileReader fr = new FileReader(csv);
-        BufferedReader bfr = new BufferedReader(fr);
-        String currentLine = bfr.readLine();
-        while (currentLine != null) {
-            String[] workingList = currentLine.split(",");
-            if (workingList.length != SPECIFC_LENGTH) {
-                throw new Exception("file problem format length");
-            }
-            if (workingList[NAME_INDEX].isEmpty() || workingList[DESCRIPTION_INDEX].isEmpty()) {
-                throw new Exception("file problem missing product name");
-            }
-            if (Store.checkStore(workingList[STORE_INDEX], storesParam) == null) {
-                // will throw exception if not in seller store list
-                throw new Exception("file problem invalid store");
-            }
-            Integer.parseInt(workingList[STOCK_INDEX]); // will throw exception if wrong format
-            Double.parseDouble(workingList[PRICE_INDEX]);  // will throw exception if wrong format
-            csvInputs.add(workingList);
-
-            currentLine = bfr.readLine();
-        }
-        fr.close();
-        bfr.close();
-        return csvInputs;
-    }
-    public void serverSideImport(ArrayList<Object[]> csvInputs, ArrayList<Product> products) throws Exception {
-        for (Object[] line : csvInputs) {
-            Store inputStore = Store.checkStore((String) line[STORE_INDEX], this.getStores());
-            String inputName = (String) line[NAME_INDEX];
-            String inputDesc = (String) line[DESCRIPTION_INDEX];
-            int inputQuantity = Integer.parseInt( (String) line[STOCK_INDEX]);
-            double inputPrice = Double.parseDouble( (String) line[PRICE_INDEX]) ;
-
-            Product inputProduct = new Product(inputStore , inputName , inputDesc , inputQuantity , inputPrice);
-            inputStore.addProduct(inputProduct , products);
         }
     }
     /**
@@ -387,7 +339,7 @@ public class Seller extends User {
         return x;
     }*/
 
-    public static List<String> customersOfStores(ArrayList<String> storeNames) {
+    public List<String> customersOfStores(ArrayList<String> storeNames) {
         Map<String, Set<String>> storeToUserMap = new HashMap<>();
 
         try (BufferedReader br = new BufferedReader(new FileReader("statistics.txt"))) {
@@ -416,7 +368,7 @@ public class Seller extends User {
         return result;
     }
 
-    public static ArrayList<String> viewTransactionHistory(ArrayList<String> inputStoreNames) throws IOException {
+    public ArrayList<String> viewTransactionHistory(ArrayList<String> inputStoreNames) throws IOException {
         ArrayList<String> filteredLines = new ArrayList<>();
 
         try (BufferedReader br = new BufferedReader(new FileReader("statistics.txt"))) {

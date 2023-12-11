@@ -58,7 +58,7 @@ public class User implements Serializable {
         if (!User.isValidEmail(paramName) || User.isEmailRegistered(paramName, users) != null) {
             throw new Exception("invalid email");
         }
-        this.name = paramName;
+        this.name = name;
     }
     /**
      * updates the password
@@ -66,9 +66,9 @@ public class User implements Serializable {
 
      */
     public void setPassword(String password) {
-        this.password = password + this.salt;
+        this.password = password;
     }
-
+    
 
     //returns the information of the user in a formatted string
     /**
@@ -87,9 +87,6 @@ public class User implements Serializable {
 
      */
     public static boolean isValidEmail(String email) {
-        if (email.isEmpty()) {
-            return false;
-        }
         return email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
     }
     // Generate a random salt for password hashing
@@ -181,33 +178,37 @@ public class User implements Serializable {
      * returns the object for a user if they are logged in
 
      */
-    public synchronized static User login(String email, String password, ArrayList<User> users) throws Exception {
+    public static User login(String email, String password, ArrayList<User> users) throws Exception {
         User currentUser = null;
+        if (User.isValidEmail(email)) {
+            // Check if the email is registered
+            currentUser = User.isEmailRegistered(email , users);
+            if (currentUser != null) {
+                // Retrieve the stored hashed password and salt for the user
+                String[] userData = currentUser.toString().split(",");
 
-        // Check if the email is registered
-        currentUser = User.isEmailRegistered(email , users);
-        if (currentUser != null) {
-            // Retrieve the stored hashed password and salt for the user
-            String[] userData = currentUser.toString().split(",");
+                if (userData != null) {
+                    String storedHashedPassword = userData[1];
+                    String salt = userData[2];
 
+                    // Hash the provided password with the stored salt
+                    String hashedPassword = hashPassword(password, salt);
 
-            String storedHashedPassword = userData[1];
-            String salt = userData[2];
-
-            // Hash the provided password with the stored salt
-            String hashedPassword = hashPassword(password, salt);
-
-            // Compare the computed hash with the stored hash
-            if (storedHashedPassword.equals(hashedPassword)) {
-                return currentUser;
+                    // Compare the computed hash with the stored hash
+                    if (storedHashedPassword.equals(hashedPassword)) {
+                        return currentUser;
+                    } else {
+                        throw new Exception("Login failed");
+                    }
+                } else {
+                    throw new Exception("Missing data?");
+                }
             } else {
-                throw new Exception("Login failed");
+                throw new Exception("Email not registered");
             }
-
         } else {
-            throw new Exception("Email not registered");
+            throw new Exception("Incorrect Email Format");
         }
-
     }
     /**
      * signs the user up with the email and password and role. if the information is correct
@@ -221,29 +222,28 @@ public class User implements Serializable {
      *
 
      */
-    public synchronized static User signup(String email, String password, int role, ArrayList<User> users) throws Exception {
+    public static User signup(String email, String password , int role, ArrayList<User> users) throws Exception {
         // Check if the email is valid
-        if (!isValidEmail(email)) {
-            throw new IllegalArgumentException("Invalid email format!");
-        }
+        if (User.isValidEmail(email)) {
+            // Check if the email is not already registered
+            User checkUser = User.isEmailRegistered(email, users);
+            if (null == checkUser) {
+                // Generate a random salt
+                String salt = generateSalt(16);   ///// 16??????
 
-        // Check if the email is not already registered
-        User checkUser = User.isEmailRegistered(email, users);
-        if (null == checkUser) {
-            // Generate a random salt
-            String salt = generateSalt(16);   ///// 16??????
+                // Hash the password with the salt
+                String hashedPassword = hashPassword(password, salt);
 
-            // Hash the password with the salt
-            String hashedPassword = hashPassword(password, salt);
+                User endUser = User.saveUserToDatabase(email, hashedPassword, salt, role, users);
 
-            User endUser = User.saveUserToDatabase(email, hashedPassword, salt, role, users);
-
-            return endUser;
-            // Store the email, hashed password, and salt in a file
+                return endUser;
+                // Store the email, hashed password, and salt in a file
+            } else {
+                throw new IllegalArgumentException("Email already registered!");
+            }
         } else {
-            throw new IllegalArgumentException("Email already registered!");
+            throw new IllegalArgumentException("Invalid e-mail format!");
         }
-
     }
 
 

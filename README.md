@@ -1,4 +1,4 @@
-# Project-5-L32-1
+# Project-4-L32-1
 
 ## Compilation Instructions
 
@@ -6,9 +6,9 @@ In order to compile the program one must compile all the classes within the src 
 
 ## Submitters
 
-### Report - submitted report on brightspace
+### Report - Steven Chang submitted report on brightspace
 
-### Project 5 - Submitted through Vocareum
+### Project 4 - Chris Xu Submitted through Vocareum
 
 
 ## Class Descriptions
@@ -32,14 +32,6 @@ In order to compile the program one must compile all the classes within the src 
 ### Seller.java
   Seller.java is the means of creating new instances of the Seller class, holding its information, and defining the variables associated with it. It is an extends the User class. The variables associated with this class include all of the stores the seller has made, as well as all of those already associated with the user class. A new instance of the Seller class is made when a user signs up and chooses to be a seller, instead of a Customer. Sellers are able to make new stores, as remove them and see the stores already created. The sellers interact with the stores and product classes by being able to create and edit stores in addition to being able to edit, add, and remove products from individual stores. Sellers are able to import products or export products relating to a particular store in the csv format and they can also view the statisics related to their stores being able to sort by revenue brought in by stores or quantity of products sold from products. They also have the ability to sort in the opposite direction inverting both sorted lists. Sellers can also look at specific users shopping carts this will help them better determine which products to sell. The seller related tests are stored within the market, shopping cart, files, and statistics tests. 
 
-### ClientThread.java
-  This class is dealing with server communication and concurrency. Using ObjectInputStream and ObjectOutputStream methods, user flow is transferred to server using either booleans or updated variables like ArrayList of products, users, and stores. To avoid overwritten changes to each other, we implemented the keyword "synchronized" with a parameter of either userSync, storeSync or productSync, wherever and whichever is applicable. Thus, any change that is made into an ArrayList, can happen synchronized, avoiding overwrite.  
-
-### ClientGui.java
-  This class, as understood from the name, creates a GUI for the user flow. Both JOptionPane and complex GUI like JFrame, JButton, etc. are used in this purpose. Choosing actions and seeing options are through compelx GUI. Errors and other messages like successfully created ... are done with JOptionPane. This class also uses ObjectOutputStream and ObjectInputStream to transfer what is chosen by the user in GUI to the server side as it is needed for the user flow. 
-
-### Server.java
-  Server class opens up a ServerSocket with port 9000 and keeps it open in a while(true) loop. In case it shutdowns in an exception, it also has the capability to store latest data. 
-
 ### Test Files
-  Some classes have their own individual test classes, but the primary test cases for the requirements within this project are found within the shared requirements, market, files, statistics, and shoppping cart test files. Each group of requirements has its own individual testing file and they test for method functinality in additon to testing invalid inputs looking for exceptions. To fun all the tests run the TestRunner file and to test some of the exception handling in main run test within the MainTest class.
+
+Some classes have their own individual test classes, but the primary test cases for the requirements within this project are found within the shared requirements, market, files, statistics, and shoppping cart test files. Each group of requirements has its own individual testing file and they test for method functinality in additon to testing invalid inputs looking for exceptions. To fun all the tests run the TestRunner file and to test some of the exception handling in main run test within the MainTest class.
